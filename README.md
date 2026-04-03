@@ -2,6 +2,10 @@
 
 DerivaLab is a Full-Stack Micro-SaaS designed to help high school calculus teachers generate exercises, evaluate student answers, and provide automated feedback.
 
+## License
+
+This project is licensed under the MIT License.
+
 ## Problem
 
 Teachers spend excessive time:
