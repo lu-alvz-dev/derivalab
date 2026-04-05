@@ -2,19 +2,36 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 function App() {
-  const [message, setMessage] = useState("");
+  const [exercise, setExercise] = useState(null);
+
+  const fetchExercise = () => {
+    axios
+      .get("http://localhost:3000/api/exercises")
+      .then((res) => setExercise(res.data))
+      .catch((err) => console.error(err));
+  };
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/health")
-      .then((res) => setMessage(res.data.message))
-      .catch((err) => console.error(err));
+    fetchExercise();
   }, []);
 
   return (
     <div>
       <h1>DerivaLab</h1>
-      <p>Server message: {message}</p>
+
+      {exercise ? (
+        <>
+          <p>
+            <strong>Exercise:</strong> {exercise.question}
+          </p>
+          <p>
+            <strong>Answer:</strong> {exercise.answer}
+          </p>
+          <button onClick={fetchExercise}>Generate New</button>
+        </>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 }
