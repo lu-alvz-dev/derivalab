@@ -2,7 +2,7 @@
 
 ## Day 1
 
-This document describes the manual testing performed during may journey creating Derivalab.
+This document describes the manual testing performed during my journey creating Derivalab.
 
 ## Overview
 
@@ -12,7 +12,7 @@ The goal is to validate the basic functionality of the system, including:
 - API endpoint response
 - Frontend-backend integration
 
----
+--
 
 ## Backend Testing
 
@@ -38,7 +38,7 @@ http://localhost:3000/api/health
 **Result:**
 Success — endpoint responds correctly
 
----
+--
 
 ## Frontend Testing
 
@@ -66,7 +66,7 @@ Server message: Server is running
 **Result:**
 Success — frontend renders and fetches data correctly
 
----
+--
 
 ## Testing-Integration
 
@@ -84,7 +84,7 @@ Success — full integration working
 
 ![Frontend Running](./images/frontend-v1.png)
 
----
+--
 
 ## Conclusion
 
@@ -144,7 +144,7 @@ Example:
 **Result:**
 Endpoint returns valid and random derivative exercises
 
----
+--
 
 ### 2. Frontend Integration Test
 
@@ -178,7 +178,7 @@ http://localhost:5173
 **Result:**
 Frontend successfully fetches and displays exercises from backend
 
----
+--
 
 ### 3. Integration Flow Test
 
