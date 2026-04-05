@@ -75,3 +75,15 @@ POST /api/validate
 {
 "isCorrect": true
 }
+
+---
+
+## Pending Improvements
+
+- [ ] Add try/catch to all API requests (frontend)
+- [ ] Replace alert() with proper UI feedback
+- [ ] Handle server errors and network failures
+
+### Completed
+
+_(Empty by now)_
