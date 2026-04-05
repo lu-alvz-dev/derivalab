@@ -46,3 +46,32 @@ f(x) = x^2 + 3x
 
 Output:
 f'(x) = 2x + 3
+
+## Answer Validation System
+
+### Flow
+
+1. Backend generates exercise (question + correct answer)
+2. Frontend displays exercise
+3. User inputs answer
+4. Frontend sends answer to backend
+5. Backend compares with correct answer
+6. Backend returns result (correct / incorrect)
+7. Frontend displays feedback
+
+### Endpoint
+
+POST /api/validate
+
+### Example Request
+
+{
+"userAnswer": "4x + 5",
+"correctAnswer": "4x + 5"
+}
+
+### Example Response
+
+{
+"isCorrect": true
+}
