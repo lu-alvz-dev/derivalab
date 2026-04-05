@@ -12,6 +12,10 @@ const exerciseRoutes = require("./routes/exerciseRoutes");
 
 app.use("/api/exercises", exerciseRoutes);
 
+const validationRoutes = require("./routes/validationRoutes");
+
+app.use("/api/validate", validationRoutes);
+
 // Health check route
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Server is running" });
