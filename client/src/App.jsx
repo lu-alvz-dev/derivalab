@@ -16,7 +16,7 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <div style={{ padding: "2rem", fontFamily: "Arial" }}>
       <h1>DerivaLab</h1>
 
       {exercise ? (
