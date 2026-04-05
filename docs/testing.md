@@ -12,8 +12,6 @@ The goal is to validate the basic functionality of the system, including:
 - API endpoint response
 - Frontend-backend integration
 
---
-
 ## Backend Testing
 
 ### Endpoint: GET /api/health
@@ -37,8 +35,6 @@ http://localhost:3000/api/health
 
 **Result:**
 Success — endpoint responds correctly
-
---
 
 ## Frontend Testing
 
@@ -66,8 +62,6 @@ Server message: Server is running
 **Result:**
 Success — frontend renders and fetches data correctly
 
---
-
 ## Testing-Integration
 
 ### Flow
@@ -83,8 +77,6 @@ Frontend → Axios → Backend → JSON Response → UI Render
 Success — full integration working
 
 ![Frontend Running](./images/frontend-v1.png)
-
---
 
 ## Conclusion
 
@@ -139,12 +131,11 @@ Example:
 ```
 
 **Evidence:**
-![Backend Test](./images/backend-exercise.png)
+
+![Backend Test](./images/backend-v2.png)
 
 **Result:**
 Endpoint returns valid and random derivative exercises
-
---
 
 ### 2. Frontend Integration Test
 
@@ -173,12 +164,11 @@ http://localhost:5173
 - Clicking "Generate New" updates exercise
 
 **Evidence:**
+
 ![Frontend Test](./images/frontend-v2.png)
 
 **Result:**
 Frontend successfully fetches and displays exercises from backend
-
---
 
 ### 3. Integration Flow Test
 
