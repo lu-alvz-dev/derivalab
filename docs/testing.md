@@ -184,3 +184,87 @@ Frontend → Axios → Backend → Service → Response → UI
 
 **Result:**
 Full-stack integration working correctly
+
+---
+
+## Day 3 – Answer Validation Testing
+
+### 1. Backend Validation Test
+
+**Endpoint:**
+POST /api/validate
+
+**Tool:**
+Postman
+
+**Test Correct Answer**
+
+Request:
+
+```json
+{
+  "userAnswer": "4x+5",
+  "correctAnswer": "4x + 5"
+}
+```
+
+Expected:
+
+```json
+{
+  "isCorrect": true
+}
+```
+
+Result:
+Passed
+
+![Postman Validation](./images/backend-postman-v1.png)
+
+### 2. Frontend Interaction Test
+
+**Steps:**
+
+1. Open app at http://localhost:5173
+2. Enter correct answer
+3. Click "Check Answer"
+
+**Expected:**
+
+- Displays "Correct answer"
+
+**Result:**
+Passed
+
+![Frontend Validation](./images/frontend-v3a.png)
+
+**Steps:**
+
+1. Enter incorrect answer
+2. Click "Check Answer"
+
+**Expected:**
+
+- Displays "Try again"
+
+**Result:**
+Passed
+
+**Evidence:**
+![Frontend Validation](./images/frontend-v3b.png)
+
+### 3. Full Integration Test
+
+**Flow:**
+Frontend → POST /api/validate → Backend → Response → UI
+
+**Validated:**
+
+- Data sent correctly
+- Backend processes correctly
+- UI updates dynamically
+
+**Result:**
+Passed
+
+- Verified using Postman and browser
