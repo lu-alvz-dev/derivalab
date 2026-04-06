@@ -87,3 +87,45 @@ POST /api/validate
 ### Completed
 
 _(Empty by now)_
+
+## Advanced Exercise System
+
+### Supported Types
+
+- Polynomial
+- Power functions
+- Trigonometric (basic)
+
+### Difficulty Levels
+
+- Easy
+- Medium
+- Hard
+
+### Strategy
+
+The backend will:
+
+1. Receive query params:
+   - type
+   - difficulty
+
+2. Route to specific generator
+
+3. Return:
+   - question
+   - answer
+   - metadata (type, difficulty)
+
+### Example
+
+GET /api/exercises?type=polynomial&difficulty=easy
+
+Response:
+
+{
+"question": "f(x) = 2x^2 + 3x",
+"answer": "4x + 3",
+"type": "polynomial",
+"difficulty": "easy"
+}
