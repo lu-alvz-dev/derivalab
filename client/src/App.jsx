@@ -50,7 +50,11 @@ function App() {
           <button onClick={validateAnswer}>Check Answer</button>
           <button onClick={fetchExercise}>New Exercise</button>
 
-          {result !== null && <p>{result ? "Correct!" : "Incorrect"}</p>}
+          {result !== null && (
+            <p style={{ fontWeight: "bold", color: result ? "green" : "red" }}>
+              {result ? "Correct answer!!" : "Try again"}
+            </p>
+          )}
         </>
       )}
     </div>
