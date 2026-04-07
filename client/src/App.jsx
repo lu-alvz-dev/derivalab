@@ -19,7 +19,9 @@ function App() {
         setUserAnswer("");
         setResult(null);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error("Error fetching exercise:", err);
+      });
   };
 
   const validateAnswer = () => {
