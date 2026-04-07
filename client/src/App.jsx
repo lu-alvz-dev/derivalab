@@ -33,7 +33,7 @@ function App() {
 
   useEffect(() => {
     fetchExercise();
-  }, []);
+  }, [type, difficulty]);
 
   return (
     <div style={{ padding: "2rem", fontFamily: "Arial" }}>
