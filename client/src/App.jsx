@@ -11,7 +11,9 @@ function App() {
 
   const fetchExercise = () => {
     axios
-      .get(`http://localhost:3000/api/exercises`)
+      .get(
+        `http://localhost:3000/api/exercises?type=${type}&difficulty=${difficulty}`,
+      )
       .then((res) => {
         setExercise(res.data);
         setUserAnswer("");
