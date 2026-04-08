@@ -44,7 +44,10 @@ function App() {
 
   return (
     <div style={{ padding: "2rem", fontFamily: "Arial" }}>
-      <h1>DerivaLab</h1>
+      <h1 style={{ marginBottom: "1rem" }}>DerivaLab</h1>
+      <p style={{ color: "#555" }}>
+        Practice derivatives with dynamic difficulty and function types
+      </p>
 
       {/* Selectors */}
       <div>
