@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 
 function App() {
@@ -6,10 +6,14 @@ function App() {
   const [userAnswer, setUserAnswer] = useState("");
   const [result, setResult] = useState(null);
 
+  // Filtros para la consulta a la API
   const [type, setType] = useState("polynomial");
   const [difficulty, setDifficulty] = useState("easy");
 
-  const fetchExercise = () => {
+  /**
+   * Fetches a new exercise from the backend. useCallback is used to stabilize the function reference, so useEffect won't enter an infinite loop when state changes, the function is only recreated if 'type' or 'difficulty' change.
+   */
+  const fetchExercise = useCallback(() => {
     axios
       .get(
         `http://localhost:3000/api/exercises?type=${type}&difficulty=${difficulty}`,
@@ -22,8 +26,9 @@ function App() {
       .catch((err) => {
         console.error("Error fetching exercise:", err);
       });
-  };
+  }, [type, difficulty]);
 
+  //Sends the user's answer to the server for validation.
   const validateAnswer = () => {
     axios
       .post("http://localhost:3000/api/validate", {
@@ -35,13 +40,13 @@ function App() {
 
   useEffect(() => {
     fetchExercise();
-  }, [type, difficulty]);
+  }, [fetchExercise]);
 
   return (
     <div style={{ padding: "2rem", fontFamily: "Arial" }}>
       <h1>DerivaLab</h1>
 
-      {/* SELECTORS */}
+      {/* Selectors */}
       <div>
         <label>Type: </label>
         <select value={type} onChange={(e) => setType(e.target.value)}>
