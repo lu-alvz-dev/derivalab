@@ -78,16 +78,6 @@ POST /api/validate
 
 ---
 
-## Pending Improvements
-
-- [ ] Add try/catch to all API requests (frontend)
-- [ ] Replace alert() with proper UI feedback
-- [ ] Handle server errors and network failures
-
-### Completed
-
-_(Empty by now)_
-
 ## Advanced Exercise System
 
 ### Supported Types
@@ -129,3 +119,53 @@ Response:
 "type": "polynomial",
 "difficulty": "easy"
 }
+
+---
+
+## Mathematical Validation System
+
+### Problem
+
+Current validation compares strings:
+"4x + 5" === "4x+5"
+
+This is unreliable and fails for equivalent expressions:
+
+- 4x + 5 !== 5 + 4x
+- x^2 !== x²
+
+### Solution
+
+Use a math parsing library to:
+
+- Normalize expressions
+- Simplify both expressions
+- Compare mathematically
+
+### Approach
+
+1. Receive userAnswer
+2. Normalize input (replace symbols like ² → ^2)
+3. Parse expressions using math library
+4. Simplify both expressions
+5. Compare results
+
+### Library
+
+mathjs will be used for:
+
+- parsing
+- simplifying
+- evaluating expressions
+
+---
+
+## Pending Improvements
+
+- [ ] Add try/catch to all API requests (frontend)
+- [ ] Replace alert() with proper UI feedback
+- [ ] Handle server errors and network failures
+
+### Completed
+
+_(Empty by now)_
