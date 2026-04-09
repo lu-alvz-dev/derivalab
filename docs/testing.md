@@ -1,7 +1,5 @@
 # Testing – DerivaLab
 
-## Day 1
-
 This document describes the manual testing performed during my journey creating Derivalab.
 
 ## Overview
@@ -84,7 +82,7 @@ The system is functional at a basic level, the backend API is operational, the f
 
 ---
 
-## Day 2 – Exercise Generation Testing
+## Exercise Generation Testing
 
 ### 1. Backend Endpoint Test
 
@@ -187,7 +185,7 @@ Full-stack integration working correctly
 
 ---
 
-## Day 3 – Answer Validation Testing
+## Answer Validation Testing
 
 ### 1. Backend Validation Test
 
@@ -268,3 +266,57 @@ Frontend → POST /api/validate → Backend → Response → UI
 Passed
 
 - Verified using Postman and browser
+
+---
+
+## Advanced Exercise System Testing
+
+### Backend
+
+Tested:
+
+- polynomial / easy
+- power / medium
+- trig / easy
+
+### API
+
+GET /api/exercises?type=polynomial&difficulty=easy
+Returns structured response with metadata
+
+![API Response](./images/backend-postman-v3.png)
+
+GET /api/exercises?type=power&difficulty=medium
+Returns structured response with metadata
+
+![API Response](./images/backend-postman-v2.png)
+
+GET /api/exercises?type=trig&difficulty=easy
+Returns structured response with metadata
+
+![API Response](./images/backend-postman-v4.png)
+
+### Frontend
+
+- User selects type
+- User selects difficulty
+- Exercise updates automatically
+
+Result:
+UI reacts correctly to user input
+
+![Frontend selects Trigonometric](./images/frontend-v4.png)
+
+![Frontend selects hard](./images/frontend-v5.png)
+
+![Frontend updaates automatically](./images/frontend-v6.png)
+
+### Integration
+
+- Frontend sends query params
+- Backend processes correctly
+
+Result:
+Full dynamic system working
+
+![Frontend dynamic system working](./images/frontend-v7.png)
