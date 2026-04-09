@@ -4,7 +4,7 @@ DerivaLab is a Full-Stack Micro-SaaS designed to help high school calculus teach
 
 ## Preview
 
-![App Preview](docs/images/frontend-v3a.png)
+![App Preview](docs/images/frontend-v7.png)
 
 ## Problem
 
