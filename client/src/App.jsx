@@ -79,7 +79,7 @@ function App() {
 
           <input
             type="text"
-            placeholder="Enter derivative..."
+            placeholder="Enter derivative (e.g. 4x + 5 or x^2)"
             value={userAnswer}
             onChange={(e) => setUserAnswer(e.target.value)}
           />
