@@ -320,3 +320,37 @@ Result:
 Full dynamic system working
 
 ![Frontend dynamic system working](./images/frontend-v7.png)
+
+---
+
+## Mathematical Validation Testing
+
+### Backend Validation
+
+Tested with:
+
+- equivalent expressions (4x + 5 vs 5 + 4x)
+- power notation (x² vs x^2)
+- incorrect answers
+
+Result:
+Mathematical comparison works correctly
+
+### Edge Cases
+
+Tested:
+
+- spaces
+- symbol variations
+- order of terms
+
+Result:
+Normalization handles variations correctly
+
+### Integration
+
+- Frontend sends answer
+- Backend validates using mathjs
+
+Result:
+Reliable validation achieved
