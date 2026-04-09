@@ -282,16 +282,19 @@ Tested:
 ### API
 
 GET /api/exercises?type=polynomial&difficulty=easy
+
 Returns structured response with metadata
 
 ![API Response](./images/backend-postman-v3.png)
 
 GET /api/exercises?type=power&difficulty=medium
+
 Returns structured response with metadata
 
 ![API Response](./images/backend-postman-v2.png)
 
 GET /api/exercises?type=trig&difficulty=easy
+
 Returns structured response with metadata
 
 ![API Response](./images/backend-postman-v4.png)
@@ -305,11 +308,17 @@ Returns structured response with metadata
 Result:
 UI reacts correctly to user input
 
+### Selects Trigonometric
+
 ![Frontend selects Trigonometric](./images/frontend-v4.png)
+
+### Selects hard
 
 ![Frontend selects hard](./images/frontend-v5.png)
 
-![Frontend updaates automatically](./images/frontend-v6.png)
+### Updates automatically
+
+![Frontend updates automatically](./images/frontend-v6.png)
 
 ### Integration
 
@@ -330,22 +339,19 @@ Full dynamic system working
 Tested with:
 
 - equivalent expressions (4x + 5 vs 5 + 4x)
+
+![Equivalent](./images/backend-postman-v5.png)
+
 - power notation (x² vs x^2)
+
+![Power notation](./images/backend-postman-v6.png)
+
 - incorrect answers
 
-Result:
-Mathematical comparison works correctly
-
-### Edge Cases
-
-Tested:
-
-- spaces
-- symbol variations
-- order of terms
+![Wrong answer](./images/backend-postman-v7.png)
 
 Result:
-Normalization handles variations correctly
+Mathematical comparison and normalization handles variations correctly
 
 ### Integration
 
