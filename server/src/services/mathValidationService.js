@@ -17,8 +17,8 @@ function compareExpressions(expr1, expr2) {
     const normalized1 = normalizeExpression(expr1);
     const normalized2 = normalizeExpression(expr2);
 
-    const simplified1 = math.simplify(normalized1);
-    const simplified2 = math.simplify(normalized2);
+    const simplified1 = math.simplify(normalized1).toString();
+    const simplified2 = math.simplify(normalized2).toString();
 
     return simplified1 === simplified2;
   } catch (error) {
