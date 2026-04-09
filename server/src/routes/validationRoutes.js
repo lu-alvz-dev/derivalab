@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
+const { compareExpressions } = require("../services/mathValidationService");
+
 router.post("/", (req, res) => {
   const { userAnswer, correctAnswer } = req.body;
 
-  const isCorrect =
-    userAnswer.trim().replace(/\s+/g, "") ===
-    correctAnswer.trim().replace(/\s+/g, "");
+  const isCorrect = compareExpressions(userAnswer, correctAnswer);
 
   res.json({ isCorrect });
 });
