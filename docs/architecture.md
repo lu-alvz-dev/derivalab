@@ -160,6 +160,49 @@ mathjs will be used for:
 
 ---
 
+## Feedback System (Extended Validation)
+
+### Objective
+
+Enhance existing mathematical validation by providing intelligent feedback based on user mistakes.
+
+### Current System
+
+- Uses mathjs to compare expressions mathematically
+- Returns: isCorrect (true/false)
+
+### New System
+
+- Uses existing validation result
+- If incorrect:
+  - Analyze structural differences
+  - Detect common calculus mistakes
+  - Generate contextual feedback
+
+### Flow
+
+1. User submits answer
+2. compareExpressions() validates mathematically
+3. IF correct → success message
+4. IF incorrect:
+   - analyzeError()
+   - detect mistake type
+   - return feedback
+
+### Error Types
+
+- Power rule error
+- Sign error
+- Missing coefficient
+- Missing chain rule
+- Incorrect simplification
+
+### Endpoint
+
+POST /api/feedback
+
+---
+
 ## Pending Improvements
 
 - [ ] Add try/catch to all API requests (frontend)
