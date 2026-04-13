@@ -16,6 +16,10 @@ const validationRoutes = require("./routes/validationRoutes");
 
 app.use("/api/validate", validationRoutes);
 
+const feedbackRoutes = require("./routes/feedbackRoutes");
+
+app.use("/api/feedback", feedbackRoutes);
+
 // Health check route
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Server is running" });
