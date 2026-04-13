@@ -16,8 +16,8 @@ function analyzeError(userAnswer, correctAnswer) {
     };
   }
 
-  const user = normalize();
-  const correct = normalize();
+  const user = normalize(userAnswer);
+  const correct = normalize(correctAnswer);
 
   //  Power rule error
   if (correct.match(/^\d+x/) && user.includes("x") && !user.match(/^\d+x/)) {
