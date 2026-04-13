@@ -1,4 +1,5 @@
 const { compareExpressions } = require("./mathValidationService");
+const { normalizeExpression } = require("../utils/mathUtils");
 
 // normalize for pattern detection only
 function normalize(expr) {
@@ -16,8 +17,8 @@ function analyzeError(userAnswer, correctAnswer) {
     };
   }
 
-  const user = normalize(userAnswer);
-  const correct = normalize(correctAnswer);
+  const user = normalizeExpression(userAnswer);
+  const correct = normalizeExpression(correctAnswer);
 
   //  Power rule error
   if (correct.match(/^\d+x/) && user.includes("x") && !user.match(/^\d+x/)) {

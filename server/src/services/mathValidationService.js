@@ -1,15 +1,7 @@
 const math = require("mathjs");
 
 //Normalize common math input variations
-function normalizeExpression(expr) {
-  if (!expr) return "";
-
-  return expr
-    .replace(/\s+/g, "") // remove spaces
-    .replace(/²/g, "^2") // x² → x^2
-    .replace(/³/g, "^3") // x³ → x^3
-    .replace(/–/g, "-"); // weird minus
-}
+const { normalizeExpression } = require("../utils/mathUtils");
 
 //Compare two expressions mathematically
 function compareExpressions(expr1, expr2) {
