@@ -9,6 +9,7 @@ function App() {
   // Filtros para la consulta a la API
   const [type, setType] = useState("polynomial");
   const [difficulty, setDifficulty] = useState("easy");
+  const [feedback, setFeedback] = useState("");
 
   /**
    * Fetches a new exercise from the backend. useCallback is used to stabilize the function reference, so useEffect won't enter an infinite loop when state changes, the function is only recreated if 'type' or 'difficulty' change.
@@ -31,11 +32,17 @@ function App() {
   //Sends the user's answer to the server for validation.
   const validateAnswer = () => {
     axios
-      .post("http://localhost:3000/api/validate", {
+      .post("http://localhost:3000/api/feedback", {
         userAnswer,
         correctAnswer: exercise.answer,
       })
-      .then((res) => setResult(res.data.isCorrect));
+      .then((res) => {
+        setResult(res.data.isCorrect);
+        setFeedback(res.data.feedback);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   useEffect(() => {
@@ -93,6 +100,17 @@ function App() {
           {result !== null && (
             <p style={{ fontWeight: "bold", color: result ? "green" : "red" }}>
               {result ? "Correct answer!!!" : "Try again"}
+            </p>
+          )}
+          {feedback && (
+            <p
+              style={{
+                marginTop: "1rem",
+                fontWeight: "bold",
+                color: result ? "green" : "orange",
+              }}
+            >
+              {feedback}
             </p>
           )}
         </>
