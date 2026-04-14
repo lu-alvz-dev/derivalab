@@ -49,6 +49,36 @@ function hasPartialSignError(userExpr, correctExpr) {
   }
 }
 
+//Validate numeric values
+function detectSignMismatch(userExpr, correctExpr) {
+  try {
+    // validate different x values
+    const testValues = [1, 2, 3, -1];
+
+    let signMismatchDetected = false;
+
+    for (let x of testValues) {
+      const scope = { x };
+
+      const correctVal = math.evaluate(correctExpr, scope);
+      const userVal = math.evaluate(userExpr, scope);
+
+      // validates absolute value and sign
+      if (
+        Math.abs(correctVal) === Math.abs(userVal) &&
+        correctVal !== userVal
+      ) {
+        signMismatchDetected = true;
+      }
+    }
+
+    return signMismatchDetected;
+  } catch {
+    return false;
+  }
+}
+
+//Error analysis
 function analyzeError(userAnswer, correctAnswer) {
   const isCorrect = compareExpressions(userAnswer, correctAnswer);
 
@@ -77,6 +107,16 @@ function analyzeError(userAnswer, correctAnswer) {
       errorType: "SIGN_ERROR",
       feedback:
         "One or more terms have incorrect signs. Check each term carefully.",
+    };
+  }
+
+  // SIGN error dynamic evaluatiopn with mathjs
+  if (detectSignMismatch(userAnswer, correctAnswer)) {
+    return {
+      isCorrect: false,
+      errorType: "SIGN_ERROR",
+      feedback:
+        "There is a sign mismatch in your result. Check the signs of each term carefully.",
     };
   }
 
