@@ -10,6 +10,7 @@ function App() {
   const [type, setType] = useState("polynomial");
   const [difficulty, setDifficulty] = useState("easy");
   const [feedback, setFeedback] = useState("");
+  const [errorType, setErrorType] = useState("");
 
   /**
    * Fetches a new exercise from the backend. useCallback is used to stabilize the function reference, so useEffect won't enter an infinite loop when state changes, the function is only recreated if 'type' or 'difficulty' change.
@@ -23,6 +24,8 @@ function App() {
         setExercise(res.data);
         setUserAnswer("");
         setResult(null);
+        setFeedback("");
+        setErrorType("");
       })
       .catch((err) => {
         console.error("Error fetching exercise:", err);
@@ -39,6 +42,7 @@ function App() {
       .then((res) => {
         setResult(res.data.isCorrect);
         setFeedback(res.data.feedback);
+        setErrorType(res.data.errorType);
       })
       .catch((err) => {
         console.error(err);
@@ -100,6 +104,11 @@ function App() {
           {result !== null && (
             <p style={{ fontWeight: "bold", color: result ? "green" : "red" }}>
               {result ? "Correct answer!!!" : "Try again"}
+            </p>
+          )}
+          {errorType && (
+            <p style={{ fontSize: "0.8rem", color: "#888" }}>
+              Error Type: {errorType}
             </p>
           )}
           {feedback && (
