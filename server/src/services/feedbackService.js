@@ -13,7 +13,8 @@ function analyzeError(userAnswer, correctAnswer) {
   if (isCorrect) {
     return {
       isCorrect: true,
-      feedback: "Correct answer!!",
+      errorType: null,
+      feedback: "",
     };
   }
 
