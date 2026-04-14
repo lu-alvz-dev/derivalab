@@ -1,25 +1,21 @@
 const { compareExpressions } = require("./mathValidationService");
 const { normalizeExpression } = require("../utils/mathUtils");
 const math = require("mathjs");
-// normalize for pattern detection only
-function normalize(expr) {
-  if (!expr) return "";
-  return expr.replace(/\s+/g, "");
-}
 
-// Validates sign expresion
+// Sign error
 function isSignError(userExpr, correctExpr) {
   try {
     const user = math.simplify(userExpr).toString();
     const negativeCorrect = math.simplify(`-1 * (${correctExpr})`).toString();
 
     return user === negativeCorrect;
-  } catch (err) {
+  } catch {
     return false;
   }
 }
 
-//Validates terms signs
+// Sign error by term
+
 function hasPartialSignError(userExpr, correctExpr) {
   try {
     const user = math.simplify(userExpr).toString();
@@ -37,7 +33,7 @@ function hasPartialSignError(userExpr, correctExpr) {
       const utAbs = ut.replace(/^[+-]/, "");
       const ctAbs = ct.replace(/^[+-]/, "");
 
-      // mismo término pero distinto signo
+      // Validates same term but differnt sign
       if (utAbs === ctAbs && ut !== ct) {
         return true;
       }
@@ -49,13 +45,11 @@ function hasPartialSignError(userExpr, correctExpr) {
   }
 }
 
-//Validate numeric values
+// Numeric sign error validation
+
 function detectSignMismatch(userExpr, correctExpr) {
   try {
-    // validate different x values
     const testValues = [1, 2, 3, -1];
-
-    let signMismatchDetected = false;
 
     for (let x of testValues) {
       const scope = { x };
@@ -63,34 +57,11 @@ function detectSignMismatch(userExpr, correctExpr) {
       const correctVal = math.evaluate(correctExpr, scope);
       const userVal = math.evaluate(userExpr, scope);
 
-      // validates absolute value and sign
+      // Same absolute value but different sign
       if (
         Math.abs(correctVal) === Math.abs(userVal) &&
         correctVal !== userVal
       ) {
-        signMismatchDetected = true;
-      }
-    }
-
-    return signMismatchDetected;
-  } catch {
-    return false;
-  }
-}
-
-//Validates power rule
-function isPowerRuleError(userExpr, correctExpr) {
-  try {
-    const testValues = [1, 2, 3];
-
-    for (let x of testValues) {
-      const scope = { x };
-
-      const correctVal = math.evaluate(correctExpr, scope);
-      const userVal = math.evaluate(userExpr, scope);
-
-      // Si el usuario no escala correctamente con la potencia
-      if (Math.abs(userVal) !== Math.abs(correctVal)) {
         return true;
       }
     }
@@ -101,10 +72,33 @@ function isPowerRuleError(userExpr, correctExpr) {
   }
 }
 
-//Error analysis
+// Coeficcient error
+function isCoefficientError(userExpr, correctExpr) {
+  try {
+    const testValues = [1, 2, 3];
+
+    for (let x of testValues) {
+      const scope = { x };
+
+      const correctVal = math.evaluate(correctExpr, scope);
+      const userVal = math.evaluate(userExpr, scope);
+
+      // Finds coefficient error
+      if (Math.abs(correctVal) !== Math.abs(userVal)) {
+        return true;
+      }
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+// Error analysis
 function analyzeError(userAnswer, correctAnswer) {
   const isCorrect = compareExpressions(userAnswer, correctAnswer);
-
+  //Answer is correct
   if (isCorrect) {
     return {
       isCorrect: true,
@@ -113,7 +107,7 @@ function analyzeError(userAnswer, correctAnswer) {
     };
   }
 
-  // expression sign error
+  // Find sign error
   if (isSignError(userAnswer, correctAnswer)) {
     return {
       isCorrect: false,
@@ -123,7 +117,7 @@ function analyzeError(userAnswer, correctAnswer) {
     };
   }
 
-  //  Sign error by term
+  // Sign error by term
   if (hasPartialSignError(userAnswer, correctAnswer)) {
     return {
       isCorrect: false,
@@ -133,7 +127,7 @@ function analyzeError(userAnswer, correctAnswer) {
     };
   }
 
-  // SIGN error dynamic evaluatiopn with mathjs
+  // Overall sign function mismatch via numeric evaluation
   if (detectSignMismatch(userAnswer, correctAnswer)) {
     return {
       isCorrect: false,
@@ -143,10 +137,20 @@ function analyzeError(userAnswer, correctAnswer) {
     };
   }
 
+  // Coefficient error
+  if (isCoefficientError(userAnswer, correctAnswer)) {
+    return {
+      isCorrect: false,
+      errorType: "COEFFICIENT_ERROR",
+      feedback:
+        "The coefficient is incorrect. Review how you multiply when applying derivative rules.",
+    };
+  }
+
+  // Trig error
   const user = normalizeExpression(userAnswer);
   const correct = normalizeExpression(correctAnswer);
 
-  //  Trig error
   if (
     (correct.includes("cos") && user.includes("sin")) ||
     (correct.includes("sin") && user.includes("cos"))
@@ -159,25 +163,17 @@ function analyzeError(userAnswer, correctAnswer) {
     };
   }
 
-  // Power error
-  if (isPowerRuleError(userAnswer, correctAnswer)) {
-    return {
-      isCorrect: false,
-      errorType: "POWER_RULE",
-      feedback: "It seems you may have misapplied the power rule.",
-    };
-  }
-
-  // Chain error
+  // Inner function structure error, missing "()""
   if (correct.includes("(") && correct.includes(")") && !user.includes("(")) {
     return {
       isCorrect: false,
-      errorType: "CHAIN_ERROR",
-      feedback: "It looks like you're missing the chain rule.",
+      errorType: "STRUCTURE_ERROR",
+      feedback:
+        'It seems you lost the inner function. Check how the expression is grouped, "()" is missing',
     };
   }
 
-  // Error by default
+  // Default error
   return {
     isCorrect: false,
     errorType: "UNKNOWN",
