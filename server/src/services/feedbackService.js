@@ -78,6 +78,29 @@ function detectSignMismatch(userExpr, correctExpr) {
   }
 }
 
+//Validates power rule
+function isPowerRuleError(userExpr, correctExpr) {
+  try {
+    const testValues = [1, 2, 3];
+
+    for (let x of testValues) {
+      const scope = { x };
+
+      const correctVal = math.evaluate(correctExpr, scope);
+      const userVal = math.evaluate(userExpr, scope);
+
+      // Si el usuario no escala correctamente con la potencia
+      if (Math.abs(userVal) !== Math.abs(correctVal)) {
+        return true;
+      }
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 //Error analysis
 function analyzeError(userAnswer, correctAnswer) {
   const isCorrect = compareExpressions(userAnswer, correctAnswer);
@@ -137,11 +160,11 @@ function analyzeError(userAnswer, correctAnswer) {
   }
 
   // Power error
-  if (correct.match(/^\d+x/) && user.includes("x") && !user.match(/^\d+x/)) {
+  if (isPowerRuleError(userAnswer, correctAnswer)) {
     return {
       isCorrect: false,
       errorType: "POWER_RULE",
-      feedback: "It seems you forgot to multiply by the exponent.",
+      feedback: "It seems you may have misapplied the power rule.",
     };
   }
 
