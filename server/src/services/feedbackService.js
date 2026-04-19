@@ -95,6 +95,16 @@ function isCoefficientError(userExpr, correctExpr) {
   }
 }
 
+//Format error
+function isMalformedExpression(expr) {
+  try {
+    math.parse(expr);
+    return false;
+  } catch {
+    return true;
+  }
+}
+
 // Exponent mismatch in polynomial terms
 function isExponentError(userExpr, correctExpr) {
   try {
@@ -168,6 +178,16 @@ function analyzeError(userAnswer, correctAnswer) {
     };
   }
 
+  // Format error
+  if (isMalformedExpression(userAnswer)) {
+    return {
+      isCorrect: false,
+      errorType: "FORMAT_ERROR",
+      feedback:
+        "The expression format is invalid. Check the syntax of your derivative.",
+    };
+  }
+
   // Exponent error
   if (isExponentError(userAnswer, correctAnswer)) {
     return {
@@ -178,8 +198,11 @@ function analyzeError(userAnswer, correctAnswer) {
     };
   }
 
-  // Coefficient error
-  if (isCoefficientError(userAnswer, correctAnswer)) {
+  // Coefficient error (only if exponent structure is correct)
+  if (
+    !isExponentError(userAnswer, correctAnswer) &&
+    isCoefficientError(userAnswer, correctAnswer)
+  ) {
     return {
       isCorrect: false,
       errorType: "COEFFICIENT_ERROR",
