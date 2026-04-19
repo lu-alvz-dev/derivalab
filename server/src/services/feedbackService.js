@@ -49,6 +49,25 @@ function hasPartialSignError(userExpr, correctExpr) {
 
 function detectSignMismatch(userExpr, correctExpr) {
   try {
+    const user = normalizeExpression(userExpr);
+    const correct = normalizeExpression(correctExpr);
+
+    // Extract exponents first
+    const exponentPattern = /x(?:\^([0-9]+))?/g;
+
+    const userExponents = [...user.matchAll(exponentPattern)].map(
+      (m) => m[1] || "1",
+    );
+
+    const correctExponents = [...correct.matchAll(exponentPattern)].map(
+      (m) => m[1] || "1",
+    );
+
+    // If exponents differ, this is NOT a sign error
+    if (JSON.stringify(userExponents) !== JSON.stringify(correctExponents)) {
+      return false;
+    }
+
     const testValues = [1, 2, 3, -1];
 
     for (let x of testValues) {
@@ -57,7 +76,7 @@ function detectSignMismatch(userExpr, correctExpr) {
       const correctVal = math.evaluate(correctExpr, scope);
       const userVal = math.evaluate(userExpr, scope);
 
-      // Same absolute value but different sign
+      // Same magnitude but opposite sign
       if (
         Math.abs(correctVal) === Math.abs(userVal) &&
         correctVal !== userVal
