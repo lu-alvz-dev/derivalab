@@ -72,19 +72,31 @@ function detectSignMismatch(userExpr, correctExpr) {
   }
 }
 
-// Coeficcient error
+// Coefficient error by polynomial term
 function isCoefficientError(userExpr, correctExpr) {
   try {
-    const testValues = [1, 2, 3];
+    const user = normalizeExpression(userExpr);
+    const correct = normalizeExpression(correctExpr);
 
-    for (let x of testValues) {
-      const scope = { x };
+    const termPattern = /([+-]?\d*)x(?:\^\d+)?|([+-]?\d+)/g;
 
-      const correctVal = math.evaluate(correctExpr, scope);
-      const userVal = math.evaluate(userExpr, scope);
+    const userTerms = [...user.matchAll(termPattern)].map((m) => m[0]);
+    const correctTerms = [...correct.matchAll(termPattern)].map((m) => m[0]);
 
-      // Finds coefficient error
-      if (Math.abs(correctVal) !== Math.abs(userVal)) {
+    if (userTerms.length !== correctTerms.length) return false;
+
+    for (let i = 0; i < userTerms.length; i++) {
+      const u = userTerms[i];
+      const c = correctTerms[i];
+
+      const uCoeff = parseInt(u.match(/[+-]?\d+/)?.[0] || "1");
+      const cCoeff = parseInt(c.match(/[+-]?\d+/)?.[0] || "1");
+
+      const uPower = u.includes("^") ? u.split("^")[1] : "";
+      const cPower = c.includes("^") ? c.split("^")[1] : "";
+
+      // same exponent but different coefficient
+      if (uPower === cPower && uCoeff !== cCoeff) {
         return true;
       }
     }
