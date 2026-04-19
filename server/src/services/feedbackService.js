@@ -73,37 +73,40 @@ function detectSignMismatch(userExpr, correctExpr) {
 }
 
 // Coefficient error by polynomial term
-function isCoefficientError(userExpr, correctExpr) {
+function detectCoefficientErrorType(userExpr, correctExpr) {
   try {
     const user = normalizeExpression(userExpr);
     const correct = normalizeExpression(correctExpr);
 
-    const termPattern = /([+-]?\d*)x(?:\^\d+)?|([+-]?\d+)/g;
+    const termPattern = /([+-]?\d*)x(?:\^(\d+))?|([+-]?\d+)/g;
 
-    const userTerms = [...user.matchAll(termPattern)].map((m) => m[0]);
-    const correctTerms = [...correct.matchAll(termPattern)].map((m) => m[0]);
+    const userTerms = [...user.matchAll(termPattern)];
+    const correctTerms = [...correct.matchAll(termPattern)];
 
-    if (userTerms.length !== correctTerms.length) return false;
+    if (userTerms.length !== correctTerms.length) return null;
 
     for (let i = 0; i < userTerms.length; i++) {
-      const u = userTerms[i];
-      const c = correctTerms[i];
+      const uTerm = userTerms[i][0];
+      const cTerm = correctTerms[i][0];
 
-      const uCoeff = parseInt(u.match(/[+-]?\d+/)?.[0] || "1");
-      const cCoeff = parseInt(c.match(/[+-]?\d+/)?.[0] || "1");
+      const uCoeff = parseInt(uTerm.match(/^[+-]?\d+/)?.[0] || "1");
+      const cCoeff = parseInt(cTerm.match(/^[+-]?\d+/)?.[0] || "1");
 
-      const uPower = u.includes("^") ? u.split("^")[1] : "";
-      const cPower = c.includes("^") ? c.split("^")[1] : "";
+      const uPower = uTerm.includes("^") ? uTerm.split("^")[1] : null;
+      const cPower = cTerm.includes("^") ? cTerm.split("^")[1] : null;
 
-      // same exponent but different coefficient
-      if (uPower === cPower && uCoeff !== cCoeff) {
-        return true;
+      if (uCoeff !== cCoeff) {
+        if (cPower) {
+          return "POWER_COEFFICIENT_ERROR";
+        } else {
+          return "LINEAR_TERM_ERROR";
+        }
       }
     }
 
-    return false;
+    return null;
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -211,16 +214,29 @@ function analyzeError(userAnswer, correctAnswer) {
   }
 
   // Coefficient error (only if exponent structure is correct)
-  if (
-    !isExponentError(userAnswer, correctAnswer) &&
-    isCoefficientError(userAnswer, correctAnswer)
-  ) {
-    return {
-      isCorrect: false,
-      errorType: "COEFFICIENT_ERROR",
-      feedback:
-        "The coefficient is incorrect. Review how you multiply when applying derivative rules.",
-    };
+  const coefficientErrorType = detectCoefficientErrorType(
+    userAnswer,
+    correctAnswer,
+  );
+
+  if (!isExponentError(userAnswer, correctAnswer) && coefficientErrorType) {
+    if (coefficientErrorType === "POWER_COEFFICIENT_ERROR") {
+      return {
+        isCorrect: false,
+        errorType: "COEFFICIENT_ERROR",
+        feedback:
+          "The coefficient is incorrect. Review how you multiply when applying the power rule.",
+      };
+    }
+
+    if (coefficientErrorType === "LINEAR_TERM_ERROR") {
+      return {
+        isCorrect: false,
+        errorType: "LINEAR_TERM_ERROR",
+        feedback:
+          "The derivative of the linear term is incorrect. Remember: d/dx(ax)=a.",
+      };
+    }
   }
 
   // Trig error
