@@ -95,6 +95,37 @@ function isCoefficientError(userExpr, correctExpr) {
   }
 }
 
+// Exponent mismatch in polynomial terms
+function isExponentError(userExpr, correctExpr) {
+  try {
+    const user = normalizeExpression(userExpr);
+    const correct = normalizeExpression(correctExpr);
+
+    // Detect x^n and plain x as exponent 1
+    const exponentPattern = /x(?:\^([0-9]+))?/g;
+
+    const userExponents = [...user.matchAll(exponentPattern)].map(
+      (m) => m[1] || "1",
+    );
+
+    const correctExponents = [...correct.matchAll(exponentPattern)].map(
+      (m) => m[1] || "1",
+    );
+
+    if (userExponents.length !== correctExponents.length) return false;
+
+    for (let i = 0; i < userExponents.length; i++) {
+      if (userExponents[i] !== correctExponents[i]) {
+        return true;
+      }
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 // Error analysis
 function analyzeError(userAnswer, correctAnswer) {
   const isCorrect = compareExpressions(userAnswer, correctAnswer);
@@ -134,6 +165,16 @@ function analyzeError(userAnswer, correctAnswer) {
       errorType: "SIGN_ERROR",
       feedback:
         "There is a sign mismatch in your result. Check the signs of each term carefully.",
+    };
+  }
+
+  // Exponent error
+  if (isExponentError(userAnswer, correctAnswer)) {
+    return {
+      isCorrect: false,
+      errorType: "EXPONENT_ERROR",
+      feedback:
+        "The exponent seems incorrect. Review how the exponent decreases when applying the power rule.",
     };
   }
 
