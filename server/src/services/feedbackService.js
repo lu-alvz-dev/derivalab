@@ -170,6 +170,12 @@ function isExponentError(userExpr, correctExpr) {
   }
 }
 
+// Detect if expression is trigonometric
+function isTrigExpression(expr) {
+  const normalized = normalizeExpression(expr);
+  return /sin|cos|tan/.test(normalized);
+}
+
 // Error analysis
 function analyzeError(userAnswer, correctAnswer) {
   const isCorrect = compareExpressions(userAnswer, correctAnswer);
@@ -232,6 +238,34 @@ function analyzeError(userAnswer, correctAnswer) {
     };
   }
 
+  // Coefficient error only for polynomial/power expressions
+  if (!isTrigExpression(correctAnswer)) {
+    const coefficientErrorType = detectCoefficientErrorType(
+      userAnswer,
+      correctAnswer,
+    );
+
+    if (!isExponentError(userAnswer, correctAnswer) && coefficientErrorType) {
+      if (coefficientErrorType === "POWER_COEFFICIENT_ERROR") {
+        return {
+          isCorrect: false,
+          errorType: "COEFFICIENT_ERROR",
+          feedback:
+            "The coefficient is incorrect. Review how you multiply when applying the power rule.",
+        };
+      }
+
+      if (coefficientErrorType === "LINEAR_TERM_ERROR") {
+        return {
+          isCorrect: false,
+          errorType: "LINEAR_TERM_ERROR",
+          feedback:
+            "The derivative of the linear term is incorrect. Remember: d/dx(ax)=a.",
+        };
+      }
+    }
+  }
+
   // Trig error
   const user = normalizeExpression(userAnswer);
   const correct = normalizeExpression(correctAnswer);
@@ -246,32 +280,6 @@ function analyzeError(userAnswer, correctAnswer) {
       feedback:
         "Check your trigonometric derivatives. Remember: d/dx(sin(x)) = cos(x) and d/dx(cos(x)) = -sin(x).",
     };
-  }
-
-  // Coefficient error (only if exponent structure is correct)
-  const coefficientErrorType = detectCoefficientErrorType(
-    userAnswer,
-    correctAnswer,
-  );
-
-  if (!isExponentError(userAnswer, correctAnswer) && coefficientErrorType) {
-    if (coefficientErrorType === "POWER_COEFFICIENT_ERROR") {
-      return {
-        isCorrect: false,
-        errorType: "COEFFICIENT_ERROR",
-        feedback:
-          "The coefficient is incorrect. Review how you multiply when applying the power rule.",
-      };
-    }
-
-    if (coefficientErrorType === "LINEAR_TERM_ERROR") {
-      return {
-        isCorrect: false,
-        errorType: "LINEAR_TERM_ERROR",
-        feedback:
-          "The derivative of the linear term is incorrect. Remember: d/dx(ax)=a.",
-      };
-    }
   }
 
   // Inner function structure error, missing "()""
