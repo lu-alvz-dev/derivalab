@@ -232,6 +232,22 @@ function analyzeError(userAnswer, correctAnswer) {
     };
   }
 
+  // Trig error
+  const user = normalizeExpression(userAnswer);
+  const correct = normalizeExpression(correctAnswer);
+
+  if (
+    (correct.includes("cos") && user.includes("sin")) ||
+    (correct.includes("sin") && user.includes("cos"))
+  ) {
+    return {
+      isCorrect: false,
+      errorType: "TRIG_ERROR",
+      feedback:
+        "Check your trigonometric derivatives. Remember: d/dx(sin(x)) = cos(x) and d/dx(cos(x)) = -sin(x).",
+    };
+  }
+
   // Coefficient error (only if exponent structure is correct)
   const coefficientErrorType = detectCoefficientErrorType(
     userAnswer,
@@ -256,22 +272,6 @@ function analyzeError(userAnswer, correctAnswer) {
           "The derivative of the linear term is incorrect. Remember: d/dx(ax)=a.",
       };
     }
-  }
-
-  // Trig error
-  const user = normalizeExpression(userAnswer);
-  const correct = normalizeExpression(correctAnswer);
-
-  if (
-    (correct.includes("cos") && user.includes("sin")) ||
-    (correct.includes("sin") && user.includes("cos"))
-  ) {
-    return {
-      isCorrect: false,
-      errorType: "TRIG_ERROR",
-      feedback:
-        "Check your trigonometric derivatives. Remember: d/dx(sin(x)) = cos(x) and d/dx(cos(x)) = -sin(x).",
-    };
   }
 
   // Inner function structure error, missing "()""
