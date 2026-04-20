@@ -2,11 +2,18 @@ const { compareExpressions } = require("./mathValidationService");
 const { normalizeExpression } = require("../utils/mathUtils");
 const math = require("mathjs");
 
-// Sign error
-function isSignError(userExpr, correctExpr) {
+/**
+ * Detects if the entire expression has inverted sign
+ * Example:
+ * correct:  2x + 3
+ * user:    -2x - 3
+ */
+function isGlobalSignError(userExpr, correctExpr) {
   try {
-    const user = math.simplify(userExpr).toString();
-    const negativeCorrect = math.simplify(`-1 * (${correctExpr})`).toString();
+    const user = math.simplify(normalizeExpression(userExpr)).toString();
+    const negativeCorrect = math
+      .simplify(`-1 * (${normalizeExpression(correctExpr)})`)
+      .toString();
 
     return user === negativeCorrect;
   } catch {
@@ -14,12 +21,16 @@ function isSignError(userExpr, correctExpr) {
   }
 }
 
-// Sign error by term
-
-function hasPartialSignError(userExpr, correctExpr) {
+/**
+ * Detects sign errors by term
+ * Example:
+ * correct: 2x^2 + 3
+ * user:    2x^2 - 3
+ */
+function hasTermSignError(userExpr, correctExpr) {
   try {
-    const user = math.simplify(userExpr).toString();
-    const correct = math.simplify(correctExpr).toString();
+    const user = math.simplify(normalizeExpression(userExpr)).toString();
+    const correct = math.simplify(normalizeExpression(correctExpr)).toString();
 
     const uTerms = user.replace(/\s+/g, "").split(/(?=[+-])/);
     const cTerms = correct.replace(/\s+/g, "").split(/(?=[+-])/);
@@ -27,14 +38,10 @@ function hasPartialSignError(userExpr, correctExpr) {
     if (uTerms.length !== cTerms.length) return false;
 
     for (let i = 0; i < uTerms.length; i++) {
-      const ut = uTerms[i];
-      const ct = cTerms[i];
+      const uNoSign = uTerms[i].replace(/^[+-]/, "");
+      const cNoSign = cTerms[i].replace(/^[+-]/, "");
 
-      const utAbs = ut.replace(/^[+-]/, "");
-      const ctAbs = ct.replace(/^[+-]/, "");
-
-      // Validates same term but differnt sign
-      if (utAbs === ctAbs && ut !== ct) {
+      if (uNoSign === cNoSign && uTerms[i] !== cTerms[i]) {
         return true;
       }
     }
@@ -45,42 +52,55 @@ function hasPartialSignError(userExpr, correctExpr) {
   }
 }
 
-// Numeric sign error validation
-
-function detectSignMismatch(userExpr, correctExpr) {
+/**
+ * Detects exponent mismatch
+ */
+function hasExponentError(userExpr, correctExpr) {
   try {
     const user = normalizeExpression(userExpr);
     const correct = normalizeExpression(correctExpr);
 
-    // Extract exponents first
-    const exponentPattern = /x(?:\^([0-9]+))?/g;
+    const exponentPattern = /x(?:\^(\d+))?/g;
 
-    const userExponents = [...user.matchAll(exponentPattern)].map(
+    const uExponents = [...user.matchAll(exponentPattern)].map(
       (m) => m[1] || "1",
     );
 
-    const correctExponents = [...correct.matchAll(exponentPattern)].map(
+    const cExponents = [...correct.matchAll(exponentPattern)].map(
       (m) => m[1] || "1",
     );
 
-    // If exponents differ, this is NOT a sign error
-    if (JSON.stringify(userExponents) !== JSON.stringify(correctExponents)) {
-      return false;
-    }
+    if (uExponents.length !== cExponents.length) return false;
 
-    const testValues = [1, 2, 3, -1];
+    return uExponents.some((exp, i) => exp !== cExponents[i]);
+  } catch {
+    return false;
+  }
+}
 
-    for (let x of testValues) {
-      const scope = { x };
+/**
+ * Detects coefficient mismatch while exponent matches
+ */
+function hasCoefficientError(userExpr, correctExpr) {
+  try {
+    const user = normalizeExpression(userExpr);
+    const correct = normalizeExpression(correctExpr);
 
-      const correctVal = math.evaluate(correctExpr, scope);
-      const userVal = math.evaluate(userExpr, scope);
+    const termPattern = /([+-]?\d*)x(?:\^\d+)?|([+-]?\d+)/g;
 
-      // Same magnitude but opposite sign
-      if (
-        Math.abs(correctVal) === Math.abs(userVal) &&
-        correctVal !== userVal
-      ) {
+    const uTerms = [...user.matchAll(termPattern)].map((m) => m[0]);
+    const cTerms = [...correct.matchAll(termPattern)].map((m) => m[0]);
+
+    if (uTerms.length !== cTerms.length) return false;
+
+    for (let i = 0; i < uTerms.length; i++) {
+      const uCoeff = parseInt(uTerms[i].match(/^[+-]?\d+/)?.[0] || "1");
+      const cCoeff = parseInt(cTerms[i].match(/^[+-]?\d+/)?.[0] || "1");
+
+      const uExp = uTerms[i].includes("^") ? uTerms[i].split("^")[1] : "1";
+      const cExp = cTerms[i].includes("^") ? cTerms[i].split("^")[1] : "1";
+
+      if (uExp === cExp && uCoeff !== cCoeff) {
         return true;
       }
     }
@@ -91,95 +111,139 @@ function detectSignMismatch(userExpr, correctExpr) {
   }
 }
 
-// Coefficient error by polynomial term
-function detectCoefficientErrorType(userExpr, correctExpr) {
-  try {
-    const user = normalizeExpression(userExpr);
-    const correct = normalizeExpression(correctExpr);
+/**
+ * Detects wrong trig function:
+ * sin instead of cos, or cos instead of sin
+ */
+function hasTrigFunctionError(userExpr, correctExpr) {
+  const user = normalizeExpression(userExpr);
+  const correct = normalizeExpression(correctExpr);
 
-    const termPattern = /([+-]?\d*)x(?:\^(\d+))?|([+-]?\d+)/g;
-
-    const userTerms = [...user.matchAll(termPattern)];
-    const correctTerms = [...correct.matchAll(termPattern)];
-
-    if (userTerms.length !== correctTerms.length) return null;
-
-    for (let i = 0; i < userTerms.length; i++) {
-      const uTerm = userTerms[i][0];
-      const cTerm = correctTerms[i][0];
-
-      const uCoeff = parseInt(uTerm.match(/^[+-]?\d+/)?.[0] || "1");
-      const cCoeff = parseInt(cTerm.match(/^[+-]?\d+/)?.[0] || "1");
-
-      const uPower = uTerm.includes("^") ? uTerm.split("^")[1] : null;
-      const cPower = cTerm.includes("^") ? cTerm.split("^")[1] : null;
-
-      if (uCoeff !== cCoeff) {
-        if (cPower) {
-          return "POWER_COEFFICIENT_ERROR";
-        } else {
-          return "LINEAR_TERM_ERROR";
-        }
-      }
-    }
-
-    return null;
-  } catch {
-    return null;
-  }
+  return (
+    (correct.includes("cos") && user.includes("sin")) ||
+    (correct.includes("sin") && user.includes("cos"))
+  );
 }
 
-//Format error
-function isMalformedExpression(expr) {
+/**
+ * Detects wrong inner argument:
+ * cos(4x) vs cos(5x)
+ */
+function hasInnerArgumentError(userExpr, correctExpr) {
   try {
-    math.parse(expr);
-    return false;
-  } catch {
-    return true;
-  }
-}
+    const trigPattern = /(sin|cos)\(([^)]+)\)/;
 
-// Exponent mismatch in polynomial terms
-function isExponentError(userExpr, correctExpr) {
-  try {
-    const user = normalizeExpression(userExpr);
-    const correct = normalizeExpression(correctExpr);
+    const userMatch = normalizeExpression(userExpr).match(trigPattern);
+    const correctMatch = normalizeExpression(correctExpr).match(trigPattern);
 
-    // Detect x^n and plain x as exponent 1
-    const exponentPattern = /x(?:\^([0-9]+))?/g;
+    if (!userMatch || !correctMatch) return false;
 
-    const userExponents = [...user.matchAll(exponentPattern)].map(
-      (m) => m[1] || "1",
-    );
-
-    const correctExponents = [...correct.matchAll(exponentPattern)].map(
-      (m) => m[1] || "1",
-    );
-
-    if (userExponents.length !== correctExponents.length) return false;
-
-    for (let i = 0; i < userExponents.length; i++) {
-      if (userExponents[i] !== correctExponents[i]) {
-        return true;
-      }
-    }
-
-    return false;
+    return userMatch[2] !== correctMatch[2];
   } catch {
     return false;
   }
 }
 
-// Detect if expression is trigonometric
-function isTrigExpression(expr) {
-  const normalized = normalizeExpression(expr);
-  return /sin|cos|tan/.test(normalized);
+/**
+ * POLYNOMIAL ERROR ANALYSIS
+ */
+function analyzePolynomialError(userAnswer, correctAnswer) {
+  if (isGlobalSignError(userAnswer, correctAnswer)) {
+    return {
+      isCorrect: false,
+      errorType: "SIGN_ERROR",
+      feedback: "All signs are inverted in your result.",
+    };
+  }
+
+  if (hasTermSignError(userAnswer, correctAnswer)) {
+    return {
+      isCorrect: false,
+      errorType: "SIGN_ERROR",
+      feedback: "One or more terms have incorrect signs.",
+    };
+  }
+
+  if (hasExponentError(userAnswer, correctAnswer)) {
+    return {
+      isCorrect: false,
+      errorType: "EXPONENT_ERROR",
+      feedback: "The exponent is incorrect. Review the power rule.",
+    };
+  }
+
+  if (hasCoefficientError(userAnswer, correctAnswer)) {
+    return {
+      isCorrect: false,
+      errorType: "COEFFICIENT_ERROR",
+      feedback: "The coefficient is incorrect. Review your multiplication.",
+    };
+  }
+
+  return {
+    isCorrect: false,
+    errorType: "UNKNOWN",
+    feedback: "The answer is incorrect. Review your derivative steps.",
+  };
 }
 
-// Error analysis
-function analyzeError(userAnswer, correctAnswer) {
+/**
+ * POWER ERROR ANALYSIS
+ */
+function analyzePowerError(userAnswer, correctAnswer) {
+  return analyzePolynomialError(userAnswer, correctAnswer);
+}
+
+/**
+ * TRIG ERROR ANALYSIS
+ */
+function analyzeTrigError(userAnswer, correctAnswer) {
+  if (isGlobalSignError(userAnswer, correctAnswer)) {
+    return {
+      isCorrect: false,
+      errorType: "SIGN_ERROR",
+      feedback: "The sign of the derivative is incorrect.",
+    };
+  }
+
+  if (hasTrigFunctionError(userAnswer, correctAnswer)) {
+    return {
+      isCorrect: false,
+      errorType: "TRIG_FUNCTION_ERROR",
+      feedback: "The trigonometric derivative function is incorrect.",
+    };
+  }
+
+  if (hasInnerArgumentError(userAnswer, correctAnswer)) {
+    return {
+      isCorrect: false,
+      errorType: "INNER_ARGUMENT_ERROR",
+      feedback:
+        "The inner argument of the trigonometric function is incorrect.",
+    };
+  }
+
+  if (hasCoefficientError(userAnswer, correctAnswer)) {
+    return {
+      isCorrect: false,
+      errorType: "COEFFICIENT_ERROR",
+      feedback: "The coefficient in the derivative is incorrect.",
+    };
+  }
+
+  return {
+    isCorrect: false,
+    errorType: "UNKNOWN",
+    feedback: "The derivative is incorrect. Review the trigonometric rule.",
+  };
+}
+
+/**
+ * MAIN ENTRY
+ */
+function analyzeError(userAnswer, correctAnswer, exerciseType) {
   const isCorrect = compareExpressions(userAnswer, correctAnswer);
-  //Answer is correct
+
   if (isCorrect) {
     return {
       isCorrect: true,
@@ -188,117 +252,23 @@ function analyzeError(userAnswer, correctAnswer) {
     };
   }
 
-  // Find sign error
-  if (isSignError(userAnswer, correctAnswer)) {
-    return {
-      isCorrect: false,
-      errorType: "SIGN_ERROR",
-      feedback:
-        "Your result has the correct structure but all signs are inverted.",
-    };
+  switch (exerciseType) {
+    case "polynomial":
+      return analyzePolynomialError(userAnswer, correctAnswer);
+
+    case "power":
+      return analyzePowerError(userAnswer, correctAnswer);
+
+    case "trig":
+      return analyzeTrigError(userAnswer, correctAnswer);
+
+    default:
+      return {
+        isCorrect: false,
+        errorType: "UNKNOWN",
+        feedback: "Unknown exercise type.",
+      };
   }
-
-  // Sign error by term
-  if (hasPartialSignError(userAnswer, correctAnswer)) {
-    return {
-      isCorrect: false,
-      errorType: "SIGN_ERROR",
-      feedback:
-        "One or more terms have incorrect signs. Check each term carefully.",
-    };
-  }
-
-  // Overall sign function mismatch via numeric evaluation
-  if (detectSignMismatch(userAnswer, correctAnswer)) {
-    return {
-      isCorrect: false,
-      errorType: "SIGN_ERROR",
-      feedback:
-        "There is a sign mismatch in your result. Check the signs of each term carefully.",
-    };
-  }
-
-  // Format error
-  if (isMalformedExpression(userAnswer)) {
-    return {
-      isCorrect: false,
-      errorType: "FORMAT_ERROR",
-      feedback:
-        "The expression format is invalid. Check the syntax of your derivative.",
-    };
-  }
-
-  // Exponent error
-  if (isExponentError(userAnswer, correctAnswer)) {
-    return {
-      isCorrect: false,
-      errorType: "EXPONENT_ERROR",
-      feedback:
-        "The exponent seems incorrect. Review how the exponent decreases when applying the power rule.",
-    };
-  }
-
-  // Coefficient error only for polynomial/power expressions
-  if (!isTrigExpression(correctAnswer)) {
-    const coefficientErrorType = detectCoefficientErrorType(
-      userAnswer,
-      correctAnswer,
-    );
-
-    if (!isExponentError(userAnswer, correctAnswer) && coefficientErrorType) {
-      if (coefficientErrorType === "POWER_COEFFICIENT_ERROR") {
-        return {
-          isCorrect: false,
-          errorType: "COEFFICIENT_ERROR",
-          feedback:
-            "The coefficient is incorrect. Review how you multiply when applying the power rule.",
-        };
-      }
-
-      if (coefficientErrorType === "LINEAR_TERM_ERROR") {
-        return {
-          isCorrect: false,
-          errorType: "LINEAR_TERM_ERROR",
-          feedback:
-            "The derivative of the linear term is incorrect. Remember: d/dx(ax)=a.",
-        };
-      }
-    }
-  }
-
-  // Trig error
-  const user = normalizeExpression(userAnswer);
-  const correct = normalizeExpression(correctAnswer);
-
-  if (
-    (correct.includes("cos") && user.includes("sin")) ||
-    (correct.includes("sin") && user.includes("cos"))
-  ) {
-    return {
-      isCorrect: false,
-      errorType: "TRIG_ERROR",
-      feedback:
-        "Check your trigonometric derivatives. Remember: d/dx(sin(x)) = cos(x) and d/dx(cos(x)) = -sin(x).",
-    };
-  }
-
-  // Inner function structure error, missing "()""
-  if (correct.includes("(") && correct.includes(")") && !user.includes("(")) {
-    return {
-      isCorrect: false,
-      errorType: "STRUCTURE_ERROR",
-      feedback:
-        'It seems you lost the inner function. Check how the expression is grouped, "()" is missing',
-    };
-  }
-
-  // Default error
-  return {
-    isCorrect: false,
-    errorType: "UNKNOWN",
-    feedback:
-      "Not quite right. Try simplifying your result and applying derivative rules step by step.",
-  };
 }
 
 module.exports = {

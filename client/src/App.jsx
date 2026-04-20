@@ -38,6 +38,7 @@ function App() {
       .post("http://localhost:3000/api/feedback", {
         userAnswer,
         correctAnswer: exercise.answer,
+        exerciseType: exercise.type,
       })
       .then((res) => {
         setResult(res.data.isCorrect);

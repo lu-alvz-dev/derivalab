@@ -3,11 +3,10 @@ const router = express.Router();
 
 const { analyzeError } = require("../services/feedbackService");
 
-// POST /api/feedback
 router.post("/", (req, res) => {
-  const { userAnswer, correctAnswer } = req.body;
+  const { userAnswer, correctAnswer, exerciseType } = req.body;
 
-  const result = analyzeError(userAnswer, correctAnswer);
+  const result = analyzeError(userAnswer, correctAnswer, exerciseType);
 
   res.json(result);
 });
