@@ -4,31 +4,64 @@ const math = require("mathjs");
 
 // Extract polynomial terms dynamically. Example: 20x^4+6 -> [{coeff:20,power:4},{coeff:6,power:0}]
 function extractTerms(expr) {
-  const normalized = normalizeExpression(expr);
+  try {
+    const normalized = normalizeExpression(expr);
+    const node = math.parse(normalized);
 
-  const terms = normalized.match(/[+-]?[^+-]+/g) || [];
+    const terms = [];
 
-  return terms.map((term) => {
-    const match = term.match(/^([+-]?\d*)\*?x(?:\^(\d+))?$/);
+    function walk(n, sign = 1) {
+      if (n.type === "OperatorNode" && n.op === "+") {
+        walk(n.args[0], sign);
+        walk(n.args[1], sign);
+        return;
+      }
 
-    if (match) {
-      let coeff = match[1];
+      if (n.type === "OperatorNode" && n.op === "-") {
+        walk(n.args[0], sign);
+        walk(n.args[1], -sign);
+        return;
+      }
 
-      if (coeff === "" || coeff === "+") coeff = 1;
-      else if (coeff === "-") coeff = -1;
-      else coeff = Number(coeff);
+      let coeff = sign;
+      let power = 0;
 
-      return {
-        coeff,
-        power: match[2] ? Number(match[2]) : 1,
-      };
+      if (n.type === "OperatorNode" && n.op === "*") {
+        n.args.forEach((arg) => {
+          if (arg.type === "ConstantNode") {
+            coeff *= Number(arg.value);
+          }
+
+          if (arg.type === "SymbolNode" && arg.name === "x") {
+            power = 1;
+          }
+
+          if (arg.type === "OperatorNode" && arg.op === "^") {
+            if (arg.args[0].type === "SymbolNode" && arg.args[0].name === "x") {
+              power = Number(arg.args[1].value);
+            }
+          }
+        });
+      } else if (n.type === "SymbolNode" && n.name === "x") {
+        coeff = sign;
+        power = 1;
+      } else if (n.type === "OperatorNode" && n.op === "^") {
+        coeff = sign;
+        power = Number(n.args[1].value);
+      } else if (n.type === "ConstantNode") {
+        coeff = sign * Number(n.value);
+        power = 0;
+      }
+
+      terms.push({ coeff, power });
     }
 
-    return {
-      coeff: Number(term),
-      power: 0,
-    };
-  });
+    walk(node);
+
+    return terms;
+  } catch {
+    return [];
+  }
 }
 
 // Analyze polynomial term evidence
