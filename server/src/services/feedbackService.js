@@ -126,10 +126,19 @@ function analyzeTrigEvidence(userExpr, correctExpr) {
   const trigError = userFunc !== correctFunc;
   const innerArgumentError = userInner !== correctInner;
 
-  const userOuter = user.replace(trigPattern, "");
-  const correctOuter = correct.replace(trigPattern, "");
+  const outerPattern = /^(.*?)(sin|cos)\(/;
 
-  const outerEvidence = analyzePolynomialEvidence(userOuter, correctOuter);
+  const userOuterMatch = user.match(outerPattern);
+  const correctOuterMatch = correct.match(outerPattern);
+
+  const userOuter = userOuterMatch ? userOuterMatch[1] : "";
+  const correctOuter = correctOuterMatch ? correctOuterMatch[1] : "";
+  const cleanOuter = (expr) => expr.replace(/\*$/, "") || "1";
+
+  const outerEvidence = analyzePolynomialEvidence(
+    cleanOuter(userOuter),
+    cleanOuter(correctOuter),
+  );
 
   return {
     trigError,
