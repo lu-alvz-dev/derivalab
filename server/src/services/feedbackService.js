@@ -79,21 +79,29 @@ function analyzeTrigEvidence(userExpr, correctExpr) {
   const user = normalizeExpression(userExpr);
   const correct = normalizeExpression(correctExpr);
 
-  const trigError =
-    (correct.includes("cos") && user.includes("sin")) ||
-    (correct.includes("sin") && user.includes("cos"));
+  const trigPattern = /(sin|cos)\(([^)]+)\)/;
 
-  const innerPattern = /(sin|cos)\(([^)]+)\)/;
+  const userTrig = user.match(trigPattern);
+  const correctTrig = correct.match(trigPattern);
 
-  const userInner = user.match(innerPattern);
-  const correctInner = correct.match(innerPattern);
+  const userFunc = userTrig ? userTrig[1] : null;
+  const correctFunc = correctTrig ? correctTrig[1] : null;
 
-  const innerArgumentError =
-    userInner && correctInner && userInner[2] !== correctInner[2];
+  const userInner = userTrig ? userTrig[2] : null;
+  const correctInner = correctTrig ? correctTrig[2] : null;
+
+  const trigError = userFunc !== correctFunc;
+  const innerArgumentError = userInner !== correctInner;
+
+  const userOuter = user.replace(trigPattern, "");
+  const correctOuter = correct.replace(trigPattern, "");
+
+  const outerEvidence = analyzePolynomialEvidence(userOuter, correctOuter);
 
   return {
     trigError,
     innerArgumentError,
+    outerEvidence,
   };
 }
 
@@ -144,9 +152,9 @@ function classifyPolynomialError(evidence) {
 
 // Trig classification by evidence
 function classifyTrigError(userAnswer, correctAnswer) {
-  const trigEvidence = analyzeTrigEvidence(userAnswer, correctAnswer);
+  const evidence = analyzeTrigEvidence(userAnswer, correctAnswer);
 
-  if (trigEvidence.trigError) {
+  if (evidence.trigError) {
     return {
       isCorrect: false,
       errorType: "TRIG_FUNCTION_ERROR",
@@ -154,7 +162,7 @@ function classifyTrigError(userAnswer, correctAnswer) {
     };
   }
 
-  if (trigEvidence.innerArgumentError) {
+  if (evidence.innerArgumentError) {
     return {
       isCorrect: false,
       errorType: "INNER_ARGUMENT_ERROR",
@@ -162,8 +170,7 @@ function classifyTrigError(userAnswer, correctAnswer) {
     };
   }
 
-  const polyEvidence = analyzePolynomialEvidence(userAnswer, correctAnswer);
-  return classifyPolynomialError(polyEvidence);
+  return classifyPolynomialError(evidence.outerEvidence);
 }
 
 // Main entry
