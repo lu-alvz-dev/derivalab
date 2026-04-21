@@ -2,169 +2,124 @@ const { compareExpressions } = require("./mathValidationService");
 const { normalizeExpression } = require("../utils/mathUtils");
 const math = require("mathjs");
 
-/**
- * Detects if the entire expression has inverted sign
- * Example:
- * correct:  2x + 3
- * user:    -2x - 3
- */
-function isGlobalSignError(userExpr, correctExpr) {
-  try {
-    const user = math.simplify(normalizeExpression(userExpr)).toString();
-    const negativeCorrect = math
-      .simplify(`-1 * (${normalizeExpression(correctExpr)})`)
-      .toString();
+// Extract polynomial terms dynamically. Example: 20x^4+6 -> [{coeff:20,power:4},{coeff:6,power:0}]
+function extractTerms(expr) {
+  const normalized = normalizeExpression(expr);
 
-    return user === negativeCorrect;
-  } catch {
-    return false;
-  }
+  const terms = normalized.match(/[+-]?[^+-]+/g) || [];
+
+  return terms.map((term) => {
+    const match = term.match(/^([+-]?\d*)\*?x(?:\^(\d+))?$/);
+
+    if (match) {
+      let coeff = match[1];
+
+      if (coeff === "" || coeff === "+") coeff = 1;
+      else if (coeff === "-") coeff = -1;
+      else coeff = Number(coeff);
+
+      return {
+        coeff,
+        power: match[2] ? Number(match[2]) : 1,
+      };
+    }
+
+    return {
+      coeff: Number(term),
+      power: 0,
+    };
+  });
 }
 
-/**
- * Detects sign errors by term
- * Example:
- * correct: 2x^2 + 3
- * user:    2x^2 - 3
- */
-function hasTermSignError(userExpr, correctExpr) {
+// Analyze polynomial term evidence
+function analyzePolynomialEvidence(userExpr, correctExpr) {
   try {
-    const user = math.simplify(normalizeExpression(userExpr)).toString();
-    const correct = math.simplify(normalizeExpression(correctExpr)).toString();
+    const userTerms = extractTerms(userExpr);
+    const correctTerms = extractTerms(correctExpr);
 
-    const uTerms = user.replace(/\s+/g, "").split(/(?=[+-])/);
-    const cTerms = correct.replace(/\s+/g, "").split(/(?=[+-])/);
+    if (userTerms.length !== correctTerms.length) {
+      return null;
+    }
 
-    if (uTerms.length !== cTerms.length) return false;
+    let signErrors = 0;
+    let exponentErrors = 0;
+    let coefficientErrors = 0;
 
-    for (let i = 0; i < uTerms.length; i++) {
-      const uNoSign = uTerms[i].replace(/^[+-]/, "");
-      const cNoSign = cTerms[i].replace(/^[+-]/, "");
+    for (let i = 0; i < userTerms.length; i++) {
+      const u = userTerms[i];
+      const c = correctTerms[i];
 
-      if (uNoSign === cNoSign && uTerms[i] !== cTerms[i]) {
-        return true;
+      if (u.power !== c.power) {
+        exponentErrors++;
+        continue;
+      }
+
+      if (Math.abs(u.coeff) === Math.abs(c.coeff) && u.coeff !== c.coeff) {
+        signErrors++;
+        continue;
+      }
+
+      if (u.coeff !== c.coeff) {
+        coefficientErrors++;
       }
     }
 
-    return false;
+    return {
+      signErrors,
+      exponentErrors,
+      coefficientErrors,
+    };
   } catch {
-    return false;
+    return null;
   }
 }
 
-/**
- * Detects exponent mismatch
- */
-function hasExponentError(userExpr, correctExpr) {
-  try {
-    const user = normalizeExpression(userExpr);
-    const correct = normalizeExpression(correctExpr);
-
-    const exponentPattern = /x(?:\^(\d+))?/g;
-
-    const uExponents = [...user.matchAll(exponentPattern)].map(
-      (m) => m[1] || "1",
-    );
-
-    const cExponents = [...correct.matchAll(exponentPattern)].map(
-      (m) => m[1] || "1",
-    );
-
-    if (uExponents.length !== cExponents.length) return false;
-
-    return uExponents.some((exp, i) => exp !== cExponents[i]);
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Detects coefficient mismatch while exponent matches
- */
-function hasCoefficientError(userExpr, correctExpr) {
-  try {
-    const user = normalizeExpression(userExpr);
-    const correct = normalizeExpression(correctExpr);
-
-    const termPattern = /([+-]?\d*)x(?:\^\d+)?|([+-]?\d+)/g;
-
-    const uTerms = [...user.matchAll(termPattern)].map((m) => m[0]);
-    const cTerms = [...correct.matchAll(termPattern)].map((m) => m[0]);
-
-    if (uTerms.length !== cTerms.length) return false;
-
-    for (let i = 0; i < uTerms.length; i++) {
-      const uCoeff = parseInt(uTerms[i].match(/^[+-]?\d+/)?.[0] || "1");
-      const cCoeff = parseInt(cTerms[i].match(/^[+-]?\d+/)?.[0] || "1");
-
-      const uExp = uTerms[i].includes("^") ? uTerms[i].split("^")[1] : "1";
-      const cExp = cTerms[i].includes("^") ? cTerms[i].split("^")[1] : "1";
-
-      if (uExp === cExp && uCoeff !== cCoeff) {
-        return true;
-      }
-    }
-
-    return false;
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Detects wrong trig function:
- * sin instead of cos, or cos instead of sin
- */
-function hasTrigFunctionError(userExpr, correctExpr) {
+// Detect trig evidence
+function analyzeTrigEvidence(userExpr, correctExpr) {
   const user = normalizeExpression(userExpr);
   const correct = normalizeExpression(correctExpr);
 
-  return (
+  const trigError =
     (correct.includes("cos") && user.includes("sin")) ||
-    (correct.includes("sin") && user.includes("cos"))
-  );
+    (correct.includes("sin") && user.includes("cos"));
+
+  const innerPattern = /(sin|cos)\(([^)]+)\)/;
+
+  const userInner = user.match(innerPattern);
+  const correctInner = correct.match(innerPattern);
+
+  const innerArgumentError =
+    userInner && correctInner && userInner[2] !== correctInner[2];
+
+  return {
+    trigError,
+    innerArgumentError,
+  };
 }
 
-/**
- * Detects wrong inner argument:
- * cos(4x) vs cos(5x)
- */
-function hasInnerArgumentError(userExpr, correctExpr) {
-  try {
-    const trigPattern = /(sin|cos)\(([^)]+)\)/;
-
-    const userMatch = normalizeExpression(userExpr).match(trigPattern);
-    const correctMatch = normalizeExpression(correctExpr).match(trigPattern);
-
-    if (!userMatch || !correctMatch) return false;
-
-    return userMatch[2] !== correctMatch[2];
-  } catch {
-    return false;
-  }
-}
-
-/**
- * POLYNOMIAL ERROR ANALYSIS
- */
-function analyzePolynomialError(userAnswer, correctAnswer) {
-  if (isGlobalSignError(userAnswer, correctAnswer)) {
+// Polynomial classification by evidence
+function classifyPolynomialError(evidence) {
+  if (!evidence) {
     return {
       isCorrect: false,
-      errorType: "SIGN_ERROR",
-      feedback: "All signs are inverted in your result.",
+      errorType: "UNKNOWN",
+      feedback: "The answer structure is incorrect.",
     };
   }
 
-  if (hasTermSignError(userAnswer, correctAnswer)) {
+  if (
+    evidence.signErrors > 0 &&
+    evidence.exponentErrors === 0 &&
+    evidence.coefficientErrors === 0
+  ) {
     return {
       isCorrect: false,
       errorType: "SIGN_ERROR",
-      feedback: "One or more terms have incorrect signs.",
+      feedback: "One or more signs are incorrect.",
     };
   }
 
-  if (hasExponentError(userAnswer, correctAnswer)) {
+  if (evidence.exponentErrors > 0) {
     return {
       isCorrect: false,
       errorType: "EXPONENT_ERROR",
@@ -172,7 +127,7 @@ function analyzePolynomialError(userAnswer, correctAnswer) {
     };
   }
 
-  if (hasCoefficientError(userAnswer, correctAnswer)) {
+  if (evidence.coefficientErrors > 0) {
     return {
       isCorrect: false,
       errorType: "COEFFICIENT_ERROR",
@@ -183,30 +138,15 @@ function analyzePolynomialError(userAnswer, correctAnswer) {
   return {
     isCorrect: false,
     errorType: "UNKNOWN",
-    feedback: "The answer is incorrect. Review your derivative steps.",
+    feedback: "The answer is incorrect.",
   };
 }
 
-/**
- * POWER ERROR ANALYSIS
- */
-function analyzePowerError(userAnswer, correctAnswer) {
-  return analyzePolynomialError(userAnswer, correctAnswer);
-}
+// Trig classification by evidence
+function classifyTrigError(userAnswer, correctAnswer) {
+  const trigEvidence = analyzeTrigEvidence(userAnswer, correctAnswer);
 
-/**
- * TRIG ERROR ANALYSIS
- */
-function analyzeTrigError(userAnswer, correctAnswer) {
-  if (isGlobalSignError(userAnswer, correctAnswer)) {
-    return {
-      isCorrect: false,
-      errorType: "SIGN_ERROR",
-      feedback: "The sign of the derivative is incorrect.",
-    };
-  }
-
-  if (hasTrigFunctionError(userAnswer, correctAnswer)) {
+  if (trigEvidence.trigError) {
     return {
       isCorrect: false,
       errorType: "TRIG_FUNCTION_ERROR",
@@ -214,33 +154,19 @@ function analyzeTrigError(userAnswer, correctAnswer) {
     };
   }
 
-  if (hasInnerArgumentError(userAnswer, correctAnswer)) {
+  if (trigEvidence.innerArgumentError) {
     return {
       isCorrect: false,
       errorType: "INNER_ARGUMENT_ERROR",
-      feedback:
-        "The inner argument of the trigonometric function is incorrect.",
+      feedback: "The inner argument is incorrect.",
     };
   }
 
-  if (hasCoefficientError(userAnswer, correctAnswer)) {
-    return {
-      isCorrect: false,
-      errorType: "COEFFICIENT_ERROR",
-      feedback: "The coefficient in the derivative is incorrect.",
-    };
-  }
-
-  return {
-    isCorrect: false,
-    errorType: "UNKNOWN",
-    feedback: "The derivative is incorrect. Review the trigonometric rule.",
-  };
+  const polyEvidence = analyzePolynomialEvidence(userAnswer, correctAnswer);
+  return classifyPolynomialError(polyEvidence);
 }
 
-/**
- * MAIN ENTRY
- */
+// Main entry
 function analyzeError(userAnswer, correctAnswer, exerciseType) {
   const isCorrect = compareExpressions(userAnswer, correctAnswer);
 
@@ -254,13 +180,17 @@ function analyzeError(userAnswer, correctAnswer, exerciseType) {
 
   switch (exerciseType) {
     case "polynomial":
-      return analyzePolynomialError(userAnswer, correctAnswer);
+      return classifyPolynomialError(
+        analyzePolynomialEvidence(userAnswer, correctAnswer),
+      );
 
     case "power":
-      return analyzePowerError(userAnswer, correctAnswer);
+      return classifyPolynomialError(
+        analyzePolynomialEvidence(userAnswer, correctAnswer),
+      );
 
     case "trig":
-      return analyzeTrigError(userAnswer, correctAnswer);
+      return classifyTrigError(userAnswer, correctAnswer);
 
     default:
       return {

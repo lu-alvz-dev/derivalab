@@ -12,9 +12,7 @@ function App() {
   const [feedback, setFeedback] = useState("");
   const [errorType, setErrorType] = useState("");
 
-  /**
-   * Fetches a new exercise from the backend. useCallback is used to stabilize the function reference, so useEffect won't enter an infinite loop when state changes, the function is only recreated if 'type' or 'difficulty' change.
-   */
+  // Fetches a new exercise from the backend. useCallback is used to stabilize the function reference, so useEffect won't enter an infinite loop when state changes, the function is only recreated if 'type' or 'difficulty' change.
   const fetchExercise = useCallback(() => {
     axios
       .get(
