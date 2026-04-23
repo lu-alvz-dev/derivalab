@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import axios from "axios";
+import { fetchExerciseApi, validateAnswerApi } from "./services/api";
 
 function App() {
   const [exercise, setExercise] = useState(null);
@@ -14,10 +14,7 @@ function App() {
 
   // Fetches a new exercise from the backend. useCallback is used to stabilize the function reference, so useEffect won't enter an infinite loop when state changes, the function is only recreated if 'type' or 'difficulty' change.
   const fetchExercise = useCallback(() => {
-    axios
-      .get(
-        `http://localhost:3000/api/exercises?type=${type}&difficulty=${difficulty}`,
-      )
+    fetchExerciseApi(type, difficulty)
       .then((res) => {
         setExercise(res.data);
         setUserAnswer("");
@@ -32,12 +29,11 @@ function App() {
 
   //Sends the user's answer to the server for validation.
   const validateAnswer = () => {
-    axios
-      .post("http://localhost:3000/api/feedback", {
-        userAnswer,
-        correctAnswer: exercise.answer,
-        exerciseType: exercise.type,
-      })
+    validateAnswerApi({
+      userAnswer,
+      correctAnswer: exercise.answer,
+      exerciseType: exercise.type,
+    })
       .then((res) => {
         setResult(res.data.isCorrect);
         setFeedback(res.data.feedback);
