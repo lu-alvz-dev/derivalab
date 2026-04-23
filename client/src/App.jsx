@@ -1,5 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { fetchExerciseApi, validateAnswerApi } from "./services/api";
+import Header from "./components/Header";
+import ControlsPanel from "./components/ControlsPanel";
+import ExerciseCard from "./components/ExerciseCard";
+import FeedbackPanel from "./components/FeedbackPanel";
+import DashboardPanel from "./components/DashboardPanel";
 
 function App() {
   const [exercise, setExercise] = useState(null);
@@ -11,6 +16,11 @@ function App() {
   const [difficulty, setDifficulty] = useState("easy");
   const [feedback, setFeedback] = useState("");
   const [errorType, setErrorType] = useState("");
+  const [stats, setStats] = useState({
+    attempts: 0,
+    correct: 0,
+    accuracy: 0,
+  });
 
   // Fetches a new exercise from the backend. useCallback is used to stabilize the function reference, so useEffect won't enter an infinite loop when state changes, the function is only recreated if 'type' or 'difficulty' change.
   const fetchExercise = useCallback(() => {
@@ -33,15 +43,19 @@ function App() {
       userAnswer,
       correctAnswer: exercise.answer,
       exerciseType: exercise.type,
-    })
-      .then((res) => {
-        setResult(res.data.isCorrect);
-        setFeedback(res.data.feedback);
-        setErrorType(res.data.errorType);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    }).then((res) => {
+      const isCorrect = res.data.isCorrect;
+
+      const attempts = stats.attempts + 1;
+      const correct = stats.correct + (isCorrect ? 1 : 0);
+      const accuracy = Math.round((correct / attempts) * 100);
+
+      setStats({ attempts, correct, accuracy });
+
+      setResult(isCorrect);
+      setFeedback(res.data.feedback);
+      setErrorType(res.data.errorType);
+    });
   };
 
   useEffect(() => {
@@ -49,74 +63,30 @@ function App() {
   }, [fetchExercise]);
 
   return (
-    <div style={{ padding: "2rem", fontFamily: "Arial" }}>
-      <h1 style={{ marginBottom: "1rem" }}>DerivaLab</h1>
-      <p style={{ color: "#555" }}>
-        Practice derivatives with dynamic difficulty and function types
-      </p>
-
-      {/* Selectors */}
-      <div>
-        <label>Type: </label>
-        <select value={type} onChange={(e) => setType(e.target.value)}>
-          <option value="polynomial">Polynomial</option>
-          <option value="power">Power</option>
-          <option value="trig">Trigonometric</option>
-        </select>
-
-        <label style={{ marginLeft: "1rem" }}>Difficulty: </label>
-        <select
-          value={difficulty}
-          onChange={(e) => setDifficulty(e.target.value)}
-        >
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
-        </select>
-      </div>
-
-      <br />
+    <div className="max-w-3xl mx-auto p-6">
+      <Header />
+      <ControlsPanel
+        type={type}
+        setType={setType}
+        difficulty={difficulty}
+        setDifficulty={setDifficulty}
+      />
 
       {exercise && (
         <>
-          <p>
-            <strong>Exercise:</strong> {exercise.question}
-          </p>
-
-          <input
-            type="text"
-            placeholder="Enter derivative (e.g. 4x + 5 or x^2)"
-            value={userAnswer}
-            onChange={(e) => setUserAnswer(e.target.value)}
+          <ExerciseCard
+            exercise={exercise}
+            userAnswer={userAnswer}
+            setUserAnswer={setUserAnswer}
+            onCheck={validateAnswer}
+            onNext={fetchExercise}
           />
-
-          <br />
-          <br />
-
-          <button onClick={validateAnswer}>Check Answer</button>
-          <button onClick={fetchExercise}>New Exercise</button>
-
-          {result !== null && (
-            <p style={{ fontWeight: "bold", color: result ? "green" : "red" }}>
-              {result ? "Correct answer!!!" : "Try again"}
-            </p>
-          )}
-          {errorType && (
-            <p style={{ fontSize: "0.8rem", color: "#888" }}>
-              Error Type: {errorType}
-            </p>
-          )}
-          {feedback && (
-            <p
-              style={{
-                marginTop: "1rem",
-                fontWeight: "bold",
-                color: result ? "green" : "orange",
-              }}
-            >
-              {feedback}
-            </p>
-          )}
+          <FeedbackPanel
+            result={result}
+            feedback={feedback}
+            errorType={errorType}
+          />
+          <DashboardPanel stats={stats} />
         </>
       )}
     </div>
