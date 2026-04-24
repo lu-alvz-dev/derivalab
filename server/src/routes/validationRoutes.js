@@ -1,14 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const { compareExpressions } = require("../services/mathValidationService");
+const { validateExpression } = require("../controllers/validationController");
 
-router.post("/", (req, res) => {
-  const { userAnswer, correctAnswer } = req.body;
-
-  const isCorrect = compareExpressions(userAnswer, correctAnswer);
-
-  res.json({ isCorrect });
-});
+router.post("/", validateExpression);
 
 module.exports = router;

@@ -1,15 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const { generateExercise } = require("../controllers/exerciseController");
 
-const { getExercise } = require("../services/exerciseService");
-
-// Handle GET requests to generate and return a calculus exercise
-router.get("/", (req, res) => {
-  const { type, difficulty } = req.query;
-
-  const exercise = getExercise(type, difficulty);
-
-  res.json(exercise);
-});
+router.get("/", generateExercise);
 
 module.exports = router;
