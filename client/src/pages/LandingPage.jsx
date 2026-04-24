@@ -1,4 +1,4 @@
-function LandingPage() {
+function LandingPage({ onStart }) {
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Hero */}
@@ -13,7 +13,10 @@ function LandingPage() {
         </p>
 
         <div className="mt-10 flex justify-center gap-4">
-          <button className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow">
+          <button
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow"
+            onClick={onStart}
+          >
             Get Started
           </button>
 
