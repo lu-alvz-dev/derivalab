@@ -8,3 +8,7 @@ export const fetchExerciseApi = (type, difficulty) =>
   API.get(`/exercises?type=${type}&difficulty=${difficulty}`);
 
 export const validateAnswerApi = (payload) => API.post("/feedback", payload);
+
+export const registerUserApi = (payload) => API.post("/auth/register", payload);
+
+export const loginUserApi = (payload) => API.post("/auth/login", payload);
