@@ -20,6 +20,10 @@ const feedbackRoutes = require("./routes/feedbackRoutes");
 
 app.use("/api/feedback", feedbackRoutes);
 
+const authRoutes = require("./routes/authRoutes");
+
+app.use("/api/auth", authRoutes);
+
 // Health check route
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Server is running" });
