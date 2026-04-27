@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { registerUser, loginUser } = require("../services/userService");
 
-const SECRET_KEY = "mysecretkey";
+const SECRET_KEY = process.env.JWT_SECRET;
 
 async function register(req, res) {
   const { email, password } = req.body;
@@ -29,7 +29,6 @@ async function login(req, res) {
   const token = jwt.sign(
     {
       userId: result.user.id,
-      email: result.user.email,
     },
     SECRET_KEY,
     { expiresIn: "1h" },
