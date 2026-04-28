@@ -203,12 +203,39 @@ POST /api/feedback
 
 ---
 
+## Authentication Flow Architecture
+
+First authentication layer in DerivaLab.
+
+A new backend authentication module was added following the existing architecture pattern:
+
+Routes -> Controllers -> Services
+
+New authentication modules:
+
+- authRoutes.js
+- authController.js
+- userService.js
+
+The login flow now works as follows:
+
+1. LoginPage sends email and password to `/api/auth/login`
+2. authRoutes forwards the request to authController
+3. authController calls userService to validate credentials
+4. bcrypt compares the password hash
+5. JWT token is generated
+6. The frontend stores the token for session state
+
+This structure keeps authentication logic separated from routes and prepares the backend for future protected routes and role-based access.
+
+---
+
 ## Pending Improvements
 
-- [ ] Add try/catch to all API requests (frontend)
-- [ ] Replace alert() with proper UI feedback
-- [ ] Handle server errors and network failures
+- ~~Add try/catch to all API requests (frontend)~~
+- Replace alert() with proper UI feedback
+- Handle server errors and network failures
 
-### Completed
+## Done
 
-_(Empty by now)_
+- Add try/catch to all API requests (frontend)

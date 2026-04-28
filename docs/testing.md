@@ -392,3 +392,37 @@ Frontend → /api/feedback → validation → feedback → UI
 
 Result:
 Full intelligent feedback loop working
+
+---
+
+## Authentication Tests
+
+### Login with correct credentials
+
+I tested the login route using a valid email and password.
+
+Expected:
+The server should validate the credentials and return a JWT token.
+
+Actual result:
+The login was successful and the token was returned correctly.
+
+### Password hashing
+
+I verified that the password is hashed before being stored.
+
+Expected:
+The stored password should not match the plain text password.
+
+Actual result:
+The password was stored as a bcrypt hash, not as plain text.
+
+### JWT token generation
+
+I verified that a token is created after successful login.
+
+Expected:
+The server should generate and return a valid JWT token.
+
+Actual result:
+The JWT token was generated and returned correctly after login.
