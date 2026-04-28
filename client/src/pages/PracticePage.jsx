@@ -6,7 +6,7 @@ import ExerciseCard from "../components/ExerciseCard";
 import FeedbackPanel from "../components/FeedbackPanel";
 import DashboardPanel from "../components/DashboardPanel";
 
-function App() {
+function PracticePage() {
   const [exercise, setExercise] = useState(null);
   const [userAnswer, setUserAnswer] = useState("");
   const [result, setResult] = useState(null);
@@ -93,4 +93,4 @@ function App() {
   );
 }
 
-export default App;
+export default PracticePage;
