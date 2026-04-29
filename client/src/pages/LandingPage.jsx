@@ -34,6 +34,30 @@ function LandingPage({ onRegister, onLogin }) {
           </button>
         </p>
       </section>
+
+      {/* Benefits */}
+      <section className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-8">
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h3 className="text-xl font-semibold">Generate Exercises</h3>
+          <p className="mt-3 text-gray-600">
+            Create derivative exercises by type and difficulty in seconds.
+          </p>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h3 className="text-xl font-semibold">Detect Mistakes</h3>
+          <p className="mt-3 text-gray-600">
+            Identify common student errors automatically.
+          </p>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h3 className="text-xl font-semibold">Track Progress</h3>
+          <p className="mt-3 text-gray-600">
+            Monitor accuracy and student performance over time.
+          </p>
+        </div>
+      </section>
     </main>
   );
 }
