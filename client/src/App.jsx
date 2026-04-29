@@ -1,7 +1,7 @@
 import { useState } from "react";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
-import PracticePage from "./pages/PracticePage";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   const [currentView, setCurrentView] = useState("landing");
@@ -9,14 +9,19 @@ function App() {
   return (
     <>
       {currentView === "landing" && (
-        <LandingPage onStart={() => setCurrentView("login")} />
+        <LandingPage
+          onLogin={() => setCurrentView("login")}
+          onRegister={() => setCurrentView("register")}
+        />
       )}
 
       {currentView === "login" && (
-        <LoginPage onLogin={() => setCurrentView("practice")} />
+        <LoginPage onLogin={() => setCurrentView("app")} />
       )}
 
-      {currentView === "practice" && <PracticePage />}
+      {currentView === "register" && (
+        <RegisterPage onRegister={() => setCurrentView("login")} />
+      )}
     </>
   );
 }
