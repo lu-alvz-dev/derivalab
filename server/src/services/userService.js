@@ -1,48 +1,44 @@
+const pool = require("../config/db");
 const bcrypt = require("bcryptjs");
 
-// Temporary in-memory storage for users (replaces a database for now)
-const users = [];
+async function registerUser(email, password, role = "teacher") {
+  const existingUser = await pool.query(
+    "SELECT * FROM users WHERE email = $1",
+    [email],
+  );
 
-//Handles the registration of a new user
-async function registerUser(email, password) {
-  const existingUser = users.find((user) => user.email === email);
-
-  if (existingUser) {
-    return { error: "User already exists" };
+  if (existingUser.rows.length > 0) {
+    throw new Error("User already exists");
   }
 
-  // Secure the password using hashing before saving it
-  // 10 salt rounds standard for balance between security and speed
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  //Create new user
-  const newUser = {
-    id: users.length + 1,
-    email,
-    password: hashedPassword,
-  };
+  const result = await pool.query(
+    "INSERT INTO users (email, password, role) VALUES ($1, $2, $3) RETURNING id, email, role",
+    [email, hashedPassword, role],
+  );
 
-  users.push(newUser);
-
-  return { user: newUser };
+  return result.rows[0];
 }
 
-//User authentication
 async function loginUser(email, password) {
-  const user = users.find((user) => user.email === email);
+  const result = await pool.query("SELECT * FROM users WHERE email = $1", [
+    email,
+  ]);
 
-  if (!user) {
-    return { error: "User not found" };
+  if (result.rows.length === 0) {
+    throw new Error("User not found");
   }
 
-  //compares password from login attempt with stored password
-  const passwordMatch = await bcrypt.compare(password, user.password);
+  const user = result.rows[0];
 
-  if (!passwordMatch) {
-    return { error: "Invalid password" };
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    throw new Error("Invalid password");
   }
 
-  return { user };
+  return user;
 }
 
 module.exports = {
