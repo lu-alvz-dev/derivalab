@@ -1,10 +1,8 @@
+![App Preview](docs/images/frontend-v8.png)
+
 # DerivaLab
 
 DerivaLab is a Full-Stack Micro-SaaS designed to help high school calculus teachers generate exercises, evaluate student answers, and provide automated feedback.
-
-## Preview
-
-![App Preview](docs/images/frontend-v8.png)
 
 ## Problem
 
@@ -26,15 +24,24 @@ DerivaLab automates:
 
 - Frontend: React
 - Backend: Node.js + Express
-- Database: (to be defined)
+- Database: PostgreSQL
+- Authentication: JWT + bcryptjs
 
 ## Project Status
 
 In development (MVP phase)
 
+## Database Setup
+
+The PostgreSQL schema is located in:
+
+```bash
+server/database/schema.sql
+```
+
 ## Testing
 
-Manual and integration testing documented in `docs/testing.md`, including backend validation and frontend integration checks.
+Manual and integration testing documented in docs/testing.md, including backend validation and frontend integration checks.
 
 ## License
 
