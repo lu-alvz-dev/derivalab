@@ -4,6 +4,7 @@ import { registerUserApi } from "../services/api";
 function RegisterPage({ onRegister }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleRegister = async () => {
     try {
@@ -11,10 +12,14 @@ function RegisterPage({ onRegister }) {
         email,
         password,
       });
-
+      setErrorMessage("");
       onRegister();
     } catch (error) {
       console.error("Registration failed", error);
+
+      const message = error.response?.data?.message || "Registration failed";
+
+      setErrorMessage(message);
     }
   };
 
@@ -48,6 +53,9 @@ function RegisterPage({ onRegister }) {
           >
             Register
           </button>
+          {errorMessage && (
+            <p className="text-red-500 text-sm text-center">{errorMessage}</p>
+          )}
         </div>
       </div>
     </main>
