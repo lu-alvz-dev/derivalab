@@ -4,6 +4,7 @@ import { loginUserApi } from "../services/api";
 function LoginPage({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleLogin = async () => {
     try {
@@ -13,11 +14,14 @@ function LoginPage({ onLogin }) {
       });
 
       localStorage.setItem("token", response.data.token);
-
+      setErrorMessage("");
       onLogin();
     } catch (error) {
       console.error("Login failed:", error);
-      alert("Login failed");
+
+      const message = error.response?.data?.message || "Something went wrong";
+
+      setErrorMessage(message);
     }
   };
 
@@ -55,6 +59,9 @@ function LoginPage({ onLogin }) {
           >
             Login
           </button>
+          {errorMessage && (
+            <p className="text-red-500 text-sm text-center">{errorMessage}</p>
+          )}
         </div>
       </div>
     </main>
