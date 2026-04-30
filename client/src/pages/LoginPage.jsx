@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { loginUserApi } from "../services/api";
 
-function LoginPage({ onLogin }) {
+function LoginPage({ onLogin, successMessage }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -35,6 +35,11 @@ function LoginPage({ onLogin }) {
         <p className="text-gray-600 text-center mt-2">
           Login to continue to DerivaLab
         </p>
+        {successMessage && (
+          <p className="text-green-600 text-sm text-center mt-3">
+            {successMessage}
+          </p>
+        )}
 
         <div className="mt-6 space-y-4">
           <input

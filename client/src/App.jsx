@@ -6,6 +6,7 @@ import PracticePage from "./pages/PracticePage";
 
 function App() {
   const [currentView, setCurrentView] = useState("landing");
+  const [successMessage, setSuccessMessage] = useState("");
 
   return (
     <>
@@ -17,11 +18,19 @@ function App() {
       )}
 
       {currentView === "register" && (
-        <RegisterPage onRegister={() => setCurrentView("login")} />
+        <RegisterPage
+          onRegister={() => {
+            setSuccessMessage("Account created successfully. Please log in.");
+            setCurrentView("login");
+          }}
+        />
       )}
 
       {currentView === "login" && (
-        <LoginPage onLogin={() => setCurrentView("app")} />
+        <LoginPage
+          onLogin={() => setCurrentView("app")}
+          successMessage={successMessage}
+        />
       )}
 
       {currentView === "app" && <PracticePage />}
