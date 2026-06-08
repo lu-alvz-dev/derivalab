@@ -6,12 +6,15 @@ CREATE TABLE users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE exercise_attempts (
-  id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(id),
-  exercise_type VARCHAR(50),
-  difficulty VARCHAR(50),
-  is_correct BOOLEAN,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE exercise_history (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    question TEXT NOT NULL,
+    correct_answer TEXT NOT NULL,
+    user_answer TEXT NOT NULL,
+    exercise_type VARCHAR(50),
+    difficulty VARCHAR(50),
+    is_correct BOOLEAN,
+    error_type VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
