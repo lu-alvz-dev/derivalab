@@ -40,9 +40,12 @@ function PracticePage() {
   //Sends the user's answer to the server for validation.
   const validateAnswer = () => {
     validateAnswerApi({
+      userId: 1,
+      question: exercise.question,
       userAnswer,
       correctAnswer: exercise.answer,
       exerciseType: exercise.type,
+      difficulty: exercise.difficulty,
     }).then((res) => {
       const isCorrect = res.data.isCorrect;
 
