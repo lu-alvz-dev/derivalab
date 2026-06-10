@@ -1,5 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
-import { fetchExerciseApi, validateAnswerApi } from "../services/api";
+import {
+  fetchExerciseApi,
+  validateAnswerApi,
+  fetchStatsApi,
+} from "../services/api";
 import Header from "../components/Header";
 import ControlsPanel from "../components/ControlsPanel";
 import ExerciseCard from "../components/ExerciseCard";
@@ -22,7 +26,11 @@ function PracticePage() {
     accuracy: 0,
   });
 
-  // Fetches a new exercise from the backend. useCallback is used to stabilize the function reference, so useEffect won't enter an infinite loop when state changes, the function is only recreated if 'type' or 'difficulty' change.
+  /* 
+   Fetches a new exercise from the backend, useCallback is used to stabilize 
+   the function reference, so useEffect won't enter an infinite loop when state changes, 
+   the function is only recreated if 'type' or 'difficulty' change.
+   */
   const fetchExercise = useCallback(() => {
     fetchExerciseApi(type, difficulty)
       .then((res) => {
@@ -49,20 +57,26 @@ function PracticePage() {
     }).then((res) => {
       const isCorrect = res.data.isCorrect;
 
-      const attempts = stats.attempts + 1;
-      const correct = stats.correct + (isCorrect ? 1 : 0);
-      const accuracy = Math.round((correct / attempts) * 100);
-
-      setStats({ attempts, correct, accuracy });
-
       setResult(isCorrect);
       setFeedback(res.data.feedback);
       setErrorType(res.data.errorType);
+      loadStats();
     });
+  };
+
+  const loadStats = () => {
+    fetchStatsApi(1)
+      .then((res) => {
+        setStats(res.data);
+      })
+      .catch((err) => {
+        console.error("Stats error:", err);
+      });
   };
 
   useEffect(() => {
     fetchExercise();
+    loadStats();
   }, [fetchExercise]);
 
   return (

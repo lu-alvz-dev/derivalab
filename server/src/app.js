@@ -25,6 +25,10 @@ const authRoutes = require("./routes/authRoutes");
 
 app.use("/api/auth", authRoutes);
 
+const statsRoutes = require("./routes/statsRoutes");
+
+app.use("/api/stats", statsRoutes);
+
 // Health check route
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Server is running" });

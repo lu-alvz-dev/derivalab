@@ -12,3 +12,5 @@ export const validateAnswerApi = (payload) => API.post("/feedback", payload);
 export const registerUserApi = (payload) => API.post("/auth/register", payload);
 
 export const loginUserApi = (payload) => API.post("/auth/login", payload);
+
+export const fetchStatsApi = (userId) => API.get(`/stats/${userId}`);
