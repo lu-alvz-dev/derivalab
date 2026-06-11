@@ -119,6 +119,7 @@ useEffect(() => {
             errorType={errorType}
           />
           <DashboardPanel stats={stats} />
+          <ExerciseHistoryPanel history={history} />
         </>
       )}
     </div>
