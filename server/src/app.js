@@ -29,6 +29,10 @@ const statsRoutes = require("./routes/statsRoutes");
 
 app.use("/api/stats", statsRoutes);
 
+const historyRoutes = require("./routes/historyRoutes");
+
+app.use("/api/history", historyRoutes);
+
 // Health check route
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Server is running" });

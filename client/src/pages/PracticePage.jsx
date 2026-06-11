@@ -3,12 +3,14 @@ import {
   fetchExerciseApi,
   validateAnswerApi,
   fetchStatsApi,
+  fetchHistoryApi,
 } from "../services/api";
 import Header from "../components/Header";
 import ControlsPanel from "../components/ControlsPanel";
 import ExerciseCard from "../components/ExerciseCard";
 import FeedbackPanel from "../components/FeedbackPanel";
 import DashboardPanel from "../components/DashboardPanel";
+import ExerciseHistoryPanel from "../components/ExerciseHistoryPanel";
 
 function PracticePage() {
   const [exercise, setExercise] = useState(null);
@@ -25,6 +27,7 @@ function PracticePage() {
     correct: 0,
     accuracy: 0,
   });
+  const [history, setHistory] = useState([]);
 
   /* 
    Fetches a new exercise from the backend, useCallback is used to stabilize 
@@ -61,6 +64,7 @@ function PracticePage() {
       setFeedback(res.data.feedback);
       setErrorType(res.data.errorType);
       loadStats();
+      loadHistory();
     });
   };
 
@@ -74,10 +78,21 @@ function PracticePage() {
       });
   };
 
-  useEffect(() => {
-    fetchExercise();
-    loadStats();
-  }, [fetchExercise]);
+  const loadHistory = () => {
+  fetchHistoryApi(1)
+    .then((res) => {
+      setHistory(res.data);
+    })
+    .catch((err) => {
+      console.error("History error:", err);
+    });
+};
+
+useEffect(() => {
+  fetchExercise();
+  loadStats();
+  loadHistory();
+}, [fetchExercise]);
 
   return (
     <div className="max-w-3xl mx-auto p-6">
