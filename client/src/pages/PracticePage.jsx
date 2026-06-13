@@ -11,8 +11,11 @@ import ExerciseCard from "../components/ExerciseCard";
 import FeedbackPanel from "../components/FeedbackPanel";
 import DashboardPanel from "../components/DashboardPanel";
 import ExerciseHistoryPanel from "../components/ExerciseHistoryPanel";
+import { getCurrentUser } from "../utils/auth";
 
 function PracticePage() {
+  const currentUser = getCurrentUser();
+
   const [exercise, setExercise] = useState(null);
   const [userAnswer, setUserAnswer] = useState("");
   const [result, setResult] = useState(null);
@@ -51,7 +54,7 @@ function PracticePage() {
   //Sends the user's answer to the server for validation.
   const validateAnswer = () => {
     validateAnswerApi({
-      userId: 1,
+      userId: currentUser.userId,
       question: exercise.question,
       userAnswer,
       correctAnswer: exercise.answer,
@@ -69,7 +72,7 @@ function PracticePage() {
   };
 
   const loadStats = () => {
-    fetchStatsApi(1)
+    fetchStatsApi(currentUser.userId)
       .then((res) => {
         setStats(res.data);
       })
@@ -79,20 +82,20 @@ function PracticePage() {
   };
 
   const loadHistory = () => {
-  fetchHistoryApi(1)
-    .then((res) => {
-      setHistory(res.data);
-    })
-    .catch((err) => {
-      console.error("History error:", err);
-    });
-};
+    fetchHistoryApi(currentUser.userId)
+      .then((res) => {
+        setHistory(res.data);
+      })
+      .catch((err) => {
+        console.error("History error:", err);
+      });
+  };
 
-useEffect(() => {
-  fetchExercise();
-  loadStats();
-  loadHistory();
-}, [fetchExercise]);
+  useEffect(() => {
+    fetchExercise();
+    loadStats();
+    loadHistory();
+  }, [fetchExercise]);
 
   return (
     <div className="max-w-3xl mx-auto p-6">
