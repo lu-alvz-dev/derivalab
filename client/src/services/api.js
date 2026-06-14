@@ -16,3 +16,5 @@ export const loginUserApi = (payload) => API.post("/auth/login", payload);
 export const fetchStatsApi = (userId) => API.get(`/stats/${userId}`);
 
 export const fetchHistoryApi = (userId) => API.get(`/history/${userId}`);
+
+export const fetchTeacherDashboardApi = () => API.get("/dashboard/teacher");
