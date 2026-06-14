@@ -71,7 +71,7 @@ function PracticePage() {
     });
   };
 
-  const loadStats = () => {
+  const loadStats = useCallback(() => {
     fetchStatsApi(currentUser.userId)
       .then((res) => {
         setStats(res.data);
@@ -79,9 +79,9 @@ function PracticePage() {
       .catch((err) => {
         console.error("Stats error:", err);
       });
-  };
+  }, [currentUser.userId]);
 
-  const loadHistory = () => {
+  const loadHistory = useCallback(() => {
     fetchHistoryApi(currentUser.userId)
       .then((res) => {
         setHistory(res.data);
@@ -89,13 +89,13 @@ function PracticePage() {
       .catch((err) => {
         console.error("History error:", err);
       });
-  };
+  }, [currentUser.userId]);
 
   useEffect(() => {
     fetchExercise();
     loadStats();
     loadHistory();
-  }, [fetchExercise]);
+  }, [fetchExercise, loadStats, loadHistory]);
 
   return (
     <div className="max-w-3xl mx-auto p-6">
