@@ -33,6 +33,10 @@ const historyRoutes = require("./routes/historyRoutes");
 
 app.use("/api/history", historyRoutes);
 
+const dashboardRoutes = require("./routes/dashboardRoutes");
+
+app.use("/api/dashboard", dashboardRoutes);
+
 // Health check route
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Server is running" });
