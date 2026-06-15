@@ -15,7 +15,7 @@ function LoginPage({ onLogin, successMessage }) {
 
       localStorage.setItem("token", response.data.token);
       setErrorMessage("");
-      onLogin();
+      onLogin(response.data);
     } catch (error) {
       console.error("Login failed:", error);
 
