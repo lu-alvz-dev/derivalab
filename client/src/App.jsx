@@ -9,7 +9,6 @@ import StudentDashboard from "./pages/StudentDashboard";
 function App() {
   const [currentView, setCurrentView] = useState("landing");
   const [successMessage, setSuccessMessage] = useState("");
-  const [currentUser, setCurrentUser] = useState(null);
 
   return (
     <>
@@ -33,8 +32,6 @@ function App() {
         <LoginPage
           successMessage={successMessage}
           onLogin={(response) => {
-            setCurrentUser(response.user);
-
             if (response.user.role === "teacher") {
               setCurrentView("teacher-dashboard");
             } else {
