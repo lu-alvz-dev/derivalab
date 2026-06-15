@@ -36,6 +36,10 @@ function StudentDashboard() {
     loadDashboard();
   }, [loadDashboard]);
 
+  if (!currentUser) {
+    return <div className="p-6">Session expired. Please log in again.</div>;
+  }
+
   if (loading) {
     return <div className="p-6">Loading dashboard...</div>;
   }
