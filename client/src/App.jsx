@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import PracticePage from "./pages/PracticePage";
 import TeacherDashboard from "./pages/TeacherDashboard";
+import StudentDashboard from "./pages/StudentDashboard";
 
 function App() {
   const [currentView, setCurrentView] = useState("landing");
@@ -37,7 +38,7 @@ function App() {
             if (response.user.role === "teacher") {
               setCurrentView("teacher-dashboard");
             } else {
-              setCurrentView("app");
+              setCurrentView("student-dashboard");
             }
           }}
         />
@@ -45,6 +46,7 @@ function App() {
 
       {currentView === "app" && <PracticePage />}
       {currentView === "teacher-dashboard" && <TeacherDashboard />}
+      {currentView === "student-dashboard" && <StudentDashboard />}
     </>
   );
 }
