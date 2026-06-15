@@ -3,10 +3,12 @@ import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import PracticePage from "./pages/PracticePage";
+import TeacherDashboard from "./pages/TeacherDashboard";
 
 function App() {
   const [currentView, setCurrentView] = useState("landing");
   const [successMessage, setSuccessMessage] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
 
   return (
     <>
@@ -28,12 +30,21 @@ function App() {
 
       {currentView === "login" && (
         <LoginPage
-          onLogin={() => setCurrentView("app")}
           successMessage={successMessage}
+          onLogin={(response) => {
+            setCurrentUser(response.user);
+
+            if (response.user.role === "teacher") {
+              setCurrentView("teacher-dashboard");
+            } else {
+              setCurrentView("app");
+            }
+          }}
         />
       )}
 
       {currentView === "app" && <PracticePage />}
+      {currentView === "teacher-dashboard" && <TeacherDashboard />}
     </>
   );
 }
