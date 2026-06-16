@@ -1,15 +1,9 @@
 export function getCurrentUser() {
-  const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
 
-  if (!token) {
+  if (!user) {
     return null;
   }
 
-  try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-
-    return payload;
-  } catch {
-    return null;
-  }
+  return JSON.parse(user);
 }
