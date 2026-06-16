@@ -4,6 +4,7 @@ import { registerUserApi } from "../services/api";
 function RegisterPage({ onRegister }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("teacher");
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleRegister = async () => {
@@ -11,6 +12,7 @@ function RegisterPage({ onRegister }) {
       await registerUserApi({
         email,
         password,
+        role,
       });
       setErrorMessage("");
       onRegister();
@@ -46,6 +48,16 @@ function RegisterPage({ onRegister }) {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full border rounded-lg p-3"
           />
+
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className="w-full border rounded-lg p-3"
+          >
+            <option value="teacher">Teacher</option>
+
+            <option value="student">Student</option>
+          </select>
 
           <button
             onClick={handleRegister}
