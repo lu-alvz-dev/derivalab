@@ -4,6 +4,8 @@ const router = express.Router();
 
 const { getHistory } = require("../controllers/historyController");
 
-router.get("/:userId", getHistory);
+const { authenticate } = require("../middlewares/authMiddleware");
+
+router.get("/", authenticate, getHistory);
 
 module.exports = router;
