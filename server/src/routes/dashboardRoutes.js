@@ -2,10 +2,13 @@ const express = require("express");
 
 const router = express.Router();
 
-const {
-  getTeacherDashboardData,
-} = require("../controllers/dashboardController");
+const { getDashboard } = require("../controllers/dashboardController");
 
-router.get("/teacher", getTeacherDashboardData);
+const { authenticate } = require("../middlewares/authMiddleware");
+
+const { authorize } = require("../middlewares/roleMiddleware");
+
+router.get("/:userId", getDashboard);
+router.get("/teacher", authenticate, authorize("teacher"), getDashboard);
 
 module.exports = router;
