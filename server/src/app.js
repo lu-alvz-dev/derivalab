@@ -37,6 +37,10 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 
 app.use("/api/dashboard", dashboardRoutes);
 
+const studentDashboardRoutes = require("./routes/studentDashboardRoutes");
+
+app.use("/api/student-dashboard", studentDashboardRoutes);
+
 // Health check route
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Server is running" });
