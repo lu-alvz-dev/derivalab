@@ -2,7 +2,7 @@ const { getExerciseHistory } = require("../services/statsService");
 
 async function getHistory(req, res) {
   try {
-    const userId = req.params.userId;
+    const userId = req.user.userId;
 
     const history = await getExerciseHistory(userId);
 
