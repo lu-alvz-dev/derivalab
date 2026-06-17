@@ -54,7 +54,7 @@ function PracticePage() {
   //Sends the user's answer to the server for validation.
   const validateAnswer = () => {
     validateAnswerApi({
-      userId: currentUser.userId,
+      userId: currentUser.id,
       question: exercise.question,
       userAnswer,
       correctAnswer: exercise.answer,
@@ -72,7 +72,7 @@ function PracticePage() {
   };
 
   const loadStats = useCallback(() => {
-    fetchStatsApi(currentUser.userId)
+    fetchStatsApi()
       .then((res) => {
         setStats(res.data);
       })
@@ -82,7 +82,7 @@ function PracticePage() {
   }, [currentUser.userId]);
 
   const loadHistory = useCallback(() => {
-    fetchHistoryApi(currentUser.userId)
+    fetchHistoryApi()
       .then((res) => {
         setHistory(res.data);
       })
