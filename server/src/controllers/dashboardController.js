@@ -1,19 +1,21 @@
 const { getTeacherDashboard } = require("../services/dashboardService");
 
-async function getTeacherDashboardData(req, res) {
+async function getDashboard(req, res) {
   try {
-    const dashboardData = await getTeacherDashboard();
+    const userId = req.params.userId;
 
-    res.json(dashboardData);
+    const dashboard = await getTeacherDashboard(userId);
+
+    res.json(dashboard);
   } catch (error) {
-    console.error("Teacher dashboard error:", error);
+    console.error(error);
 
     res.status(500).json({
-      message: "Failed to load teacher dashboard",
+      message: "Dashboard error",
     });
   }
 }
 
 module.exports = {
-  getTeacherDashboardData,
+  getDashboard,
 };

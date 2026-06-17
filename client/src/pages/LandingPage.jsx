@@ -1,4 +1,4 @@
-function LandingPage({ onRegister, onLogin }) {
+function LandingPage({ onRegister, onLogin, onDemo }) {
   return (
     <main className="min-h-screen bg-gray-50">
       <section className="max-w-6xl mx-auto px-6 py-20 text-center">
@@ -19,8 +19,11 @@ function LandingPage({ onRegister, onLogin }) {
             Get Started
           </button>
 
-          <button className="bg-white border px-6 py-3 rounded-lg shadow hover:bg-gray-100">
-            Live Demo
+          <button
+            className="bg-white border px-6 py-3 rounded-lg shadow hover:bg-gray-100"
+            onClick={onDemo}
+          >
+            Try Demo
           </button>
         </div>
 

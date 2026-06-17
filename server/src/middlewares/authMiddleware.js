@@ -6,7 +6,7 @@ function authenticate(req, res, next) {
 
     if (!authHeader) {
       return res.status(401).json({
-        message: "No token provided",
+        message: "Token required",
       });
     }
 
@@ -17,11 +17,13 @@ function authenticate(req, res, next) {
     req.user = decoded;
 
     next();
-  } catch {
-    res.status(401).json({
-      message: "Unauthorized",
+  } catch (error) {
+    return res.status(401).json({
+      message: "Invalid token",
     });
   }
 }
 
-module.exports = authenticate;
+module.exports = {
+  authenticate,
+};

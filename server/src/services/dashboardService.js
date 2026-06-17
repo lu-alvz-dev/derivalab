@@ -1,41 +1,25 @@
 const pool = require("../config/db");
 
-async function getTeacherDashboard() {
-  const studentsQuery = `
-    SELECT COUNT(*) AS total_students
-    FROM users
-    WHERE role = 'student'
-  `;
-
-  const attemptsQuery = `
-    SELECT COUNT(*) AS total_attempts
-    FROM exercise_history
-  `;
-
-  const accuracyQuery = `
+async function getTeacherDashboard(userId) {
+  const query = `
     SELECT
-      ROUND(
-        AVG(
-          CASE
-            WHEN is_correct = true
-            THEN 100
-            ELSE 0
-          END
-        ),2
-      ) AS average_accuracy
+      COUNT(*) AS attempts,
+      COUNT(*) FILTER (WHERE is_correct = true) AS correct
     FROM exercise_history
+    WHERE user_id = $1
   `;
 
-  const [students, attempts, accuracy] = await Promise.all([
-    pool.query(studentsQuery),
-    pool.query(attemptsQuery),
-    pool.query(accuracyQuery),
-  ]);
+  const result = await pool.query(query, [userId]);
+
+  const attempts = Number(result.rows[0].attempts);
+  const correct = Number(result.rows[0].correct);
+
+  const accuracy = attempts === 0 ? 0 : Math.round((correct / attempts) * 100);
 
   return {
-    totalStudents: Number(students.rows[0].total_students),
-    totalAttempts: Number(attempts.rows[0].total_attempts),
-    averageAccuracy: Number(accuracy.rows[0].average_accuracy || 0),
+    attempts,
+    correct,
+    accuracy,
   };
 }
 
