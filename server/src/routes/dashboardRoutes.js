@@ -8,7 +8,6 @@ const { authenticate } = require("../middlewares/authMiddleware");
 
 const { authorize } = require("../middlewares/roleMiddleware");
 
-router.get("/:userId", getDashboard);
 router.get("/teacher", authenticate, authorize("teacher"), getDashboard);
 
 module.exports = router;
