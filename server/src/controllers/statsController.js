@@ -2,7 +2,7 @@ const { getStudentStats } = require("../services/statsService");
 
 async function getStats(req, res) {
   try {
-    const userId = req.params.userId;
+    const userId = req.user.userId;
 
     const stats = await getStudentStats(userId);
 
