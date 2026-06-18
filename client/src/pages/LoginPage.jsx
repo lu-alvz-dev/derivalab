@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { loginUserApi } from "../services/api";
 
-function LoginPage({ onLogin, successMessage }) {
+function LoginPage() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -16,7 +18,13 @@ function LoginPage({ onLogin, successMessage }) {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
       setErrorMessage("");
-      onLogin(response.data);
+      const user = response.data.user;
+
+      if (user.role === "teacher") {
+        navigate("/teacher-dashboard");
+      } else {
+        navigate("/student-dashboard");
+      }
     } catch (error) {
       console.error("Login failed:", error);
 
