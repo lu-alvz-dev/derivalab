@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { registerUserApi } from "../services/api";
 
-function RegisterPage({ onRegister }) {
+function RegisterPage() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("teacher");
@@ -15,7 +17,7 @@ function RegisterPage({ onRegister }) {
         role,
       });
       setErrorMessage("");
-      onRegister();
+      navigate("/login");
     } catch (error) {
       console.error("Registration failed", error);
 
