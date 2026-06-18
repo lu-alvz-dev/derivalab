@@ -1,4 +1,7 @@
-function LandingPage({ onRegister, onLogin, onDemo }) {
+import { useNavigate } from "react-router-dom";
+
+function LandingPage() {
+  const navigate = useNavigate();
   return (
     <main className="min-h-screen bg-gray-50">
       <section className="max-w-6xl mx-auto px-6 py-20 text-center">
@@ -14,7 +17,7 @@ function LandingPage({ onRegister, onLogin, onDemo }) {
         <div className="mt-10 flex justify-center gap-4">
           <button
             className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700"
-            onClick={onRegister}
+            onClick={() => navigate("/register")}
           >
             Get Started
           </button>
@@ -31,7 +34,7 @@ function LandingPage({ onRegister, onLogin, onDemo }) {
           Already have an account?{" "}
           <button
             className="text-blue-600 font-semibold hover:underline"
-            onClick={onLogin}
+            onClick={() => navigate("/login")}
           >
             Login
           </button>
