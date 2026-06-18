@@ -79,7 +79,7 @@ function PracticePage() {
       .catch((err) => {
         console.error("Stats error:", err);
       });
-  }, [currentUser.userId]);
+  }, [currentUser?.id]);
 
   const loadHistory = useCallback(() => {
     fetchHistoryApi()
@@ -89,13 +89,21 @@ function PracticePage() {
       .catch((err) => {
         console.error("History error:", err);
       });
-  }, [currentUser.userId]);
+  }, [currentUser?.id]);
 
   useEffect(() => {
     fetchExercise();
     loadStats();
     loadHistory();
   }, [fetchExercise, loadStats, loadHistory]);
+
+  if (!currentUser) {
+    return (
+      <div className="p-6">
+        <p>Please login first.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto p-6">

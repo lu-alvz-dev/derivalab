@@ -28,3 +28,5 @@ export const fetchStatsApi = () => API.get("/stats");
 export const fetchHistoryApi = () => API.get("/history");
 
 export const fetchTeacherDashboardApi = () => API.get("/dashboard/teacher");
+
+export const fetchStudentDashboardApi = () => API.get("/student-dashboard");

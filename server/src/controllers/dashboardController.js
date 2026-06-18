@@ -2,7 +2,7 @@ const { getTeacherDashboard } = require("../services/dashboardService");
 
 async function getDashboard(req, res) {
   try {
-    const userId = req.params.userId;
+    const userId = req.user.userId;
 
     const dashboard = await getTeacherDashboard(userId);
 

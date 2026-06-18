@@ -26,7 +26,13 @@ function App() {
 
               localStorage.setItem("token", response.data.token);
 
-              setCurrentView("app");
+              localStorage.setItem("user", JSON.stringify(response.data.user));
+
+              if (response.data.user.role === "teacher") {
+                setCurrentView("teacher-dashboard");
+              } else {
+                setCurrentView("student-dashboard");
+              }
             } catch (error) {
               console.error("Demo login failed", error);
             }
