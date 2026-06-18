@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchTeacherDashboardApi } from "../services/api";
 
-function TeacherDashboardPage() {
+function TeacherDashboard() {
   const [dashboard, setDashboard] = useState(null);
 
   useEffect(() => {
@@ -38,4 +38,4 @@ function TeacherDashboardPage() {
   );
 }
 
-export default TeacherDashboardPage;
+export default TeacherDashboard;
