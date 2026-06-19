@@ -1,7 +1,25 @@
 import { useNavigate } from "react-router-dom";
+import { loginUserApi } from "../services/api";
 
 function LandingPage() {
   const navigate = useNavigate();
+  const handleDemo = async () => {
+    try {
+      const response = await loginUserApi({
+        email: "demo@derivalab.com",
+        password: "Demo123!",
+      });
+
+      localStorage.setItem("token", response.data.token);
+
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+
+      navigate("/teacher/dashboard");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-gray-50">
       <section className="max-w-6xl mx-auto px-6 py-20 text-center">
@@ -24,7 +42,7 @@ function LandingPage() {
 
           <button
             className="bg-white border px-6 py-3 rounded-lg shadow hover:bg-gray-100"
-            onClick={onDemo}
+            onClick={handleDemo}
           >
             Try Demo
           </button>
