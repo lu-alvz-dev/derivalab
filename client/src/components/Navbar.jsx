@@ -15,15 +15,13 @@ function Navbar() {
   };
 
   return (
-    <nav className="flex justify-between p-4 shadow">
-      <Link to="/">DerivaLab</Link>
+    <div className="flex items-center gap-4">
+      <span className="text-sm text-gray-600">{user?.email}</span>
 
-      <div className="flex gap-4">
-        <Link to="/profile">Profile</Link>
+      <Link to="/profile">Profile</Link>
 
-        <button onClick={handleLogout}>Logout</button>
-      </div>
-    </nav>
+      <button onClick={handleLogout}>Logout</button>
+    </div>
   );
 }
 
