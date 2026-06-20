@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";

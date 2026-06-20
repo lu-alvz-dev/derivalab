@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { loginUserApi } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -15,15 +17,14 @@ function LoginPage() {
         password,
       });
 
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      login(response.data.user, response.data.token);
       setErrorMessage("");
       const user = response.data.user;
 
       if (user.role === "teacher") {
-        navigate("/teacher-dashboard");
+        navigate("/teacher/dashboard");
       } else {
-        navigate("/student-dashboard");
+        navigate("/student/dashboard");
       }
     } catch (error) {
       console.error("Login failed:", error);
@@ -44,11 +45,6 @@ function LoginPage() {
         <p className="text-gray-600 text-center mt-2">
           Login to continue to DerivaLab
         </p>
-        {successMessage && (
-          <p className="text-green-600 text-sm text-center mt-3">
-            {successMessage}
-          </p>
-        )}
 
         <div className="mt-6 space-y-4">
           <input
