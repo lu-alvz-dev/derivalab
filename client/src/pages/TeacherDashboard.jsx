@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchTeacherDashboardApi } from "../services/api";
+import Navbar from "../components/Navbar";
 
 function TeacherDashboard() {
   const [dashboard, setDashboard] = useState(null);
@@ -15,26 +16,30 @@ function TeacherDashboard() {
   }
 
   return (
-    <main className="max-w-5xl mx-auto p-6">
-      <h1 className="text-3xl font-bold">Teacher Dashboard</h1>
+    <>
+      <Navbar />
+      <main className="max-w-5xl mx-auto p-6">
+        <h1 className="text-3xl font-bold">Teacher Dashboard</h1>
 
-      <div className="mt-6">
-        <p>
-          Attempts:
-          {dashboard.attempts}
-        </p>
+        <div className="mt-6">
+          <p>
+            Attempts:
+            {dashboard.attempts}
+          </p>
+          <Navbar />
 
-        <p>
-          Correct:
-          {dashboard.correct}
-        </p>
+          <p>
+            Correct:
+            {dashboard.correct}
+          </p>
 
-        <p>
-          Accuracy:
-          {dashboard.accuracy}%
-        </p>
-      </div>
-    </main>
+          <p>
+            Accuracy:
+            {dashboard.accuracy}%
+          </p>
+        </div>
+      </main>
+    </>
   );
 }
 

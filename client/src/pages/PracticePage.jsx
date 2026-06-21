@@ -12,6 +12,7 @@ import FeedbackPanel from "../components/FeedbackPanel";
 import DashboardPanel from "../components/DashboardPanel";
 import ExerciseHistoryPanel from "../components/ExerciseHistoryPanel";
 import { getCurrentUser } from "../utils/auth";
+import Navbar from "../components/Navbar";
 
 function PracticePage() {
   const currentUser = getCurrentUser();
@@ -106,34 +107,37 @@ function PracticePage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <Header />
-      <ControlsPanel
-        type={type}
-        setType={setType}
-        difficulty={difficulty}
-        setDifficulty={setDifficulty}
-      />
+    <>
+      <Navbar />
+      <div className="max-w-3xl mx-auto p-6">
+        <Header />
+        <ControlsPanel
+          type={type}
+          setType={setType}
+          difficulty={difficulty}
+          setDifficulty={setDifficulty}
+        />
 
-      {exercise && (
-        <>
-          <ExerciseCard
-            exercise={exercise}
-            userAnswer={userAnswer}
-            setUserAnswer={setUserAnswer}
-            onCheck={validateAnswer}
-            onNext={fetchExercise}
-          />
-          <FeedbackPanel
-            result={result}
-            feedback={feedback}
-            errorType={errorType}
-          />
-          <DashboardPanel stats={stats} />
-          <ExerciseHistoryPanel history={history} />
-        </>
-      )}
-    </div>
+        {exercise && (
+          <>
+            <ExerciseCard
+              exercise={exercise}
+              userAnswer={userAnswer}
+              setUserAnswer={setUserAnswer}
+              onCheck={validateAnswer}
+              onNext={fetchExercise}
+            />
+            <FeedbackPanel
+              result={result}
+              feedback={feedback}
+              errorType={errorType}
+            />
+            <DashboardPanel stats={stats} />
+            <ExerciseHistoryPanel history={history} />
+          </>
+        )}
+      </div>
+    </>
   );
 }
 

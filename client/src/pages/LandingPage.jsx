@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { loginUserApi } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 function LandingPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const handleDemo = async () => {
     try {
       const response = await loginUserApi({
@@ -10,9 +12,7 @@ function LandingPage() {
         password: "Demo123!",
       });
 
-      localStorage.setItem("token", response.data.token);
-
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      login(response.data.user, response.data.token);
 
       navigate("/teacher/dashboard");
     } catch (error) {
