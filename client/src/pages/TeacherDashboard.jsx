@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
 import { fetchTeacherDashboardApi } from "../services/api";
 import Navbar from "../components/Navbar";
+import HistoryTable from "../components/HistoryTable";
+import { fetchHistoryApi } from "../services/api";
 
 function TeacherDashboard() {
   const [dashboard, setDashboard] = useState(null);
+  const [history, setHistory] = useState([]);
 
   useEffect(() => {
     fetchTeacherDashboardApi().then((res) => {
       setDashboard(res.data);
+    });
+    fetchHistoryApi().then((res) => {
+      setHistory(res.data);
     });
   }, []);
 
@@ -26,7 +32,6 @@ function TeacherDashboard() {
             Attempts:
             {dashboard.attempts}
           </p>
-          <Navbar />
 
           <p>
             Correct:
@@ -37,6 +42,9 @@ function TeacherDashboard() {
             Accuracy:
             {dashboard.accuracy}%
           </p>
+        </div>
+        <div className="mt-6">
+          <HistoryTable history={history} />
         </div>
       </main>
     </>
