@@ -3,6 +3,7 @@ import { fetchTeacherDashboardApi } from "../services/api";
 import Navbar from "../components/Navbar";
 import HistoryTable from "../components/HistoryTable";
 import { fetchHistoryApi } from "../services/api";
+import AnalyticsCard from "../components/AnalyticsCard";
 
 function TeacherDashboard() {
   const [dashboard, setDashboard] = useState(null);
@@ -27,21 +28,12 @@ function TeacherDashboard() {
       <main className="max-w-5xl mx-auto p-6">
         <h1 className="text-3xl font-bold">Teacher Dashboard</h1>
 
-        <div className="mt-6">
-          <p>
-            Attempts:
-            {dashboard.attempts}
-          </p>
+        <div className=" mt-6 grid md:grid-cols-3 gap-6">
+          <AnalyticsCard title="Total Attempts" value={dashboard.attempts} />
 
-          <p>
-            Correct:
-            {dashboard.correct}
-          </p>
+          <AnalyticsCard title="Correct Answers" value={dashboard.correct} />
 
-          <p>
-            Accuracy:
-            {dashboard.accuracy}%
-          </p>
+          <AnalyticsCard title="Accuracy" value={`${dashboard.accuracy}%`} />
         </div>
         <div className="mt-6">
           <HistoryTable history={history} />
