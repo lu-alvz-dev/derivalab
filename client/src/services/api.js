@@ -30,3 +30,11 @@ export const fetchHistoryApi = () => API.get("/history");
 export const fetchTeacherDashboardApi = () => API.get("/dashboard/teacher");
 
 export const fetchStudentDashboardApi = () => API.get("/student-dashboard");
+
+export const fetchAccuracyChartApi = () =>
+  API.get("/dashboard/teacher/accuracy");
+
+export const fetchErrorsChartApi = () => API.get("/dashboard/teacher/errors");
+
+export const fetchDifficultyChartApi = () =>
+  API.get("/dashboard/teacher/difficulty");
