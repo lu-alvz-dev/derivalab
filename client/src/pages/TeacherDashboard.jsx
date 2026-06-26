@@ -5,6 +5,7 @@ import HistoryTable from "../components/HistoryTable";
 import { fetchHistoryApi } from "../services/api";
 import AnalyticsCard from "../components/AnalyticsCard";
 import MostCommonErrorsChart from "../components/MostCommonErrorsChart";
+import DifficultyChart from "../components/DifficultyChart";
 
 function TeacherDashboard() {
   const [dashboard, setDashboard] = useState(null);
@@ -41,6 +42,7 @@ function TeacherDashboard() {
         </div>
         <div className="mt-8">
           <MostCommonErrorsChart />
+          <DifficultyChart />
         </div>
       </main>
     </>
