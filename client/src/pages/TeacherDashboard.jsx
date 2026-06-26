@@ -27,23 +27,35 @@ function TeacherDashboard() {
   return (
     <>
       <Navbar />
-      <main className="max-w-5xl mx-auto p-6">
-        <h1 className="text-3xl font-bold">Teacher Dashboard</h1>
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-slate-800">
+            Teacher Dashboard
+          </h1>
 
-        <div className=" mt-6 grid md:grid-cols-3 gap-6">
+          <p className="text-slate-500 mt-2">
+            Monitor student performance and learning analytics.
+          </p>
+        </div>
+
+        <div className=" mt-8 grid md:grid-cols-3 gap-6">
           <AnalyticsCard title="Total Attempts" value={dashboard.attempts} />
 
           <AnalyticsCard title="Correct Answers" value={dashboard.correct} />
 
           <AnalyticsCard title="Accuracy" value={`${dashboard.accuracy}%`} />
         </div>
-        <div className="mt-6">
-          <HistoryTable history={history} />
-        </div>
-        <div className="mt-8">
+        <section className="mt-8">
+          <AccuracyChart />
+        </section>
+        <section className="mt-8 grid gap-6 lg:grid-cols-2">
           <MostCommonErrorsChart />
+
           <DifficultyChart />
-        </div>
+        </section>
+        <section className="mt-8">
+          <HistoryTable history={history} />
+        </section>
       </main>
     </>
   );
