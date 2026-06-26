@@ -8,7 +8,6 @@ const {
 async function getDashboard(req, res) {
   try {
     const userId = req.user.userId;
-
     const dashboard = await getTeacherDashboard(userId);
 
     res.json(dashboard);
