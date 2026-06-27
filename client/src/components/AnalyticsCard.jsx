@@ -2,13 +2,7 @@ function AnalyticsCard({ title, value }) {
   return (
     <div
       className="
-      bg-white
-      rounded-xl
-      shadow-md
-      p-6
-      border
-      hover:shadow-lg
-      transition
+      rounded-2xl bg-white shadow-md hover:shadow-lg transition-shadow p-6
     "
     >
       <h3 className="text-gray-500 text-sm">{title}</h3>

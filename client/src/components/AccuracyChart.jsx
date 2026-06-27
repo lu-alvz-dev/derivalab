@@ -9,7 +9,7 @@ import {
 
 function AccuracyChart({ data }) {
   return (
-    <div className="bg-white p-6 rounded-xl shadow">
+    <div className="bg-white p-6 rounded-2xl shadow-md">
       <h2 className="font-semibold mb-4">Accuracy Over Time</h2>
 
       <ResponsiveContainer width="100%" height={300}>

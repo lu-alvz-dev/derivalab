@@ -3,6 +3,7 @@ import { fetchStudentDashboardApi, fetchHistoryApi } from "../services/api";
 import Navbar from "../components/Navbar";
 import AnalyticsCard from "../components/AnalyticsCard";
 import { Link } from "react-router-dom";
+import HistoryTable from "../components/HistoryTable";
 
 function StudentDashboardPage() {
   const [stats, setStats] = useState(null);
@@ -24,7 +25,7 @@ function StudentDashboardPage() {
   return (
     <>
       <Navbar />
-      <main className="max-w-5xl mx-auto p-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-slate-800">
             Student Dashboard
@@ -36,7 +37,7 @@ function StudentDashboardPage() {
         </div>
 
         <div
-          className="mt-6 grid md:grid-cols-3 gap-6
+          className="mt-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6
   "
         >
           <AnalyticsCard title="Total Attempts" value={stats.attempts} />

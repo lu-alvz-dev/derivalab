@@ -27,7 +27,7 @@ function MostCommonErrorsChart() {
 
   if (data.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow p-6">
+      <div className="bg-white p-6 rounded-2xl shadow-md">
         <h2 className="text-xl font-semibold mb-4">Most Common Errors</h2>
 
         <p className="text-gray-500">No errors have been recorded yet.</p>
@@ -36,7 +36,7 @@ function MostCommonErrorsChart() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow p-6">
+    <div className="bg-white p-6 rounded-2xl shadow-md">
       <h2 className="text-xl font-semibold mb-4">Most Common Errors</h2>
 
       <ResponsiveContainer width="100%" height={320}>

@@ -6,6 +6,7 @@ import { fetchHistoryApi } from "../services/api";
 import AnalyticsCard from "../components/AnalyticsCard";
 import MostCommonErrorsChart from "../components/MostCommonErrorsChart";
 import DifficultyChart from "../components/DifficultyChart";
+import AccuracyChart from "../components/AccuracyChart";
 
 function TeacherDashboard() {
   const [dashboard, setDashboard] = useState(null);
@@ -27,7 +28,7 @@ function TeacherDashboard() {
   return (
     <>
       <Navbar />
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-slate-800">
             Teacher Dashboard
@@ -38,7 +39,7 @@ function TeacherDashboard() {
           </p>
         </div>
 
-        <div className=" mt-8 grid md:grid-cols-3 gap-6">
+        <div className=" mt-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           <AnalyticsCard title="Total Attempts" value={dashboard.attempts} />
 
           <AnalyticsCard title="Correct Answers" value={dashboard.correct} />
@@ -48,7 +49,7 @@ function TeacherDashboard() {
         <section className="mt-8">
           <AccuracyChart />
         </section>
-        <section className="mt-8 grid gap-6 lg:grid-cols-2">
+        <section className="mt-8 grid grid-cols-1 xl:grid-cols-2 gap-6">
           <MostCommonErrorsChart />
 
           <DifficultyChart />

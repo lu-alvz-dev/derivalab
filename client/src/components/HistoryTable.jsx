@@ -5,7 +5,7 @@ function HistoryTable({ history }) {
 
   return (
     <div className="mt-8 overflow-x-auto">
-      <table className="w-full border">
+      <table className="min-w-full border">
         <thead>
           <tr className="bg-gray-100">
             <th className="p-2 border">Question</th>
