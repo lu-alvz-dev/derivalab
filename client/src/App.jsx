@@ -9,7 +9,7 @@ import RegisterPage from "./pages/RegisterPage";
 import PracticePage from "./pages/PracticePage";
 
 import TeacherDashboard from "./pages/TeacherDashboard";
-import StudentDashboard from "./pages/StudentDashboard";
+import StudentDashboardPage from "./pages/StudentDashboardPage";
 
 import ProfilePage from "./pages/ProfilePage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -45,7 +45,7 @@ function App() {
         path="/student/dashboard"
         element={
           <ProtectedRoute role="student">
-            <StudentDashboard />
+            <StudentDashboardPage />
           </ProtectedRoute>
         }
       />

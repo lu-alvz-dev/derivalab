@@ -35,7 +35,12 @@ function Navbar() {
                   Dashboard
                 </Link>
               )}
-
+              <Link
+                to="/practice"
+                className="hover:text-blue-600 transition-colors"
+              >
+                Practice
+              </Link>
               <Link to="/profile" className="hover:text-blue-600">
                 Profile
               </Link>

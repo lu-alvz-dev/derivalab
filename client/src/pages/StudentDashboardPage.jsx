@@ -47,12 +47,30 @@ function StudentDashboardPage() {
           <AnalyticsCard title="Accuracy" value={`${stats.accuracy}%`} />
         </div>
 
-        <div className="mt-8">
+        <div className="mt-8 flex justify-center sm:justify-start">
           <Link
             to="/practice"
-            className="inline-flex items-center rounded-lg bg-blue-600 px-6 py-3 text-white font-medium hover:bg-blue-700 transition-colors"
+            className="
+      inline-flex
+      items-center
+      gap-2
+      rounded-xl
+      bg-blue-600
+      px-8
+      py-4
+      text-lg
+      font-semibold
+      text-white
+      shadow-md
+      transition-all
+      duration-200
+      hover:bg-blue-700
+      hover:shadow-lg
+      hover:-translate-y-0.5
+      active:translate-y-0
+    "
           >
-            Continue Practice
+            Continue Practicing
           </Link>
         </div>
         <section className="mt-8">

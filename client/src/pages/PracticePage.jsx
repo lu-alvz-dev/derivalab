@@ -13,6 +13,7 @@ import DashboardPanel from "../components/DashboardPanel";
 import ExerciseHistoryPanel from "../components/ExerciseHistoryPanel";
 import { getCurrentUser } from "../utils/auth";
 import Navbar from "../components/Navbar";
+import { useNavigate } from "react-router-dom";
 
 function PracticePage() {
   const currentUser = getCurrentUser();
@@ -20,6 +21,7 @@ function PracticePage() {
   const [exercise, setExercise] = useState(null);
   const [userAnswer, setUserAnswer] = useState("");
   const [result, setResult] = useState(null);
+  const navigate = useNavigate();
 
   // Filtros para la consulta a la API
   const [type, setType] = useState("polynomial");
@@ -110,6 +112,21 @@ function PracticePage() {
     <>
       <Navbar />
       <div className="max-w-3xl mx-auto p-6">
+        <div className="mb-6">
+          <button
+            onClick={() => navigate(-1)}
+            className="
+      rounded-lg
+      border
+      px-4
+      py-2
+      hover:bg-gray-100
+      transition
+    "
+          >
+            ← Back
+          </button>
+        </div>
         <Header />
         <ControlsPanel
           type={type}
