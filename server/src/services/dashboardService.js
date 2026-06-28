@@ -26,29 +26,30 @@ async function getTeacherDashboard(userId) {
 async function getAccuracyOverTime(userId) {
   const query = `
     SELECT
-      DATE(created_at) AS day,
-
-      ROUND(
-        AVG(
-          CASE
-            WHEN is_correct = true THEN 100
-            ELSE 0
-          END
-        )
-      ) AS accuracy
+      created_at,
+      is_correct
 
     FROM exercise_history
 
     WHERE user_id = $1
 
-    GROUP BY DATE(created_at)
-
-    ORDER BY day
+    ORDER BY created_at ASC
   `;
 
   const result = await pool.query(query, [userId]);
 
-  return result.rows;
+  let correct = 0;
+
+  return result.rows.map((attempt, index) => {
+    if (attempt.is_correct) {
+      correct++;
+    }
+
+    return {
+      attempt: index + 1,
+      accuracy: Math.round((correct / (index + 1)) * 100),
+    };
+  });
 }
 
 async function getMostCommonErrors(userId) {
