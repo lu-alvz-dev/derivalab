@@ -34,16 +34,21 @@ function DifficultyChart() {
       </div>
     );
   }
-
+  const formattedData = data.map((item) => ({
+    ...item,
+    difficulty:
+      item.difficulty.charAt(0).toUpperCase() +
+      item.difficulty.slice(1).toLowerCase(),
+  }));
   return (
     <div className="bg-white p-6 rounded-2xl shadow-md">
       <h2 className="text-xl font-semibold mb-4">Exercises by Difficulty</h2>
 
       <ResponsiveContainer width="100%" height={320}>
-        <BarChart data={data}>
+        <BarChart data={formattedData}>
           <CartesianGrid strokeDasharray="3 3" />
 
-          <XAxis dataKey="difficulty" tick={{ fontSize: 12 }} />
+          <XAxis dataKey="difficulty" tick={{ fontSize: 12 }} tickMargin={12} />
 
           <YAxis />
 

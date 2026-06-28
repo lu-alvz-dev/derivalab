@@ -34,20 +34,43 @@ function MostCommonErrorsChart() {
       </div>
     );
   }
+  const formattedData = data.map((item) => {
+    const label = item.error_type ?? "";
 
+    return {
+      ...item,
+      error_type: label
+        .toLowerCase()
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (letter) => letter.toUpperCase()),
+    };
+  });
   return (
     <div className="bg-white p-6 rounded-2xl shadow-md">
       <h2 className="text-xl font-semibold mb-4">Most Common Errors</h2>
 
       <ResponsiveContainer width="100%" height={320}>
-        <BarChart data={data}>
+        <BarChart
+          data={formattedData}
+          margin={{
+            top: 10,
+            right: 20,
+            left: 0,
+            bottom: 60,
+          }}
+        >
           <CartesianGrid strokeDasharray="3 3" />
 
           <XAxis
             dataKey="error_type"
-            tick={{ fontSize: 12 }}
-            angle={-15}
+            angle={-20}
             textAnchor="end"
+            interval={0}
+            tickMargin={18}
+            tick={{
+              fontSize: 12,
+              textTransform: "capitalize",
+            }}
           />
 
           <YAxis />

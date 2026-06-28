@@ -43,7 +43,15 @@ function AccuracyChart() {
       </p>
 
       <ResponsiveContainer width="100%" height={320}>
-        <LineChart data={data}>
+        <LineChart
+          data={data}
+          margin={{
+            top: 10,
+            right: 20,
+            left: 0,
+            bottom: 25,
+          }}
+        >
           <CartesianGrid strokeDasharray="3 3" />
 
           <XAxis
@@ -51,8 +59,12 @@ function AccuracyChart() {
             label={{
               value: "Recent Attempts",
               position: "insideBottom",
-              offset: -5,
+              offset: -18,
             }}
+            tick={{
+              fontSize: 12,
+            }}
+            tickMargin={12}
           />
 
           <YAxis domain={[0, 100]} />
