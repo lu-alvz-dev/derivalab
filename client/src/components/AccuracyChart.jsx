@@ -28,7 +28,7 @@ function AccuracyChart() {
   if (data.length === 0) {
     return (
       <div className="bg-white p-6 rounded-2xl shadow-md">
-        <h2 className="text-xl font-semibold mb-4">Accuracy Over Time</h2>
+        <h2 className="text-xl font-semibold mb-4">Learning Progress</h2>
 
         <p className="text-gray-500">No accuracy data available yet.</p>
       </div>
@@ -37,7 +37,10 @@ function AccuracyChart() {
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow-md">
-      <h2 className="text-xl font-semibold mb-4">Accuracy Over Time</h2>
+      <h2 className="text-xl font-semibold mb-4">Learning Progress</h2>
+      <p className="text-sm text-gray-500 mb-6">
+        Based on your last 40 practice attempts.
+      </p>
 
       <ResponsiveContainer width="100%" height={320}>
         <LineChart data={data}>
@@ -46,7 +49,7 @@ function AccuracyChart() {
           <XAxis
             dataKey="attempt"
             label={{
-              value: "Attempt",
+              value: "Recent Attempts",
               position: "insideBottom",
               offset: -5,
             }}
@@ -54,7 +57,10 @@ function AccuracyChart() {
 
           <YAxis domain={[0, 100]} />
 
-          <Tooltip formatter={(value) => [`${value}%`, "Accuracy"]} />
+          <Tooltip
+            formatter={(value) => [`${value}%`, "Accuracy"]}
+            labelFormatter={(value) => `Attempt ${value}`}
+          />
 
           <Line
             type="monotone"

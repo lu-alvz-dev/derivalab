@@ -33,14 +33,25 @@ async function getAccuracyOverTime(userId) {
 
     WHERE user_id = $1
 
-    ORDER BY created_at ASC
+    ORDER BY created_at DESC
+
+    LIMIT 40
   `;
 
   const result = await pool.query(query, [userId]);
 
+  /*
+    PostgreSQL devuelve primero el intento más reciente.
+
+    Recharts necesita que los datos estén del más antiguo
+    al más reciente para dibujar correctamente la línea.
+  */
+
+  const attempts = result.rows.reverse();
+
   let correct = 0;
 
-  return result.rows.map((attempt, index) => {
+  return attempts.map((attempt, index) => {
     if (attempt.is_correct) {
       correct++;
     }
