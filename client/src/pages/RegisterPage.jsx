@@ -8,6 +8,7 @@ function RegisterPage() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("teacher");
   const [errorMessage, setErrorMessage] = useState("");
+  const [teacherId, setTeacherId] = useState("");
 
   const handleRegister = async () => {
     try {
@@ -15,6 +16,7 @@ function RegisterPage() {
         email,
         password,
         role,
+        teacher_id: role === "student" ? Number(teacherId) : null,
       });
       setErrorMessage("");
       navigate("/login");
@@ -60,6 +62,22 @@ function RegisterPage() {
 
             <option value="student">Student</option>
           </select>
+
+          {role === "student" && (
+            <>
+              <input
+                type="number"
+                placeholder="Teacher ID"
+                value={teacherId}
+                onChange={(e) => setTeacherId(e.target.value)}
+                className="w-full border rounded-lg p-3"
+              />
+
+              <p className="text-sm text-gray-500">
+                Enter the Teacher ID provided by your instructor.
+              </p>
+            </>
+          )}
 
           <button
             onClick={handleRegister}
