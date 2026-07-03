@@ -1,6 +1,20 @@
 const pool = require("../config/db");
 const bcrypt = require("bcryptjs");
 
+async function teacherExists(teacherId) {
+  const result = await pool.query(
+    `
+    SELECT id
+    FROM users
+    WHERE id = $1
+      AND role = 'teacher'
+    `,
+    [teacherId],
+  );
+
+  return result.rows.length > 0;
+}
+
 async function registerUser(email, password, role = "teacher", teacherId) {
   const existingUser = await pool.query(
     "SELECT * FROM users WHERE email = $1",
@@ -14,21 +28,15 @@ async function registerUser(email, password, role = "teacher", teacherId) {
   if (role === "student" && !teacherId) {
     throw new Error("Teacher ID is required.");
   }
-  if (role === "student") {
-    const teacher = await pool.query(
-      `
-    SELECT id
-    FROM users
-    WHERE id = $1
-      AND role = 'teacher'
-    `,
-      [teacherId],
-    );
 
-    if (teacher.rows.length === 0) {
-      throw new Error("Teacher not found.");
+  if (role === "student") {
+    const exists = await teacherExists(teacherId);
+
+    if (!exists) {
+      throw new Error("The Teacher ID you entered does not exist.");
     }
   }
+
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const result = await pool.query(
@@ -55,6 +63,7 @@ async function loginUser(email, password) {
   if (!isMatch) {
     throw new Error("Invalid password");
   }
+  
 
   return user;
 }
@@ -62,4 +71,5 @@ async function loginUser(email, password) {
 module.exports = {
   registerUser,
   loginUser,
+  teacherExists,
 };

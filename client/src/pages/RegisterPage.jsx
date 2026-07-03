@@ -19,7 +19,12 @@ function RegisterPage() {
         teacher_id: role === "student" ? Number(teacherId) : null,
       });
       setErrorMessage("");
-      navigate("/login");
+      navigate("/login", {
+        state: {
+          successMessage:
+            "Your account has been created successfully. Please log in.",
+        },
+      });
     } catch (error) {
       console.error("Registration failed", error);
 

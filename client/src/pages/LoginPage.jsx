@@ -1,10 +1,12 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { loginUserApi } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const successMessage = location.state?.successMessage;
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,9 +44,11 @@ function LoginPage() {
           Welcome Back
         </h1>
 
-        <p className="text-gray-600 text-center mt-2">
-          Login to continue to DerivaLab
-        </p>
+        {successMessage && (
+          <div className="mt-4 rounded-lg border border-green-300 bg-green-50 p-3 text-green-700">
+            {successMessage}
+          </div>
+        )}
 
         <div className="mt-6 space-y-4">
           <input
