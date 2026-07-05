@@ -7,8 +7,8 @@ const {
 
 async function getDashboard(req, res) {
   try {
-    const userId = req.user.userId;
-    const dashboard = await getTeacherDashboard(userId);
+    const teacherId = req.user.userId;
+    const dashboard = await getTeacherDashboard(teacherId);
 
     res.json(dashboard);
   } catch (error) {
@@ -22,10 +22,8 @@ async function getDashboard(req, res) {
 
 async function getAccuracyChart(req, res) {
   try {
-    const userId = req.user.userId;
-
-    const data = await getAccuracyOverTime(userId);
-
+    const teacherId = req.user.userId;
+    const data = await getAccuracyOverTime(teacherId);
     res.json(data);
   } catch (error) {
     res.status(500).json({
@@ -36,9 +34,8 @@ async function getAccuracyChart(req, res) {
 
 async function getErrorsChart(req, res) {
   try {
-    const userId = req.user.userId;
-
-    const data = await getMostCommonErrors(userId);
+    const teacherId = req.user.userId;
+    const data = await getMostCommonErrors(teacherId);
 
     res.json(data);
   } catch (error) {
@@ -50,9 +47,8 @@ async function getErrorsChart(req, res) {
 
 async function getDifficultyChart(req, res) {
   try {
-    const userId = req.user.userId;
-
-    const data = await getExercisesByDifficulty(userId);
+    const teacherId = req.user.userId;
+    const data = await getExercisesByDifficulty(teacherId);
 
     res.json(data);
   } catch (error) {

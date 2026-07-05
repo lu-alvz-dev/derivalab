@@ -1,17 +1,26 @@
 const pool = require("../config/db");
 
-async function getTeacherDashboard(userId) {
+async function getTeacherDashboard(teacherId) {
   const query = `
     SELECT
       COUNT(*) AS attempts,
-      COUNT(*) FILTER (WHERE is_correct = true) AS correct
-    FROM exercise_history
-    WHERE user_id = $1
+
+      COUNT(*) FILTER (
+        WHERE eh.is_correct = true
+      ) AS correct
+
+    FROM exercise_history eh
+
+    INNER JOIN users u
+      ON eh.user_id = u.id
+
+    WHERE u.teacher_id = $1
   `;
 
-  const result = await pool.query(query, [userId]);
+  const result = await pool.query(query, [teacherId]);
 
   const attempts = Number(result.rows[0].attempts);
+
   const correct = Number(result.rows[0].correct);
 
   const accuracy = attempts === 0 ? 0 : Math.round((correct / attempts) * 100);
@@ -23,22 +32,25 @@ async function getTeacherDashboard(userId) {
   };
 }
 
-async function getAccuracyOverTime(userId) {
+async function getAccuracyOverTime(teacherId) {
   const query = `
     SELECT
       created_at,
       is_correct
 
-    FROM exercise_history
+    FROM exercise_history eh
 
-    WHERE user_id = $1
+INNER JOIN users u
+ON eh.user_id = u.id
+
+WHERE u.teacher_id = $1
 
     ORDER BY created_at DESC
 
     LIMIT 40
   `;
 
-  const result = await pool.query(query, [userId]);
+  const result = await pool.query(query, [teacherId]);
 
   /*
     PostgreSQL devuelve primero el intento más reciente.
@@ -69,9 +81,13 @@ async function getMostCommonErrors(userId) {
       error_type,
       COUNT(*) AS count
 
-    FROM exercise_history
+    FROM exercise_history eh
 
-    WHERE user_id = $1
+INNER JOIN users u
+ON eh.user_id=u.id
+
+WHERE
+u.teacher_id=$1
       AND error_type IS NOT NULL
 
     GROUP BY error_type
@@ -90,9 +106,12 @@ async function getExercisesByDifficulty(userId) {
       difficulty,
       COUNT(*) AS count
 
-    FROM exercise_history
+    FROM exercise_history eh
 
-    WHERE user_id = $1
+INNER JOIN users u
+ON eh.user_id=u.id
+
+WHERE u.teacher_id=$1
 
     GROUP BY difficulty
   `;
