@@ -1,22 +1,29 @@
 import { useNavigate } from "react-router-dom";
 import { loginUserApi } from "../services/api";
 import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
 
 function LandingPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const handleDemo = async () => {
+  const [showDemoMenu, setShowDemoMenu] = useState(false);
+
+  const loginDemo = async (email, password) => {
     try {
       const response = await loginUserApi({
-        email: "demo@derivalab.com",
-        password: "Demo123!",
+        email,
+        password,
       });
 
       login(response.data.user, response.data.token);
 
-      navigate("/teacher/dashboard");
+      if (response.data.user.role === "teacher") {
+        navigate("/teacher/dashboard");
+      } else {
+        navigate("/student/dashboard");
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Demo login failed:", error);
     }
   };
 
@@ -40,12 +47,62 @@ function LandingPage() {
             Get Started
           </button>
 
-          <button
-            className="bg-white border px-6 py-3 rounded-lg shadow hover:bg-gray-100"
-            onClick={handleDemo}
-          >
-            Try Demo
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setShowDemoMenu(!showDemoMenu)}
+              className="bg-white border px-6 py-3 rounded-lg shadow hover:bg-gray-100"
+            >
+              Try Demo
+            </button>
+
+            {showDemoMenu && (
+              <div
+                className="
+      absolute
+      mt-2
+      w-60
+      rounded-lg
+      bg-white
+      shadow-lg
+      border
+      overflow-hidden
+      z-50
+    "
+              >
+                <button
+                  onClick={() =>
+                    loginDemo("demo.teacher@derivalab.com", "Demo123!")
+                  }
+                  className="
+          block
+          w-full
+          text-left
+          px-4
+          py-3
+          hover:bg-gray-100
+        "
+                >
+                  👩‍🏫 Teacher Experience
+                </button>
+
+                <button
+                  onClick={() =>
+                    loginDemo("demo.student@derivalab.com", "Demo123!")
+                  }
+                  className="
+          block
+          w-full
+          text-left
+          px-4
+          py-3
+          hover:bg-gray-100
+        "
+                >
+                  🎓 Student Experience
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         <p className="mt-6 text-gray-600">
