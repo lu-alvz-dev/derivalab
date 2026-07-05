@@ -63,9 +63,13 @@ async function loginUser(email, password) {
   if (!isMatch) {
     throw new Error("Invalid password");
   }
-  
 
-  return user;
+  return {
+    id: user.id,
+    email: user.email,
+    role: user.role,
+    teacher_id: user.teacher_id,
+  };
 }
 
 module.exports = {
