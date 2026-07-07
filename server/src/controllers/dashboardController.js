@@ -3,6 +3,7 @@ const {
   getAccuracyOverTime,
   getMostCommonErrors,
   getExercisesByDifficulty,
+  getTeacherStudents,
 } = require("../services/dashboardService");
 
 async function getDashboard(req, res) {
@@ -58,9 +59,26 @@ async function getDifficultyChart(req, res) {
   }
 }
 
+async function getTeacherStudentsController(req, res) {
+  try {
+    const teacherId = req.user.userId;
+
+    const students = await getTeacherStudents(teacherId);
+
+    res.json(students);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Students error",
+    });
+  }
+}
+
 module.exports = {
   getDashboard,
   getAccuracyChart,
   getErrorsChart,
   getDifficultyChart,
+  getTeacherStudentsController,
 };

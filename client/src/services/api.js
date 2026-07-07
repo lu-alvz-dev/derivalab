@@ -38,3 +38,6 @@ export const fetchErrorsChartApi = () => API.get("/dashboard/teacher/errors");
 
 export const fetchDifficultyChartApi = () =>
   API.get("/dashboard/teacher/difficulty");
+
+export const fetchTeacherStudentsApi = () =>
+  API.get("/dashboard/teacher/students");

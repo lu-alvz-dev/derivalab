@@ -3,32 +3,41 @@ const pool = require("../config/db");
 async function getTeacherDashboard(teacherId) {
   const query = `
     SELECT
-      COUNT(*) AS attempts,
+      COUNT(DISTINCT u.id) AS students,
+
+      COUNT(eh.id) AS attempts,
 
       COUNT(*) FILTER (
         WHERE eh.is_correct = true
       ) AS correct
 
-    FROM exercise_history eh
+    FROM users u
 
-    INNER JOIN users u
+    LEFT JOIN exercise_history eh
       ON eh.user_id = u.id
 
-    WHERE u.teacher_id = $1
+    WHERE
+      u.teacher_id = $1
   `;
 
   const result = await pool.query(query, [teacherId]);
 
-  const attempts = Number(result.rows[0].attempts);
+  const row = result.rows[0];
 
-  const correct = Number(result.rows[0].correct);
+  const students = Number(row.students);
 
-  const accuracy = attempts === 0 ? 0 : Math.round((correct / attempts) * 100);
+  const attempts = Number(row.attempts);
+
+  const correct = Number(row.correct);
+
+  const averageAccuracy =
+    attempts === 0 ? 0 : Math.round((correct / attempts) * 100);
 
   return {
+    students,
     attempts,
     correct,
-    accuracy,
+    averageAccuracy,
   };
 }
 
@@ -121,9 +130,58 @@ WHERE u.teacher_id=$1
   return result.rows;
 }
 
+async function getTeacherStudents(teacherId) {
+  const query = `
+    SELECT
+      u.id,
+      u.email,
+
+      COUNT(eh.id) AS attempts,
+
+      COUNT(*) FILTER (
+        WHERE eh.is_correct = true
+      ) AS correct
+
+    FROM users u
+
+    LEFT JOIN exercise_history eh
+      ON eh.user_id = u.id
+
+    WHERE
+      u.teacher_id = $1
+
+    GROUP BY
+      u.id,
+      u.email
+
+    ORDER BY
+      u.email
+  `;
+
+  const result = await pool.query(query, [teacherId]);
+
+  return result.rows.map((student) => {
+    const attempts = Number(student.attempts);
+
+    const correct = Number(student.correct);
+
+    const accuracy =
+      attempts === 0 ? 0 : Math.round((correct / attempts) * 100);
+
+    return {
+      id: student.id,
+      email: student.email,
+      attempts,
+      correct,
+      accuracy,
+    };
+  });
+}
+
 module.exports = {
   getTeacherDashboard,
   getAccuracyOverTime,
   getMostCommonErrors,
   getExercisesByDifficulty,
+  getTeacherStudents,
 };
