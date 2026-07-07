@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
-import { fetchTeacherDashboardApi } from "../services/api";
+import {
+  fetchTeacherDashboardApi,
+  fetchTeacherStudentsApi,
+  fetchHistoryApi,
+} from "../services/api";
 import Navbar from "../components/Navbar";
 import HistoryTable from "../components/HistoryTable";
-import { fetchHistoryApi } from "../services/api";
 import AnalyticsCard from "../components/AnalyticsCard";
 import MostCommonErrorsChart from "../components/MostCommonErrorsChart";
 import DifficultyChart from "../components/DifficultyChart";
 import AccuracyChart from "../components/AccuracyChart";
+import StudentAnalyticsTable from "../components/StudentAnalyticsTable";
 
 function TeacherDashboard() {
   const [dashboard, setDashboard] = useState(null);
   const [history, setHistory] = useState([]);
+  const [students, setStudents] = useState([]);
 
   useEffect(() => {
     fetchTeacherDashboardApi().then((res) => {
@@ -18,6 +23,9 @@ function TeacherDashboard() {
     });
     fetchHistoryApi().then((res) => {
       setHistory(res.data);
+    });
+    fetchTeacherStudentsApi().then((res) => {
+      setStudents(res.data);
     });
   }, []);
 
@@ -39,12 +47,17 @@ function TeacherDashboard() {
           </p>
         </div>
 
-        <div className=" mt-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          <AnalyticsCard title="Students" value={dashboard.students} />
+
           <AnalyticsCard title="Total Attempts" value={dashboard.attempts} />
 
           <AnalyticsCard title="Correct Answers" value={dashboard.correct} />
 
-          <AnalyticsCard title="Accuracy" value={`${dashboard.accuracy}%`} />
+          <AnalyticsCard
+            title="Average Accuracy"
+            value={`${dashboard.averageAccuracy}%`}
+          />
         </div>
         <section className="mt-8">
           <AccuracyChart />
@@ -53,6 +66,9 @@ function TeacherDashboard() {
           <MostCommonErrorsChart />
 
           <DifficultyChart />
+        </section>
+        <section className="mt-8">
+          <StudentAnalyticsTable students={students} />
         </section>
         <section className="mt-8">
           <HistoryTable history={history} />
