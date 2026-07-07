@@ -178,10 +178,69 @@ async function getTeacherStudents(teacherId) {
   });
 }
 
+async function getTeacherStudentDashboard(teacherId, studentId) {
+  const studentQuery = `
+    SELECT
+      id,
+      email,
+      teacher_id
+    FROM users
+    WHERE id = $1
+      AND role = 'student'
+  `;
+
+  const studentResult = await pool.query(studentQuery, [studentId]);
+
+  if (studentResult.rows.length === 0) {
+    return null;
+  }
+
+  const student = studentResult.rows[0];
+
+  if (student.teacher_id !== teacherId) {
+    return "FORBIDDEN";
+  }
+
+  const statsQuery = `
+    SELECT
+      COUNT(*) AS attempts,
+
+      COUNT(*) FILTER (
+        WHERE is_correct = true
+      ) AS correct
+
+    FROM exercise_history
+
+    WHERE user_id = $1
+  `;
+
+  const statsResult = await pool.query(statsQuery, [studentId]);
+
+  const attempts = Number(statsResult.rows[0].attempts);
+
+  const correct = Number(statsResult.rows[0].correct);
+
+  const accuracy = attempts === 0 ? 0 : Math.round((correct / attempts) * 100);
+
+  return {
+    student: {
+      id: student.id,
+      email: student.email,
+    },
+
+    stats: {
+      attempts,
+      correct,
+      accuracy,
+    },
+  };
+}
+
 module.exports = {
   getTeacherDashboard,
   getAccuracyOverTime,
   getMostCommonErrors,
   getExercisesByDifficulty,
   getTeacherStudents,
+  getTeacherStudentDashboard,
 };

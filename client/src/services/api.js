@@ -41,3 +41,6 @@ export const fetchDifficultyChartApi = () =>
 
 export const fetchTeacherStudentsApi = () =>
   API.get("/dashboard/teacher/students");
+
+export const fetchTeacherStudentDashboardApi = (studentId) =>
+  API.get(`/dashboard/teacher/student/${studentId}`);

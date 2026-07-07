@@ -12,6 +12,7 @@ const {
   getErrorsChart,
   getDifficultyChart,
   getTeacherStudentsController,
+  getTeacherStudentDashboardController,
 } = require("../controllers/dashboardController");
 
 router.get("/teacher", authenticate, authorize("teacher"), getDashboard);
@@ -42,6 +43,13 @@ router.get(
   authenticate,
   authorize("teacher"),
   getTeacherStudentsController,
+);
+
+router.get(
+  "/teacher/student/:studentId",
+  authenticate,
+  authorize("teacher"),
+  getTeacherStudentDashboardController,
 );
 
 module.exports = router;
