@@ -7,6 +7,7 @@ const {
   getTeacherStudentDashboard,
   getTeacherStudentHistory,
   getTeacherStudentAccuracy,
+  getTeacherStudentErrors,
 } = require("../services/dashboardService");
 
 async function getDashboard(req, res) {
@@ -156,6 +157,30 @@ async function getTeacherStudentAccuracyController(req, res) {
   }
 }
 
+async function getTeacherStudentErrorsController(req, res) {
+  try {
+    const teacherId = req.user.userId;
+
+    const studentId = Number(req.params.id);
+
+    const data = await getTeacherStudentErrors(teacherId, studentId);
+
+    if (data === "FORBIDDEN") {
+      return res.status(403).json({
+        message: "Access denied.",
+      });
+    }
+
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Student errors chart error",
+    });
+  }
+}
+
 module.exports = {
   getDashboard,
   getAccuracyChart,
@@ -165,4 +190,5 @@ module.exports = {
   getTeacherStudentDashboardController,
   getTeacherStudentHistoryController,
   getTeacherStudentAccuracyController,
+  getTeacherStudentErrorsController,
 };

@@ -353,6 +353,58 @@ async function getTeacherStudentAccuracy(teacherId, studentId) {
   });
 }
 
+async function getTeacherStudentErrors(teacherId, studentId) {
+  /*
+    Primero validamos que el estudiante
+    pertenezca al profesor autenticado.
+  */
+
+  const validationQuery = `
+    SELECT id
+
+    FROM users
+
+    WHERE
+      id = $1
+      AND role = 'student'
+      AND teacher_id = $2
+  `;
+
+  const validationResult = await pool.query(validationQuery, [
+    studentId,
+    teacherId,
+  ]);
+
+  if (validationResult.rows.length === 0) {
+    return "FORBIDDEN";
+  }
+
+  /*
+    Ahora obtenemos únicamente
+    los errores de ese estudiante.
+  */
+
+  const errorsQuery = `
+    SELECT
+      error_type,
+      COUNT(*) AS count
+
+    FROM exercise_history
+
+    WHERE
+      user_id = $1
+      AND error_type IS NOT NULL
+
+    GROUP BY error_type
+
+    ORDER BY count DESC
+  `;
+
+  const result = await pool.query(errorsQuery, [studentId]);
+
+  return result.rows;
+}
+
 module.exports = {
   getTeacherDashboard,
   getAccuracyOverTime,
@@ -362,4 +414,5 @@ module.exports = {
   getTeacherStudentDashboard,
   getTeacherStudentHistory,
   getTeacherStudentAccuracy,
+  getTeacherStudentErrors,
 };
