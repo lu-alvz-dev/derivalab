@@ -1,4 +1,5 @@
 const pool = require("../config/db");
+const MAX_RECENT_ATTEMPTS = 40;
 
 async function getTeacherDashboard(teacherId) {
   const query = `
@@ -279,6 +280,79 @@ async function getTeacherStudentHistory(teacherId, studentId) {
   return historyResult.rows;
 }
 
+async function getTeacherStudentAccuracy(teacherId, studentId) {
+  /*
+    Primero validamos que el alumno pertenezca al profesor.
+  */
+
+  const validationQuery = `
+    SELECT id
+
+    FROM users
+
+    WHERE
+      id = $1
+      AND role = 'student'
+      AND teacher_id = $2
+  `;
+
+  const validationResult = await pool.query(validationQuery, [
+    studentId,
+    teacherId,
+  ]);
+
+  if (validationResult.rows.length === 0) {
+    return "FORBIDDEN";
+  }
+
+  /*
+    Obtenemos únicamente los últimos intentos
+    del estudiante.
+  */
+
+  const accuracyQuery = `
+    SELECT
+      created_at,
+      is_correct
+
+    FROM exercise_history
+
+    WHERE user_id = $1
+
+    ORDER BY created_at DESC
+
+    LIMIT $2
+  `;
+
+  const result = await pool.query(accuracyQuery, [
+    studentId,
+    MAX_RECENT_ATTEMPTS,
+  ]);
+
+  /*
+    PostgreSQL devuelve del más reciente
+    al más antiguo.
+
+    Recharts necesita exactamente
+    el orden contrario.
+  */
+
+  const attempts = result.rows.reverse();
+
+  let correct = 0;
+
+  return attempts.map((attempt, index) => {
+    if (attempt.is_correct) {
+      correct++;
+    }
+
+    return {
+      attempt: index + 1,
+      accuracy: Math.round((correct / (index + 1)) * 100),
+    };
+  });
+}
+
 module.exports = {
   getTeacherDashboard,
   getAccuracyOverTime,
@@ -287,4 +361,5 @@ module.exports = {
   getTeacherStudents,
   getTeacherStudentDashboard,
   getTeacherStudentHistory,
+  getTeacherStudentAccuracy,
 };
