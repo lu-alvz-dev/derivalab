@@ -236,6 +236,49 @@ async function getTeacherStudentDashboard(teacherId, studentId) {
   };
 }
 
+async function getTeacherStudentHistory(teacherId, studentId) {
+  const validationQuery = `
+    SELECT id
+    FROM users
+    WHERE
+      id = $1
+      AND role = 'student'
+      AND teacher_id = $2
+  `;
+
+  const validationResult = await pool.query(validationQuery, [
+    studentId,
+    teacherId,
+  ]);
+
+  if (validationResult.rows.length === 0) {
+    return "FORBIDDEN";
+  }
+
+  const historyQuery = `
+    SELECT
+      id,
+      question,
+      correct_answer,
+      user_answer,
+      exercise_type,
+      difficulty,
+      is_correct,
+      error_type,
+      created_at
+
+    FROM exercise_history
+
+    WHERE user_id = $1
+
+    ORDER BY created_at DESC
+  `;
+
+  const historyResult = await pool.query(historyQuery, [studentId]);
+
+  return historyResult.rows;
+}
+
 module.exports = {
   getTeacherDashboard,
   getAccuracyOverTime,
@@ -243,4 +286,5 @@ module.exports = {
   getExercisesByDifficulty,
   getTeacherStudents,
   getTeacherStudentDashboard,
+  getTeacherStudentHistory,
 };

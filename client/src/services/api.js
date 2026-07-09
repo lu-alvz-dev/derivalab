@@ -44,3 +44,6 @@ export const fetchTeacherStudentsApi = () =>
 
 export const fetchTeacherStudentDashboardApi = (studentId) =>
   API.get(`/dashboard/teacher/student/${studentId}`);
+
+export const fetchTeacherStudentHistoryApi = (studentId) =>
+  API.get(`/dashboard/teacher/student/${studentId}/history`);
