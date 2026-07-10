@@ -405,6 +405,56 @@ async function getTeacherStudentErrors(teacherId, studentId) {
   return result.rows;
 }
 
+async function getTeacherStudentDifficulty(teacherId, studentId) {
+  /*
+    Verificamos que el estudiante
+    pertenezca al profesor autenticado.
+  */
+
+  const validationQuery = `
+    SELECT id
+
+    FROM users
+
+    WHERE
+      id = $1
+      AND role = 'student'
+      AND teacher_id = $2
+  `;
+
+  const validationResult = await pool.query(validationQuery, [
+    studentId,
+    teacherId,
+  ]);
+
+  if (validationResult.rows.length === 0) {
+    return "FORBIDDEN";
+  }
+
+  /*
+    Obtenemos únicamente los ejercicios
+    realizados por este estudiante.
+  */
+
+  const difficultyQuery = `
+    SELECT
+      difficulty,
+      COUNT(*) AS count
+
+    FROM exercise_history
+
+    WHERE user_id = $1
+
+    GROUP BY difficulty
+
+    ORDER BY difficulty
+  `;
+
+  const result = await pool.query(difficultyQuery, [studentId]);
+
+  return result.rows;
+}
+
 module.exports = {
   getTeacherDashboard,
   getAccuracyOverTime,
@@ -415,4 +465,5 @@ module.exports = {
   getTeacherStudentHistory,
   getTeacherStudentAccuracy,
   getTeacherStudentErrors,
+  getTeacherStudentDifficulty,
 };
