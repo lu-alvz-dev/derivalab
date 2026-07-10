@@ -42,8 +42,17 @@ export const fetchDifficultyChartApi = () =>
 export const fetchTeacherStudentsApi = () =>
   API.get("/dashboard/teacher/students");
 
+export const fetchTeacherStudentHistoryApi = (studentId) =>
+  API.get(`/dashboard/teacher/student/${studentId}/history`);
+
 export const fetchTeacherStudentDashboardApi = (studentId) =>
   API.get(`/dashboard/teacher/student/${studentId}`);
 
-export const fetchTeacherStudentHistoryApi = (studentId) =>
-  API.get(`/dashboard/teacher/student/${studentId}/history`);
+export const fetchTeacherStudentAccuracyApi = (studentId) =>
+  API.get(`/dashboard/teacher/student/${studentId}/accuracy`);
+
+export const fetchTeacherStudentErrorsApi = (studentId) =>
+  API.get(`/dashboard/teacher/student/${studentId}/errors`);
+
+export const fetchTeacherStudentDifficultyApi = (studentId) =>
+  API.get(`/dashboard/teacher/student/${studentId}/difficulty`);
