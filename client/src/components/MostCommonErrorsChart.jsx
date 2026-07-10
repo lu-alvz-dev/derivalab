@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 
-import { fetchErrorsChartApi } from "../services/api";
+import {
+  fetchErrorsChartApi,
+  fetchTeacherStudentErrorsApi,
+} from "../services/api";
 
 import {
   ResponsiveContainer,
@@ -12,18 +15,22 @@ import {
   Tooltip,
 } from "recharts";
 
-function MostCommonErrorsChart() {
+function MostCommonErrorsChart({ studentId = null }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetchErrorsChartApi()
+    const request = studentId
+      ? fetchTeacherStudentErrorsApi(studentId)
+      : fetchErrorsChartApi();
+
+    request
       .then((response) => {
         setData(response.data);
       })
       .catch((error) => {
         console.error("Error loading error chart:", error);
       });
-  }, []);
+  }, [studentId]);
 
   if (data.length === 0) {
     return (
