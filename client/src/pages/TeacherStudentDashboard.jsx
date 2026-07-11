@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
 
@@ -41,11 +41,28 @@ function TeacherStudentDashboard() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-800">
-            {dashboard.student.email}
-          </h1>
+          <Link
+            to="/teacher/dashboard"
+            className="
+      inline-flex
+      items-center
+      text-sm
+      text-blue-600
+      hover:text-blue-700
+      font-medium
+      transition-colors
+    "
+          >
+            ← Back to Teacher Dashboard
+          </Link>
 
-          <p className="text-slate-500 mt-2">Individual student analytics.</p>
+          <div className="mt-4">
+            <h1 className="text-4xl font-bold text-slate-800">
+              {dashboard.student.email}
+            </h1>
+
+            <p className="mt-2 text-slate-500">Student Analytics</p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
