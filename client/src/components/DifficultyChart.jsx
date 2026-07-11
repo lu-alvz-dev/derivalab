@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 
-import { fetchDifficultyChartApi } from "../services/api";
+import {
+  fetchDifficultyChartApi,
+  fetchTeacherStudentDifficultyApi,
+} from "../services/api";
 
 import {
   ResponsiveContainer,
@@ -12,18 +15,22 @@ import {
   Tooltip,
 } from "recharts";
 
-function DifficultyChart() {
+function DifficultyChart({ studentId = null }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetchDifficultyChartApi()
+    const request = studentId
+      ? fetchTeacherStudentDifficultyApi(studentId)
+      : fetchDifficultyChartApi();
+
+    request
       .then((response) => {
         setData(response.data);
       })
       .catch((error) => {
         console.error("Error loading difficulty chart:", error);
       });
-  }, []);
+  }, [studentId]);
 
   if (data.length === 0) {
     return (
