@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchStudentDashboardApi, fetchHistoryApi } from "../services/api";
+import { fetchStudentDashboardApi } from "../services/api";
 import Navbar from "../components/Navbar";
 import AnalyticsCard from "../components/AnalyticsCard";
 import { Link } from "react-router-dom";
@@ -7,14 +7,10 @@ import HistoryTable from "../components/HistoryTable";
 
 function StudentDashboardPage() {
   const [stats, setStats] = useState(null);
-  const [history, setHistory] = useState([]);
 
   useEffect(() => {
     fetchStudentDashboardApi().then((res) => {
       setStats(res.data);
-    });
-    fetchHistoryApi().then((res) => {
-      setHistory(res.data);
     });
   }, []);
 
@@ -74,7 +70,7 @@ function StudentDashboardPage() {
           </Link>
         </div>
         <section className="mt-8">
-          <HistoryTable history={history} />
+          <HistoryTable />
         </section>
       </main>
     </>

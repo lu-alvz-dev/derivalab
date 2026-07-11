@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   fetchTeacherDashboardApi,
   fetchTeacherStudentsApi,
-  fetchHistoryApi,
 } from "../services/api";
 import Navbar from "../components/Navbar";
 import HistoryTable from "../components/HistoryTable";
@@ -14,16 +13,14 @@ import StudentAnalyticsTable from "../components/StudentAnalyticsTable";
 
 function TeacherDashboard() {
   const [dashboard, setDashboard] = useState(null);
-  const [history, setHistory] = useState([]);
+
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
     fetchTeacherDashboardApi().then((res) => {
       setDashboard(res.data);
     });
-    fetchHistoryApi().then((res) => {
-      setHistory(res.data);
-    });
+
     fetchTeacherStudentsApi().then((res) => {
       setStudents(res.data);
     });
@@ -71,7 +68,7 @@ function TeacherDashboard() {
           <StudentAnalyticsTable students={students} />
         </section>
         <section className="mt-8">
-          <HistoryTable history={history} />
+          <HistoryTable />
         </section>
       </main>
     </>

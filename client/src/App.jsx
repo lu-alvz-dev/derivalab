@@ -13,6 +13,7 @@ import StudentDashboardPage from "./pages/StudentDashboardPage";
 
 import ProfilePage from "./pages/ProfilePage";
 import NotFoundPage from "./pages/NotFoundPage";
+import TeacherStudentDashboard from "./pages/TeacherStudentDashboard";
 
 function App() {
   return (
@@ -39,6 +40,11 @@ function App() {
             <TeacherDashboard />
           </ProtectedRoute>
         }
+      />
+
+      <Route
+        path="/teacher/student/:id"
+        element={<TeacherStudentDashboard />}
       />
 
       <Route
