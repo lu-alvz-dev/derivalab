@@ -77,16 +77,28 @@ function TeacherStudentDashboard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <AnalyticsCard title="Attempts" value={dashboard.stats.attempts} />
+        <section className="mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-6">
+            Performance Overview
+          </h2>
 
-          <AnalyticsCard title="Correct" value={dashboard.stats.correct} />
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <AnalyticsCard
+              title="Total Attempts"
+              value={dashboard.stats.attempts}
+            />
 
-          <AnalyticsCard
-            title="Accuracy"
-            value={`${dashboard.stats.accuracy}%`}
-          />
-        </div>
+            <AnalyticsCard
+              title="Correct Answers"
+              value={dashboard.stats.correct}
+            />
+
+            <AnalyticsCard
+              title="Accuracy"
+              value={`${dashboard.stats.accuracy}%`}
+            />
+          </div>
+        </section>
 
         <section className="mt-8">
           <AccuracyChart studentId={id} />
