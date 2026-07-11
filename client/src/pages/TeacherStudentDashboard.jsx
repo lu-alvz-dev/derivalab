@@ -44,16 +44,28 @@ function TeacherStudentDashboard() {
           <Link
             to="/teacher/dashboard"
             className="
-      inline-flex
-      items-center
-      text-sm
-      text-blue-600
-      hover:text-blue-700
-      font-medium
-      transition-colors
-    "
+    inline-flex
+    items-center
+    gap-2
+    rounded-lg
+    border
+    border-slate-300
+    bg-white
+    px-4
+    py-2
+    text-sm
+    font-medium
+    text-slate-700
+    shadow-sm
+    transition-all
+    hover:bg-slate-50
+    hover:border-blue-500
+    hover:text-blue-600
+  "
           >
-            ← Back to Teacher Dashboard
+            <span className="text-lg">←</span>
+
+            <span>Back to Teacher Dashboard</span>
           </Link>
 
           <div className="mt-4">
