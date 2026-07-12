@@ -35,7 +35,9 @@ function AccuracyChart({ studentId = null }) {
   if (data.length === 0) {
     return (
       <div className="bg-white rounded-2xl shadow-md p-6">
-        <h2 className="text-xl font-semibold mb-4">Accuracy Over Time</h2>
+        <h2 className="text-xl font-semibold mb-4">
+          {studentId ? "Student Accuracy Progress" : "Group Accuracy Progress"}
+        </h2>
 
         <p className="text-gray-500">No attempts available yet.</p>
       </div>

@@ -49,7 +49,11 @@ function DifficultyChart({ studentId = null }) {
   }));
   return (
     <div className="bg-white p-6 rounded-2xl shadow-md">
-      <h2 className="text-xl font-semibold mb-4">Exercises by Difficulty</h2>
+      <h2 className="text-xl font-semibold mb-4">
+        {studentId
+          ? "Student Difficulty Performance"
+          : "Group Difficulty Distribution"}
+      </h2>
 
       <ResponsiveContainer width="100%" height={320}>
         <BarChart data={formattedData}>

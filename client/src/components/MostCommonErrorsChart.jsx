@@ -54,7 +54,9 @@ function MostCommonErrorsChart({ studentId = null }) {
   });
   return (
     <div className="bg-white p-6 rounded-2xl shadow-md">
-      <h2 className="text-xl font-semibold mb-4">Most Common Errors</h2>
+      <h2 className="text-xl font-semibold mb-4">
+        {studentId ? "Student Error Analysis" : "Group Error Analysis"}
+      </h2>
 
       <ResponsiveContainer width="100%" height={320}>
         <BarChart
