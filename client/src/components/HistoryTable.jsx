@@ -18,23 +18,27 @@ function HistoryTable({ studentId = null }) {
         setHistory(response.data);
       })
       .catch((error) => {
-        console.error("History error:", error);
+        console.error("Error loading history:", error);
       });
   }, [studentId]);
 
-  if (!history.length) {
+  if (history.length === 0) {
     return (
       <div className="bg-white rounded-2xl shadow-md p-6">
-        <h2 className="text-xl font-semibold mb-4">Exercise History</h2>
+        <h2 className="text-xl font-semibold mb-4">
+          {studentId ? "Student History" : "Practice History"}
+        </h2>
 
-        <p className="text-gray-500">No attempts yet.</p>
+        <p className="text-gray-500">No attempts have been recorded yet.</p>
       </div>
     );
   }
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-6 overflow-x-auto">
-      <h2 className="text-xl font-semibold mb-6">Exercise History</h2>
+      <h2 className="text-xl font-semibold mb-6">
+        {studentId ? "Student History" : "Practice History"}
+      </h2>
 
       <table className="min-w-full">
         <thead>
@@ -46,6 +50,8 @@ function HistoryTable({ studentId = null }) {
             <th className="pb-3">Correct</th>
 
             <th className="pb-3">Error</th>
+
+            <th className="pb-3">Difficulty</th>
 
             <th className="pb-3">Date</th>
           </tr>
@@ -61,6 +67,8 @@ function HistoryTable({ studentId = null }) {
               <td>{attempt.is_correct ? "✅" : "❌"}</td>
 
               <td>{attempt.error_type || "-"}</td>
+
+              <td>{attempt.difficulty}</td>
 
               <td>{new Date(attempt.created_at).toLocaleDateString()}</td>
             </tr>
