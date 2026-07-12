@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import AnalyticsCard from "../components/AnalyticsCard";
 import { Link } from "react-router-dom";
 import HistoryTable from "../components/HistoryTable";
+import LoadingState from "../components/LoadingState";
 
 function StudentDashboardPage() {
   const [stats, setStats] = useState(null);
@@ -15,7 +16,7 @@ function StudentDashboardPage() {
   }, []);
 
   if (!stats) {
-    return <p>Loading...</p>;
+    return <LoadingState message="Loading your dashboard..." />;
   }
 
   return (

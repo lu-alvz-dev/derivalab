@@ -10,6 +10,7 @@ import MostCommonErrorsChart from "../components/MostCommonErrorsChart";
 import DifficultyChart from "../components/DifficultyChart";
 import AccuracyChart from "../components/AccuracyChart";
 import StudentAnalyticsTable from "../components/StudentAnalyticsTable";
+import LoadingState from "../components/LoadingState";
 
 function TeacherDashboard() {
   const [dashboard, setDashboard] = useState(null);
@@ -27,7 +28,7 @@ function TeacherDashboard() {
   }, []);
 
   if (!dashboard) {
-    return <p>Loading...</p>;
+    return <LoadingState message="Loading teacher dashboard..." />;
   }
 
   return (

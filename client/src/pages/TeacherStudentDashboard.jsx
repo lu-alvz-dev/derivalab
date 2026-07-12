@@ -15,6 +15,7 @@ import DifficultyChart from "../components/DifficultyChart";
 import HistoryTable from "../components/HistoryTable";
 
 import { fetchTeacherStudentDashboardApi } from "../services/api";
+import LoadingState from "../components/LoadingState";
 
 function TeacherStudentDashboard() {
   const { id } = useParams();
@@ -32,7 +33,7 @@ function TeacherStudentDashboard() {
   }, [id]);
 
   if (!dashboard) {
-    return <p>Loading...</p>;
+    return <LoadingState message="Loading student analytics..." />;
   }
 
   return (
