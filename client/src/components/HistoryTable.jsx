@@ -4,6 +4,7 @@ import {
   fetchHistoryApi,
   fetchTeacherStudentHistoryApi,
 } from "../services/api";
+import EmptyState from "./EmptyState";
 
 function HistoryTable({ studentId = null }) {
   const [history, setHistory] = useState([]);
@@ -24,13 +25,10 @@ function HistoryTable({ studentId = null }) {
 
   if (history.length === 0) {
     return (
-      <div className="bg-white rounded-2xl shadow-md p-6">
-        <h2 className="text-xl font-semibold mb-4">
-          {studentId ? "Student History" : "Practice History"}
-        </h2>
-
-        <p className="text-gray-500">No attempts have been recorded yet.</p>
-      </div>
+      <EmptyState
+        title="No Practice History"
+        message="Completed exercises will appear here once practice begins."
+      />
     );
   }
 

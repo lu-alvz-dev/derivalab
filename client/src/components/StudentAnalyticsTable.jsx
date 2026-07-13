@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
+import EmptyState from "./EmptyState";
 
 function StudentAnalyticsTable({ students }) {
   if (!students.length) {
     return (
-      <div className="bg-white rounded-2xl shadow-md p-6">
-        <h2 className="text-xl font-semibold mb-4">Students</h2>
-
-        <p className="text-gray-500">No students have registered yet.</p>
-      </div>
+      <EmptyState
+        title="No Students Yet"
+        message="Students associated with your account will appear here after they register."
+      />
     );
   }
 

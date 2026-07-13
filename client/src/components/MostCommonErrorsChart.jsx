@@ -14,6 +14,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
+import EmptyState from "./EmptyState";
 
 function MostCommonErrorsChart({ studentId = null }) {
   const [data, setData] = useState([]);
@@ -34,11 +35,10 @@ function MostCommonErrorsChart({ studentId = null }) {
 
   if (data.length === 0) {
     return (
-      <div className="bg-white p-6 rounded-2xl shadow-md">
-        <h2 className="text-xl font-semibold mb-4">Most Common Errors</h2>
-
-        <p className="text-gray-500">No errors have been recorded yet.</p>
-      </div>
+      <EmptyState
+        title="No Error Analysis"
+        message="There are no recorded mistakes to analyze yet."
+      />
     );
   }
   const formattedData = data.map((item) => {

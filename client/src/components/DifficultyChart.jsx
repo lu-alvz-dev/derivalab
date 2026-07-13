@@ -14,6 +14,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
+import EmptyState from "./EmptyState";
 
 function DifficultyChart({ studentId = null }) {
   const [data, setData] = useState([]);
@@ -34,11 +35,10 @@ function DifficultyChart({ studentId = null }) {
 
   if (data.length === 0) {
     return (
-      <div className="bg-white p-6 rounded-2xl shadow-md">
-        <h2 className="text-xl font-semibold mb-4">Exercises by Difficulty</h2>
-
-        <p className="text-gray-500">No exercises available yet.</p>
-      </div>
+      <EmptyState
+        title="No Difficulty Data"
+        message="Difficulty statistics will appear after students complete exercises."
+      />
     );
   }
   const formattedData = data.map((item) => ({
