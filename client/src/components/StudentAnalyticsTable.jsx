@@ -13,7 +13,9 @@ function StudentAnalyticsTable({ students }) {
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-6 overflow-x-auto">
-      <h2 className="text-xl font-semibold mb-6">Student Analytics</h2>
+      <h2 className="text-xl font-semibold text-slate-800 mb-6">
+        Student Analytics
+      </h2>
       <p className="text-gray-500 mb-6">
         Review the individual progress of every student assigned to your
         classroom.
@@ -21,7 +23,7 @@ function StudentAnalyticsTable({ students }) {
 
       <table className="min-w-full divide-y divide-gray-200">
         <thead>
-          <tr className="border-b text-left text-gray-500">
+          <tr className="border-b text-left text-sm font-semibold text-slate-500">
             <th className="pb-3">Student</th>
 
             <th className="pb-3">Attempts</th>

@@ -34,13 +34,13 @@ function HistoryTable({ studentId = null }) {
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-6 overflow-x-auto">
-      <h2 className="text-xl font-semibold mb-6">
+      <h2 className="text-xl font-semibold text-slate-800 mb-6">
         {studentId ? "Student History" : "Practice History"}
       </h2>
 
       <table className="min-w-full">
-        <thead>
-          <tr className="border-b text-left text-gray-500">
+        <thead className="border-b">
+          <tr className="text-sm font-semibold text-slate-500">
             <th className="pb-3">Question</th>
 
             <th className="pb-3">Answer</th>
