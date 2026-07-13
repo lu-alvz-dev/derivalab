@@ -45,7 +45,7 @@ function TeacherDashboard() {
           </p>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
           <AnalyticsCard title="Students" value={dashboard.students} />
 
           <AnalyticsCard title="Total Attempts" value={dashboard.attempts} />
@@ -57,18 +57,18 @@ function TeacherDashboard() {
             value={`${dashboard.averageAccuracy}%`}
           />
         </div>
-        <section className="mt-8">
+        <section className="mt-10">
           <AccuracyChart />
         </section>
-        <section className="mt-8 grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <section className="mt-10 grid grid-cols-1 xl:grid-cols-2 gap-6">
           <MostCommonErrorsChart />
 
           <DifficultyChart />
         </section>
-        <section className="mt-8">
+        <section className="mt-10">
           <StudentAnalyticsTable students={students} />
         </section>
-        <section className="mt-8">
+        <section className="mt-10">
           <HistoryTable />
         </section>
       </main>

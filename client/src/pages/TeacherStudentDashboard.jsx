@@ -78,7 +78,7 @@ function TeacherStudentDashboard() {
           </div>
         </div>
 
-        <section className="mt-8">
+        <section className="mt-10">
           <h2 className="text-xl font-semibold text-slate-800 mb-6">
             Performance Overview
           </h2>
@@ -101,17 +101,17 @@ function TeacherStudentDashboard() {
           </div>
         </section>
 
-        <section className="mt-8">
+        <section className="mt-10">
           <AccuracyChart studentId={id} />
         </section>
 
-        <section className="mt-8 grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <section className="mt-10 grid grid-cols-1 xl:grid-cols-2 gap-6">
           <MostCommonErrorsChart studentId={id} />
 
           <DifficultyChart studentId={id} />
         </section>
 
-        <section className="mt-8">
+        <section className="mt-10">
           <HistoryTable studentId={id} />
         </section>
       </main>

@@ -49,7 +49,7 @@ function DifficultyChart({ studentId = null }) {
   }));
   return (
     <div className="bg-white p-6 rounded-2xl shadow-md">
-      <h2 className="text-xl font-semibold mb-4">
+      <h2 className="text-xl font-semibold mb-6">
         {studentId
           ? "Student Difficulty Performance"
           : "Group Difficulty Distribution"}

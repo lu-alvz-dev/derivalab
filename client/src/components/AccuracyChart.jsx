@@ -44,7 +44,7 @@ function AccuracyChart({ studentId = null }) {
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-6">
-      <h2 className="text-xl font-semibold mb-4">Accuracy Over Time</h2>
+      <h2 className="text-xl font-semibold mb-6">Accuracy Over Time</h2>
 
       <ResponsiveContainer width="100%" height={320}>
         <LineChart data={data}>
