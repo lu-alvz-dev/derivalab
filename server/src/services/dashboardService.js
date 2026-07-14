@@ -1,6 +1,27 @@
 const pool = require("../config/db");
 const MAX_RECENT_ATTEMPTS = 40;
 
+async function validateTeacherStudent(teacherId, studentId) {
+  const query = `
+    SELECT
+      id,
+      email
+    FROM users
+    WHERE
+      id = $1
+      AND role = 'student'
+      AND teacher_id = $2
+  `;
+
+  const result = await pool.query(query, [studentId, teacherId]);
+
+  if (result.rows.length === 0) {
+    return null;
+  }
+
+  return result.rows[0];
+}
+
 async function getTeacherDashboard(teacherId) {
   const query = `
     SELECT
@@ -180,25 +201,9 @@ async function getTeacherStudents(teacherId) {
 }
 
 async function getTeacherStudentDashboard(teacherId, studentId) {
-  const studentQuery = `
-    SELECT
-      id,
-      email,
-      teacher_id
-    FROM users
-    WHERE id = $1
-      AND role = 'student'
-  `;
+  const student = await validateTeacherStudent(teacherId, studentId);
 
-  const studentResult = await pool.query(studentQuery, [studentId]);
-
-  if (studentResult.rows.length === 0) {
-    return null;
-  }
-
-  const student = studentResult.rows[0];
-
-  if (student.teacher_id !== teacherId) {
+  if (!student) {
     return "FORBIDDEN";
   }
 
@@ -238,21 +243,9 @@ async function getTeacherStudentDashboard(teacherId, studentId) {
 }
 
 async function getTeacherStudentHistory(teacherId, studentId) {
-  const validationQuery = `
-    SELECT id
-    FROM users
-    WHERE
-      id = $1
-      AND role = 'student'
-      AND teacher_id = $2
-  `;
+  const student = await validateTeacherStudent(teacherId, studentId);
 
-  const validationResult = await pool.query(validationQuery, [
-    studentId,
-    teacherId,
-  ]);
-
-  if (validationResult.rows.length === 0) {
+  if (!student) {
     return "FORBIDDEN";
   }
 
@@ -285,23 +278,9 @@ async function getTeacherStudentAccuracy(teacherId, studentId) {
     Primero validamos que el alumno pertenezca al profesor.
   */
 
-  const validationQuery = `
-    SELECT id
+  const student = await validateTeacherStudent(teacherId, studentId);
 
-    FROM users
-
-    WHERE
-      id = $1
-      AND role = 'student'
-      AND teacher_id = $2
-  `;
-
-  const validationResult = await pool.query(validationQuery, [
-    studentId,
-    teacherId,
-  ]);
-
-  if (validationResult.rows.length === 0) {
+  if (!student) {
     return "FORBIDDEN";
   }
 
@@ -359,23 +338,9 @@ async function getTeacherStudentErrors(teacherId, studentId) {
     pertenezca al profesor autenticado.
   */
 
-  const validationQuery = `
-    SELECT id
+  const student = await validateTeacherStudent(teacherId, studentId);
 
-    FROM users
-
-    WHERE
-      id = $1
-      AND role = 'student'
-      AND teacher_id = $2
-  `;
-
-  const validationResult = await pool.query(validationQuery, [
-    studentId,
-    teacherId,
-  ]);
-
-  if (validationResult.rows.length === 0) {
+  if (!student) {
     return "FORBIDDEN";
   }
 
@@ -411,23 +376,9 @@ async function getTeacherStudentDifficulty(teacherId, studentId) {
     pertenezca al profesor autenticado.
   */
 
-  const validationQuery = `
-    SELECT id
+  const student = await validateTeacherStudent(teacherId, studentId);
 
-    FROM users
-
-    WHERE
-      id = $1
-      AND role = 'student'
-      AND teacher_id = $2
-  `;
-
-  const validationResult = await pool.query(validationQuery, [
-    studentId,
-    teacherId,
-  ]);
-
-  if (validationResult.rows.length === 0) {
+  if (!student) {
     return "FORBIDDEN";
   }
 
@@ -456,6 +407,7 @@ async function getTeacherStudentDifficulty(teacherId, studentId) {
 }
 
 module.exports = {
+  validateTeacherStudent,
   getTeacherDashboard,
   getAccuracyOverTime,
   getMostCommonErrors,
