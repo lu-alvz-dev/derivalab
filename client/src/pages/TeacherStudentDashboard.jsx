@@ -40,29 +40,26 @@ function TeacherStudentDashboard() {
     <>
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-slate-50 min-h-screen">
         <div className="mb-8">
           <Link
             to="/teacher/dashboard"
             className="
-    inline-flex
-    items-center
-    gap-2
-    rounded-lg
-    border
-    border-slate-300
-    bg-white
-    px-4
-    py-2
-    text-sm
-    font-medium
-    text-slate-700
-    shadow-sm
-    transition-all
-    hover:bg-slate-50
-    hover:border-blue-500
-    hover:text-blue-600
-  "
+inline-flex
+items-center
+justify-center
+rounded-lg
+bg-blue-600
+px-5
+py-2.5
+text-sm
+font-medium
+text-white
+transition-all
+duration-200
+hover:bg-blue-700
+hover:shadow-md
+"
           >
             <span className="text-lg">←</span>
 
@@ -70,11 +67,17 @@ function TeacherStudentDashboard() {
           </Link>
 
           <div className="mt-4">
-            <h1 className="text-4xl font-bold text-slate-800">
+            <h1 className="text-4xl font-bold tracking-tight text-slate-900">
               {dashboard.student.email}
             </h1>
 
-            <p className="mt-2 text-slate-500">Student Analytics</p>
+            <p className="mt-1 text-lg font-medium text-blue-600">
+              Student Analytics
+            </p>
+            <p className="mt-3 max-w-3xl text-base leading-7 text-slate-600">
+              Review this student's performance, identify learning patterns, and
+              monitor individual progress through derivative exercises.
+            </p>
           </div>
         </div>
 

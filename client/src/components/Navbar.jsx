@@ -15,7 +15,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b shadow-sm">
+    <nav className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
       <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <Link to="/" className="text-2xl font-bold text-blue-600">
           DerivaLab
@@ -45,7 +45,7 @@ function Navbar() {
                 Profile
               </Link>
 
-              <span className="text-gray-500">{user.email}</span>
+              <span className="text-sm text-slate-500">{user.email}</span>
 
               <button
                 onClick={handleLogout}

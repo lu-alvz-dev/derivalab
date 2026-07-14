@@ -22,14 +22,15 @@ function StudentDashboardPage() {
   return (
     <>
       <Navbar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-slate-50 min-h-screen">
         <div className="mb-10">
-          <h1 className="text-4xl font-bold text-slate-800">
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900">
             Student Dashboard
           </h1>
 
-          <p className="text-slate-500 mt-2">
-            Review your progress and continue practicing derivatives.
+          <p className="mt-3 max-w-3xl text-base leading-7 text-slate-600">
+            Review your progress, analyze your learning history, and improve and
+            continue practicing derivatives.
           </p>
         </div>
 
@@ -48,24 +49,21 @@ function StudentDashboardPage() {
           <Link
             to="/practice"
             className="
-      inline-flex
-      items-center
-      gap-2
-      rounded-xl
-      bg-blue-600
-      px-8
-      py-4
-      text-lg
-      font-semibold
-      text-white
-      shadow-md
-      transition-all
-      duration-200
-      hover:bg-blue-700
-      hover:shadow-lg
-      hover:-translate-y-0.5
-      active:translate-y-0
-    "
+inline-flex
+items-center
+justify-center
+rounded-lg
+bg-blue-600
+px-5
+py-2.5
+text-sm
+font-medium
+text-white
+transition-all
+duration-200
+hover:bg-blue-700
+hover:shadow-md
+"
           >
             Continue Practicing
           </Link>

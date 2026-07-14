@@ -14,9 +14,9 @@ function StudentAnalyticsTable({ students }) {
   return (
     <div className="bg-white rounded-2xl shadow-md p-6">
       <h2 className="text-xl font-semibold text-slate-800 mb-6">
-        Student Analytics
+        My Students Analytics
       </h2>
-      <p className="text-gray-500 mb-6">
+      <p className="text-sm text-slate-500 mb-6">
         Review the individual progress of every student assigned to your
         classroom.
       </p>
@@ -26,7 +26,7 @@ function StudentAnalyticsTable({ students }) {
       <div className="overflow-x-auto">
         <table className="min-w-[760px] w-full">
           <thead>
-            <tr className="border-b text-left text-sm font-semibold text-slate-500">
+            <tr className="border-slate-200 text-left text-sm font-semibold text-slate-500">
               <th className="pb-3 text-left text-sm font-semibold text-slate-500 whitespace-nowrap">
                 Student
               </th>
@@ -67,15 +67,21 @@ function StudentAnalyticsTable({ students }) {
                   <Link
                     to={`/teacher/student/${student.id}`}
                     className="
-                  inline-flex
-                  rounded-lg
-                  bg-blue-600
-                  px-4
-                  py-2
-                  text-white
-                  hover:bg-blue-700
-                    transition-colors
-                  "
+inline-flex
+items-center
+justify-center
+rounded-lg
+bg-blue-600
+px-5
+py-2.5
+text-sm
+font-medium
+text-white
+transition-all
+duration-200
+hover:bg-blue-700
+hover:shadow-md
+"
                   >
                     View Dashboard
                   </Link>

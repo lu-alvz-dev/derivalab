@@ -34,9 +34,12 @@ function HistoryTable({ studentId = null }) {
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-6">
-      <h2 className="text-xl font-semibold text-slate-800 mb-6">
+      <h2 className="text-xl font-semibold text-slate-800 mb-2">
         {studentId ? "Student History" : "Practice History"}
       </h2>
+      <p className="text-sm text-slate-500 mb-6">
+        Review previous submissions and identify recurring mistakes.
+      </p>
       <p className="mb-4 text-sm text-slate-500 md:hidden">
         Swipe horizontally to view all columns.
       </p>
