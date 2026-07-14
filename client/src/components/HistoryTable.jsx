@@ -33,46 +33,74 @@ function HistoryTable({ studentId = null }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-6 overflow-x-auto">
+    <div className="bg-white rounded-2xl shadow-md p-6">
       <h2 className="text-xl font-semibold text-slate-800 mb-6">
         {studentId ? "Student History" : "Practice History"}
       </h2>
+      <p className="mb-4 text-sm text-slate-500 md:hidden">
+        Swipe horizontally to view all columns.
+      </p>
+      <div className="overflow-x-auto">
+        <table className="min-w-[900px] w-full">
+          <thead className="border-b">
+            <tr className="text-sm font-semibold text-slate-500">
+              <th className="px-4 py-3 text-left text-sm font-semibold text-slate-500 border-b whitespace-nowrap">
+                Question
+              </th>
 
-      <table className="min-w-full">
-        <thead className="border-b">
-          <tr className="text-sm font-semibold text-slate-500">
-            <th className="pb-3">Question</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-slate-500 border-b whitespace-nowrap">
+                Answer
+              </th>
 
-            <th className="pb-3">Answer</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-slate-500 border-b whitespace-nowrap">
+                Correct
+              </th>
 
-            <th className="pb-3">Correct</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-slate-500 border-b whitespace-nowrapp">
+                Error
+              </th>
 
-            <th className="pb-3">Error</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-slate-500 border-b whitespace-nowrap">
+                Difficulty
+              </th>
 
-            <th className="pb-3">Difficulty</th>
-
-            <th className="pb-3">Date</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {history.map((attempt) => (
-            <tr key={attempt.id} className="border-b last:border-none">
-              <td className="py-4">{attempt.question}</td>
-
-              <td>{attempt.user_answer}</td>
-
-              <td>{attempt.is_correct ? "✅" : "❌"}</td>
-
-              <td>{attempt.error_type || "-"}</td>
-
-              <td>{attempt.difficulty}</td>
-
-              <td>{new Date(attempt.created_at).toLocaleDateString()}</td>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-slate-500 border-b whitespace-nowrap">
+                Date
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {history.map((attempt) => (
+              <tr key={attempt.id} className="border-b last:border-none">
+                <td className="px-4 py-3 border-b min-w-[280px]">
+                  {attempt.question}
+                </td>
+
+                <td className="px-4 py-3 border-b min-w-[180px]">
+                  {attempt.user_answer}
+                </td>
+
+                <td className="px-4 py-3 border-b whitespace-nowrap">
+                  {attempt.is_correct ? "✅" : "❌"}
+                </td>
+
+                <td className="px-4 py-3 border-b whitespace-nowrap">
+                  {attempt.error_type || "-"}
+                </td>
+
+                <td className="px-4 py-3 border-b whitespace-nowrap">
+                  {attempt.difficulty}
+                </td>
+
+                <td className="px-4 py-3 border-b whitespace-nowrap">
+                  {new Date(attempt.created_at).toLocaleDateString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
