@@ -1,5 +1,5 @@
 const pool = require("../config/db");
-const MAX_RECENT_ATTEMPTS = 40;
+const { MAX_RECENT_ATTEMPTS } = require("../config/dashboardConfig");
 
 async function validateTeacherStudent(teacherId, studentId) {
   const query = `
@@ -78,7 +78,7 @@ WHERE u.teacher_id = $1
 
     ORDER BY created_at DESC
 
-    LIMIT 40
+    LIMIT ${MAX_RECENT_ATTEMPTS}
   `;
 
   const result = await pool.query(query, [teacherId]);
