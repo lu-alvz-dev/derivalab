@@ -54,6 +54,9 @@ function DifficultyChart({ studentId = null }) {
           ? "Student Difficulty Performance"
           : "Group Difficulty Distribution"}
       </h2>
+      <p className="text-sm text-slate-500 mt-1 mb-6">
+        Practice attempts grouped by selected difficulty.
+      </p>
 
       <ResponsiveContainer width="100%" height={320}>
         <BarChart data={formattedData}>

@@ -16,7 +16,7 @@ import {
 } from "recharts";
 import EmptyState from "./EmptyState";
 
-function AccuracyChart({ studentId = null }) {
+function AccuracyChart({ studentId = null, title = "Learning Progress" }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -44,9 +44,10 @@ function AccuracyChart({ studentId = null }) {
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-6">
-      <h2 className="text-xl font-semibold text-slate-800 mb-6">
-        Accuracy Over Time
-      </h2>
+      <h2 className="text-xl font-semibold text-slate-800 mb-6">{title}</h2>
+      <p className="text-sm text-slate-500 mt-1 mb-6">
+        Accuracy based on the most recent practice attempts.
+      </p>
 
       <ResponsiveContainer width="100%" height={320}>
         <LineChart data={data}>

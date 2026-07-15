@@ -57,6 +57,9 @@ function MostCommonErrorsChart({ studentId = null }) {
       <h2 className="text-xl font-semibold text-slate-800 mb-6">
         {studentId ? "Student Error Analysis" : "Group Error Analysis"}
       </h2>
+      <p className="text-sm text-slate-500 mt-1 mb-6">
+        Frequent mistakes detected during derivative practice.
+      </p>
 
       <ResponsiveContainer width="100%" height={320}>
         <BarChart
