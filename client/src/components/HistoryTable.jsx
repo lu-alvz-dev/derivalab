@@ -44,7 +44,11 @@ function HistoryTable({ studentId = null }) {
         Swipe horizontally to view all columns.
       </p>
       <div className="overflow-x-auto">
-        <table className="min-w-[900px] w-full">
+        <table
+          className="min-w-[680px]
+    lg:min-w-full
+    w-full"
+        >
           <thead className="border-b">
             <tr className="text-sm font-semibold text-slate-500">
               <th className="px-4 py-3 text-left text-sm font-semibold text-slate-500 border-b whitespace-nowrap">

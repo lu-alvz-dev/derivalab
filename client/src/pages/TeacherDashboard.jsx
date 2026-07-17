@@ -54,13 +54,16 @@ function TeacherDashboard() {
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
           {/* Sidebar */}
 
-          <aside className="xl:col-span-3">
+          <aside className="order-2 xl:order-1 xl:col-span-3 space-y-6">
             <StudentAnalyticsTable students={students} />
           </aside>
 
           {/* Main Content */}
 
-          <section className="xl:col-span-9 space-y-8">
+          <section
+            className="order-1 xl:order-2 xl:col-span-9
+    space-y-8"
+          >
             {/* Analytics Cards */}
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
