@@ -1,7 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import EmptyState from "./EmptyState";
 
 function StudentAnalyticsTable({ students }) {
+  const location = useLocation();
+
   if (!students.length) {
     return (
       <EmptyState
@@ -12,86 +14,60 @@ function StudentAnalyticsTable({ students }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-6">
-      <h2 className="text-xl font-semibold text-slate-800 mb-6">
-        My Students Analytics
-      </h2>
-      <p className="text-sm text-slate-500 mb-6">
-        Review the individual progress of every student assigned to your
-        classroom.
+    <aside className="bg-white rounded-2xl shadow-md p-6">
+      <h2 className="text-xl font-semibold text-slate-900">My Students</h2>
+
+      <p className="mt-2 text-sm text-slate-500">
+        Select a student to view individual analytics.
       </p>
-      <p className="mb-4 text-sm text-slate-500 md:hidden">
-        Swipe horizontally to view all student metrics.
-      </p>
-      <div className="overflow-x-auto">
-        <table className="min-w-[760px] w-full">
-          <thead>
-            <tr className="border-slate-200 text-left text-sm font-semibold text-slate-500">
-              <th className="pb-3 text-left text-sm font-semibold text-slate-500 whitespace-nowrap">
-                Student
-              </th>
 
-              <th className="pb-3 text-left text-sm font-semibold text-slate-500 whitespace-nowrap">
-                Attempts
-              </th>
+      <div className="mt-6 space-y-2">
+        {students.map((student) => {
+          const isActive =
+            location.pathname === `/teacher/student/${student.id}`;
 
-              <th className="pb-3 text-left text-sm font-semibold text-slate-500 whitespace-nowrap">
-                Correct
-              </th>
+          return (
+            <Link
+              key={student.id}
+              to={`/teacher/student/${student.id}`}
+              className={`
+                flex
+                items-center
+                justify-between
+                rounded-xl
+                px-4
+                py-3
+                transition-all
+                duration-200
+                ${
+                  isActive
+                    ? "bg-blue-50 text-blue-700 border border-blue-200"
+                    : "hover:bg-slate-50 border border-transparent"
+                }
+              `}
+            >
+              <div className="min-w-0">
+                <p className="font-medium text-slate-800 truncate">
+                  {student.email}
+                </p>
 
-              <th className="pb-3 text-left text-sm font-semibold text-slate-500 whitespace-nowrap">
-                Accuracy
-              </th>
+                <p className="text-xs text-slate-500 mt-1">
+                  {student.attempts} attempts
+                </p>
+              </div>
 
-              <th className="pb-3 text-left text-sm font-semibold text-slate-500 whitespace-nowrap">
-                Dashboard
-              </th>
-            </tr>
-          </thead>
+              <div className="text-right">
+                <p className="text-sm font-semibold text-blue-600">
+                  {student.accuracy}%
+                </p>
 
-          <tbody className="divide-y divide-gray-100">
-            {students.map((student) => (
-              <tr
-                key={student.id}
-                className="hover:bg-gray-50 transition-colors"
-              >
-                <td className="py-4 min-w-[220px]">{student.email}</td>
-
-                <td className="py-4 whitespace-nowrap">{student.attempts}</td>
-
-                <td className="py-4 whitespace-nowrap">{student.correct}</td>
-
-                <td className="py-4 whitespace-nowrap">{student.accuracy}%</td>
-
-                <td className="whitespace-nowrap">
-                  <Link
-                    to={`/teacher/student/${student.id}`}
-                    className="
-inline-flex
-items-center
-justify-center
-rounded-lg
-bg-blue-600
-px-5
-py-2.5
-text-sm
-font-medium
-text-white
-transition-all
-duration-200
-hover:bg-blue-700
-hover:shadow-md
-"
-                  >
-                    View Dashboard
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                <p className="text-xs text-slate-400">accuracy</p>
+              </div>
+            </Link>
+          );
+        })}
       </div>
-    </div>
+    </aside>
   );
 }
 
