@@ -48,7 +48,7 @@ function DifficultyChart({ studentId = null }) {
       item.difficulty.slice(1).toLowerCase(),
   }));
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-md">
+    <div className="h-full bg-white p-6 rounded-2xl shadow-md">
       <h2 className="text-xl font-semibold text-slate-800 mb-6">
         {studentId
           ? "Student Difficulty Performance"

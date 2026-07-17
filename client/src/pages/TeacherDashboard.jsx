@@ -90,7 +90,7 @@ function TeacherDashboard() {
 
             {/* Errors and Difficulty */}
 
-            <section className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <section className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-stretch">
               <MostCommonErrorsChart />
 
               <DifficultyChart />
