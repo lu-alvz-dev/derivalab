@@ -33,7 +33,18 @@ function HistoryTable({ studentId = null }) {
   }
 
   return (
-    <div className="w-full bg-white rounded-2xl shadow-md p-6">
+    <div
+      className="w-full
+    rounded-2xl
+    border
+    border-slate-200
+    bg-white
+    p-6
+    shadow-sm
+    transition-all
+    duration-200
+    hover:shadow-md"
+    >
       <h2 className="text-xl font-semibold text-slate-800 mb-2">
         {studentId ? "Student History" : "Practice History"}
       </h2>
@@ -49,58 +60,55 @@ function HistoryTable({ studentId = null }) {
     lg:min-w-full
     w-full"
         >
-          <thead className="border-b">
+          <thead className="bg-slate-50 border-b border-slate-200">
             <tr className="text-sm font-semibold text-slate-500">
-              <th className="px-4 py-3 text-left text-sm font-semibold text-slate-500 border-b whitespace-nowrap">
+              <th className="px-4 py-3 text-left whitespace-nowrap">
                 Question
               </th>
 
-              <th className="px-4 py-3 text-left text-sm font-semibold text-slate-500 border-b whitespace-nowrap">
-                Answer
-              </th>
+              <th className="px-4 py-3 text-left whitespace-nowrap">Answer</th>
 
-              <th className="px-4 py-3 text-left text-sm font-semibold text-slate-500 border-b whitespace-nowrap">
-                Correct
-              </th>
+              <th className="px-4 py-3 text-left whitespace-nowrap">Correct</th>
 
-              <th className="px-4 py-3 text-left text-sm font-semibold text-slate-500 border-b whitespace-nowrapp">
-                Error
-              </th>
+              <th className="px-4 py-3 text-left whitespace-nowrap">Error</th>
 
-              <th className="px-4 py-3 text-left text-sm font-semibold text-slate-500 border-b whitespace-nowrap">
+              <th className="px-4 py-3 text-left whitespace-nowrap">
                 Difficulty
               </th>
 
-              <th className="px-4 py-3 text-left text-sm font-semibold text-slate-500 border-b whitespace-nowrap">
-                Date
-              </th>
+              <th className="px-4 py-3 text-left whitespace-nowrap">Date</th>
             </tr>
           </thead>
 
           <tbody>
             {history.map((attempt) => (
-              <tr key={attempt.id} className="border-b last:border-none">
-                <td className="px-4 py-3 border-b min-w-[280px]">
-                  {attempt.question}
-                </td>
+              <tr
+                key={attempt.id}
+                className="border-b
+    border-slate-100
+    last:border-none
+    hover:bg-slate-50
+    transition-colors"
+              >
+                <td className="px-4 py-3 min-w-[280px]">{attempt.question}</td>
 
-                <td className="px-4 py-3 border-b min-w-[180px]">
+                <td className="px-4 py-3 min-w-[180px]">
                   {attempt.user_answer}
                 </td>
 
-                <td className="px-4 py-3 border-b whitespace-nowrap">
+                <td className="px-4 py-3 whitespace-nowrap">
                   {attempt.is_correct ? "✅" : "❌"}
                 </td>
 
-                <td className="px-4 py-3 border-b whitespace-nowrap">
+                <td className="px-4 py-3 whitespace-nowrap">
                   {attempt.error_type || "-"}
                 </td>
 
-                <td className="px-4 py-3 border-b whitespace-nowrap">
+                <td className="px-4 py-3 whitespace-nowrap">
                   {attempt.difficulty}
                 </td>
 
-                <td className="px-4 py-3 border-b whitespace-nowrap">
+                <td className="px-4 py-3 whitespace-nowrap">
                   {new Date(attempt.created_at).toLocaleDateString()}
                 </td>
               </tr>

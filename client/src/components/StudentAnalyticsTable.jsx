@@ -14,7 +14,18 @@ function StudentAnalyticsTable({ students }) {
   }
 
   return (
-    <aside className="bg-white rounded-2xl shadow-md p-6">
+    <aside
+      className="
+bg-white
+rounded-2xl
+border
+border-slate-200
+shadow-sm
+hover:shadow-md
+transition-shadow
+duration-200
+p-6"
+    >
       <h2 className="text-xl font-semibold text-slate-900">My Students</h2>
 
       <p className="mt-2 text-sm text-slate-500">
@@ -31,20 +42,21 @@ function StudentAnalyticsTable({ students }) {
               key={student.id}
               to={`/teacher/student/${student.id}`}
               className={`
-                flex
-                items-center
-                justify-between
-                rounded-xl
-                px-4
-                py-3
-                transition-all
-                duration-200
-                ${
-                  isActive
-                    ? "bg-blue-50 text-blue-700 border border-blue-200"
-                    : "hover:bg-slate-50 border border-transparent"
-                }
-              `}
+  flex
+  items-center
+  justify-between
+  rounded-xl
+  px-4
+  py-3
+  border
+  transition-all
+  duration-200
+  ${
+    isActive
+      ? "border-blue-200 bg-blue-50 shadow-sm"
+      : "border-transparent hover:border-slate-200 hover:bg-slate-50 hover:shadow-sm hover:-translate-y-0.5"
+  }
+`}
             >
               <div className="min-w-0">
                 <p className="font-medium text-slate-800 truncate">

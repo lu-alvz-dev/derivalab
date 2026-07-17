@@ -53,7 +53,17 @@ function MostCommonErrorsChart({ studentId = null }) {
     };
   });
   return (
-    <div className="h-full bg-white p-6 rounded-2xl shadow-md">
+    <div
+      className="h-full bg-white
+rounded-2xl
+border
+border-slate-200
+shadow-sm
+hover:shadow-md
+transition-shadow
+duration-200
+p-6"
+    >
       <h2 className="text-xl font-semibold text-slate-800 mb-6">
         {studentId ? "Student Error Analysis" : "Group Error Analysis"}
       </h2>
