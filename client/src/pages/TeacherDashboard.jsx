@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
+
 import {
   fetchTeacherDashboardApi,
   fetchTeacherStudentsApi,
 } from "../services/api";
+
 import Navbar from "../components/Navbar";
-import HistoryTable from "../components/HistoryTable";
 import AnalyticsCard from "../components/AnalyticsCard";
+import AccuracyChart from "../components/AccuracyChart";
 import MostCommonErrorsChart from "../components/MostCommonErrorsChart";
 import DifficultyChart from "../components/DifficultyChart";
-import AccuracyChart from "../components/AccuracyChart";
 import StudentAnalyticsTable from "../components/StudentAnalyticsTable";
+import HistoryTable from "../components/HistoryTable";
 import LoadingState from "../components/LoadingState";
 
 function TeacherDashboard() {
@@ -34,8 +36,10 @@ function TeacherDashboard() {
   return (
     <>
       <Navbar />
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-slate-50 min-h-screen">
-        <div className="mb-8">
+        {/* Encabezado */}
+        <header className="mb-10">
           <h1 className="text-4xl font-bold tracking-tight text-slate-900">
             Teacher Dashboard
           </h1>
@@ -43,34 +47,62 @@ function TeacherDashboard() {
           <p className="mt-3 max-w-3xl text-base leading-7 text-slate-600">
             Monitor student performance and learning analytics.
           </p>
+        </header>
+
+        {/* ===== Layout principal ===== */}
+
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+          {/* Sidebar */}
+
+          <aside className="xl:col-span-3">
+            <StudentAnalyticsTable students={students} />
+          </aside>
+
+          {/* Main Content */}
+
+          <section className="xl:col-span-9 space-y-8">
+            {/* Analytics Cards */}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+              <AnalyticsCard title="Students" value={dashboard.students} />
+
+              <AnalyticsCard
+                title="Total Attempts"
+                value={dashboard.attempts}
+              />
+
+              <AnalyticsCard
+                title="Correct Answers"
+                value={dashboard.correct}
+              />
+
+              <AnalyticsCard
+                title="Average Accuracy"
+                value={`${dashboard.averageAccuracy}%`}
+              />
+            </div>
+
+            {/* Accuracy */}
+
+            <section>
+              <AccuracyChart />
+            </section>
+
+            {/* Errors and Difficulty */}
+
+            <section className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <MostCommonErrorsChart />
+
+              <DifficultyChart />
+            </section>
+
+            {/* History */}
+
+            <section>
+              <HistoryTable />
+            </section>
+          </section>
         </div>
-
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-          <AnalyticsCard title="Students" value={dashboard.students} />
-
-          <AnalyticsCard title="Total Attempts" value={dashboard.attempts} />
-
-          <AnalyticsCard title="Correct Answers" value={dashboard.correct} />
-
-          <AnalyticsCard
-            title="Average Accuracy"
-            value={`${dashboard.averageAccuracy}%`}
-          />
-        </div>
-        <section className="mt-10">
-          <AccuracyChart />
-        </section>
-        <section className="mt-10 grid grid-cols-1 xl:grid-cols-2 gap-6">
-          <MostCommonErrorsChart />
-
-          <DifficultyChart />
-        </section>
-        <section className="mt-10">
-          <StudentAnalyticsTable students={students} />
-        </section>
-        <section className="mt-10">
-          <HistoryTable />
-        </section>
       </main>
     </>
   );
