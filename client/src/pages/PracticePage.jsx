@@ -148,6 +148,7 @@ function PracticePage() {
               result={result}
               feedback={feedback}
               errorType={errorType}
+              onNextExercise={fetchExercise}
             />
             <DashboardPanel stats={stats} />
             <ExerciseHistoryPanel history={history} />
