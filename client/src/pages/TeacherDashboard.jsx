@@ -98,7 +98,7 @@ function TeacherDashboard() {
 
             {/* History */}
 
-            <section>
+            <section className="w-full">
               <HistoryTable />
             </section>
           </section>
