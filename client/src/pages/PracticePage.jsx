@@ -112,19 +112,32 @@ function PracticePage() {
     <>
       <Navbar />
       <div className="max-w-3xl mx-auto p-6">
-        <div className="mb-6">
+        <div className="mb-8">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/student-dashboard")}
             className="
-      rounded-lg
+      inline-flex
+      items-center
+      gap-2
+      rounded-xl
       border
-      px-4
-      py-2
-      hover:bg-gray-100
-      transition
+      border-slate-300
+      bg-white
+      px-5
+      py-3
+      text-sm
+      font-medium
+      text-slate-700
+      shadow-sm
+      transition-all
+      duration-200
+      hover:border-blue-200
+      hover:bg-blue-50
+      hover:text-blue-700
+      hover:shadow-md
     "
           >
-            ← Back
+            ← Back to Dashboard
           </button>
         </div>
         <Header />
