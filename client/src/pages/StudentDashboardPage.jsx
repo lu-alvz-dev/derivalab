@@ -5,6 +5,7 @@ import AnalyticsCard from "../components/AnalyticsCard";
 import { Link, useLocation } from "react-router-dom";
 import HistoryTable from "../components/HistoryTable";
 import LoadingState from "../components/LoadingState";
+import EmptyState from "../components/EmptyState";
 
 function StudentDashboardPage() {
   const [stats, setStats] = useState(null);
@@ -43,16 +44,22 @@ function StudentDashboardPage() {
           </p>
         </div>
 
-        <div
-          className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6
-  "
-        >
-          <AnalyticsCard title="Total Attempts" value={stats.attempts} />
+        {stats.attempts === 0 ? (
+          <section className="mt-10">
+            <EmptyState
+              title="Welcome!"
+              message="You haven't completed any exercises yet. Start practicing to build your learning statistics."
+            />
+          </section>
+        ) : (
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <AnalyticsCard title="Total Attempts" value={stats.attempts} />
 
-          <AnalyticsCard title="Correct Answers" value={stats.correct} />
+            <AnalyticsCard title="Correct Answers" value={stats.correct} />
 
-          <AnalyticsCard title="Accuracy" value={`${stats.accuracy}%`} />
-        </div>
+            <AnalyticsCard title="Accuracy" value={`${stats.accuracy}%`} />
+          </div>
+        )}
 
         <div className="mt-10 flex justify-center sm:justify-start">
           <Link
@@ -77,9 +84,11 @@ hover:shadow-md
             Continue Practicing
           </Link>
         </div>
-        <section className="mt-10">
-          <HistoryTable />
-        </section>
+        {stats.attempts > 0 && (
+          <section className="mt-10">
+            <HistoryTable />
+          </section>
+        )}
       </main>
     </>
   );
