@@ -33,62 +33,66 @@ function StudentDashboardPage() {
     <>
       <Navbar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-slate-50 min-h-screen">
-        <div className="mb-10">
+        <div className="mb-12">
           <h1 className="text-4xl font-bold tracking-tight text-slate-900">
             Student Dashboard
           </h1>
 
           <p className="mt-3 max-w-3xl text-base leading-7 text-slate-600">
-            Review your progress, analyze your learning history, and improve and
-            continue practicing derivatives.
+            Review your learning progress, explore your practice history, and
+            continue improving your derivative skills.
           </p>
         </div>
 
-        {stats.attempts === 0 ? (
-          <section className="mt-10">
+        <div className="space-y-10">
+          {stats.attempts === 0 ? (
             <EmptyState
               title="Welcome!"
               message="You haven't completed any exercises yet. Start practicing to build your learning statistics."
             />
+          ) : (
+            <section>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <AnalyticsCard title="Total Attempts" value={stats.attempts} />
+
+                <AnalyticsCard title="Correct Answers" value={stats.correct} />
+
+                <AnalyticsCard title="Accuracy" value={`${stats.accuracy}%`} />
+              </div>
+            </section>
+          )}
+
+          <section className="flex justify-center sm:justify-start">
+            <Link
+              to="/practice"
+              className="
+        inline-flex
+        items-center
+        justify-center
+        rounded-lg
+        bg-blue-600
+        px-5
+        py-2.5
+        text-sm
+        font-medium
+        text-white
+        transition-all
+        duration-200
+        hover:-translate-y-0.5
+        hover:bg-blue-700
+        hover:shadow-lg
+      "
+            >
+              Continue Practicing
+            </Link>
           </section>
-        ) : (
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            <AnalyticsCard title="Total Attempts" value={stats.attempts} />
 
-            <AnalyticsCard title="Correct Answers" value={stats.correct} />
-
-            <AnalyticsCard title="Accuracy" value={`${stats.accuracy}%`} />
-          </div>
-        )}
-
-        <div className="mt-10 flex justify-center sm:justify-start">
-          <Link
-            to="/practice"
-            className="
-inline-flex
-items-center
-justify-center
-rounded-lg
-bg-blue-600
-px-5
-py-2.5
-text-sm
-font-medium
-text-white
-transition-all
-duration-200
-hover:bg-blue-700
-hover:shadow-md
-"
-          >
-            Continue Practicing
-          </Link>
+          {stats.attempts > 0 && (
+            <section>
+              <HistoryTable />
+            </section>
+          )}
         </div>
-        {stats.attempts > 0 && (
-          <section className="mt-10">
-            <HistoryTable />
-          </section>
-        )}
       </main>
     </>
   );
