@@ -5,9 +5,11 @@ import {
   fetchTeacherStudentHistoryApi,
 } from "../services/api";
 import EmptyState from "./EmptyState";
+import LoadingState from "./LoadingState";
 
 function HistoryTable({ studentId = null }) {
   const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const request = studentId
@@ -20,9 +22,15 @@ function HistoryTable({ studentId = null }) {
       })
       .catch((error) => {
         console.error("Error loading history:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [studentId]);
 
+  if (loading) {
+    return <LoadingState message="Loading practice history..." />;
+  }
   if (history.length === 0) {
     return (
       <EmptyState

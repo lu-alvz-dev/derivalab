@@ -15,9 +15,11 @@ import {
   Tooltip,
 } from "recharts";
 import EmptyState from "./EmptyState";
+import LoadingState from "./LoadingState";
 
 function MostCommonErrorsChart({ studentId = null }) {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const request = studentId
@@ -30,9 +32,15 @@ function MostCommonErrorsChart({ studentId = null }) {
       })
       .catch((error) => {
         console.error("Error loading error chart:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [studentId]);
 
+  if (loading) {
+    return <LoadingState message="Loading error analysis..." />;
+  }
   if (data.length === 0) {
     return (
       <EmptyState

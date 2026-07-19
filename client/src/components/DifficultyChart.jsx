@@ -15,9 +15,11 @@ import {
   Tooltip,
 } from "recharts";
 import EmptyState from "./EmptyState";
+import LoadingState from "./LoadingState";
 
 function DifficultyChart({ studentId = null }) {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const request = studentId
@@ -30,9 +32,15 @@ function DifficultyChart({ studentId = null }) {
       })
       .catch((error) => {
         console.error("Error loading difficulty chart:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [studentId]);
 
+  if (loading) {
+    return <LoadingState message="Loading difficulty statistics..." />;
+  }
   if (data.length === 0) {
     return (
       <EmptyState

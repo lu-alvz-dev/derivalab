@@ -15,9 +15,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import EmptyState from "./EmptyState";
+import LoadingState from "./LoadingState";
 
 function AccuracyChart({ studentId = null, title = "Learning Progress" }) {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const request = studentId
@@ -30,9 +32,15 @@ function AccuracyChart({ studentId = null, title = "Learning Progress" }) {
       })
       .catch((error) => {
         console.error("Error loading accuracy chart:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [studentId]);
 
+  if (loading) {
+    return <LoadingState message="Loading learning progress..." />;
+  }
   if (data.length === 0) {
     return (
       <EmptyState
