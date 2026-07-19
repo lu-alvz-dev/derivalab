@@ -2,18 +2,27 @@ import { useEffect, useState } from "react";
 import { fetchStudentDashboardApi } from "../services/api";
 import Navbar from "../components/Navbar";
 import AnalyticsCard from "../components/AnalyticsCard";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import HistoryTable from "../components/HistoryTable";
 import LoadingState from "../components/LoadingState";
 
 function StudentDashboardPage() {
   const [stats, setStats] = useState(null);
+  const location = useLocation();
+
+  const loadDashboard = () => {
+    fetchStudentDashboardApi()
+      .then((res) => {
+        setStats(res.data);
+      })
+      .catch((error) => {
+        console.error("Dashboard error:", error);
+      });
+  };
 
   useEffect(() => {
-    fetchStudentDashboardApi().then((res) => {
-      setStats(res.data);
-    });
-  }, []);
+    loadDashboard();
+  }, [location.key]);
 
   if (!stats) {
     return <LoadingState message="Loading your dashboard..." />;
