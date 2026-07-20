@@ -14,11 +14,14 @@ import StudentDashboardPage from "./pages/StudentDashboardPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import TeacherStudentDashboard from "./pages/TeacherStudentDashboard";
+import DemoSelectionPage from "./pages/DemoSelectionPage";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+
+      <Route path="/demo" element={<DemoSelectionPage />} />
 
       <Route path="/login" element={<LoginPage />} />
 

@@ -82,7 +82,7 @@ function PracticePage() {
       .catch((err) => {
         console.error("Stats error:", err);
       });
-  }, [currentUser?.id]);
+  }, []);
 
   const loadHistory = useCallback(() => {
     fetchHistoryApi()
@@ -92,7 +92,7 @@ function PracticePage() {
       .catch((err) => {
         console.error("History error:", err);
       });
-  }, [currentUser?.id]);
+  }, []);
 
   useEffect(() => {
     fetchExercise();
