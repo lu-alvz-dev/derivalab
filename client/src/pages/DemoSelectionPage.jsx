@@ -10,6 +10,7 @@ function DemoSelectionPage() {
   const { login } = useAuth();
 
   const [loadingTeacher, setLoadingTeacher] = useState(false);
+  const [loadingStudent, setLoadingStudent] = useState(false);
 
   const loginTeacherDemo = async () => {
     try {
@@ -27,6 +28,25 @@ function DemoSelectionPage() {
       console.error("Teacher demo login failed:", error);
     } finally {
       setLoadingTeacher(false);
+    }
+  };
+
+  const loginStudentDemo = async () => {
+    try {
+      setLoadingStudent(true);
+
+      const response = await loginUserApi({
+        email: "demo.student@derivalab.com",
+        password: "Demo123!",
+      });
+
+      login(response.data.user, response.data.token);
+
+      navigate("/student/dashboard");
+    } catch (error) {
+      console.error("Student demo login failed:", error);
+    } finally {
+      setLoadingStudent(false);
     }
   };
 
@@ -127,20 +147,28 @@ function DemoSelectionPage() {
             </p>
 
             <button
-              disabled
+              onClick={loginStudentDemo}
+              disabled={loadingStudent}
               className="
                 mt-8
                 w-full
                 rounded-lg
-                bg-slate-300
+                bg-blue-600
                 px-5
                 py-3
                 font-medium
-                text-slate-600
-                cursor-not-allowed
+                text-white
+                transition-all
+                duration-200
+                hover:bg-blue-700
+                hover:shadow-lg
+                disabled:cursor-not-allowed
+                disabled:opacity-60
               "
             >
-              Available in next step
+              {loadingStudent
+                ? "Launching Student Demo..."
+                : "Launch Student Demo"}
             </button>
           </section>
         </div>
