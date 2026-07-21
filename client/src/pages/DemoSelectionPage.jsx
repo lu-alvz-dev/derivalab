@@ -1,7 +1,35 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { loginUserApi } from "../services/api";
+import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
 
 function DemoSelectionPage() {
+  const navigate = useNavigate();
+
+  const { login } = useAuth();
+
+  const [loadingTeacher, setLoadingTeacher] = useState(false);
+
+  const loginTeacherDemo = async () => {
+    try {
+      setLoadingTeacher(true);
+
+      const response = await loginUserApi({
+        email: "demo.teacher@derivalab.com",
+        password: "Demo123!",
+      });
+
+      login(response.data.user, response.data.token);
+
+      navigate("/teacher/dashboard");
+    } catch (error) {
+      console.error("Teacher demo login failed:", error);
+    } finally {
+      setLoadingTeacher(false);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -46,6 +74,8 @@ function DemoSelectionPage() {
             </p>
 
             <button
+              onClick={loginTeacherDemo}
+              disabled={loadingTeacher}
               className="
                 mt-8
                 w-full
@@ -59,9 +89,13 @@ function DemoSelectionPage() {
                 duration-200
                 hover:bg-blue-700
                 hover:shadow-lg
+                disabled:cursor-not-allowed
+                disabled:opacity-60
               "
             >
-              Launch Teacher Demo
+              {loadingTeacher
+                ? "Launching Teacher Demo..."
+                : "Launch Teacher Demo"}
             </button>
           </section>
 
@@ -93,22 +127,20 @@ function DemoSelectionPage() {
             </p>
 
             <button
+              disabled
               className="
                 mt-8
                 w-full
                 rounded-lg
-                bg-blue-600
+                bg-slate-300
                 px-5
                 py-3
                 font-medium
-                text-white
-                transition-all
-                duration-200
-                hover:bg-blue-700
-                hover:shadow-lg
+                text-slate-600
+                cursor-not-allowed
               "
             >
-              Launch Student Demo
+              Available in next step
             </button>
           </section>
         </div>
