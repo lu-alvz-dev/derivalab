@@ -1,5 +1,6 @@
 /*
 Demo exercise history
+Creates 48 practice attempts for the demo student.
 */
 
 INSERT INTO exercise_history
@@ -11,122 +12,103 @@ INSERT INTO exercise_history
     exercise_type,
     difficulty,
     is_correct,
-    error_type
+    error_type,
+    created_at
 )
 
 SELECT
 
 u.id,
 
-data.question,
+CASE (g.i % 8)
 
-data.correct_answer,
+WHEN 0 THEN 'd/dx (2x² + 5x)'
+WHEN 1 THEN 'd/dx (3x³)'
+WHEN 2 THEN 'd/dx (sin(x))'
+WHEN 3 THEN 'd/dx (5x⁴)'
+WHEN 4 THEN 'd/dx (x² + 3x)'
+WHEN 5 THEN 'd/dx (x⁵)'
+WHEN 6 THEN 'd/dx (cos(x))'
+ELSE 'd/dx (8x)'
 
-data.user_answer,
+END,
 
-data.exercise_type,
+CASE (g.i % 8)
 
-data.difficulty,
+WHEN 0 THEN '4x + 5'
+WHEN 1 THEN '9x²'
+WHEN 2 THEN 'cos(x)'
+WHEN 3 THEN '20x³'
+WHEN 4 THEN '2x + 3'
+WHEN 5 THEN '5x⁴'
+WHEN 6 THEN '-sin(x)'
+ELSE '8'
 
-data.is_correct,
+END,
 
-data.error_type
+CASE (g.i % 8)
+
+WHEN 0 THEN '4x + 5'
+WHEN 1 THEN '6x²'
+WHEN 2 THEN '-sin(x)'
+WHEN 3 THEN '20x³'
+WHEN 4 THEN '2x'
+WHEN 5 THEN '5x⁴'
+WHEN 6 THEN 'sin(x)'
+ELSE '8'
+
+END,
+
+CASE (g.i % 3)
+
+WHEN 0 THEN 'polynomial'
+WHEN 1 THEN 'power'
+ELSE 'trigonometric'
+
+END,
+
+CASE (g.i % 3)
+
+WHEN 0 THEN 'easy'
+WHEN 1 THEN 'medium'
+ELSE 'hard'
+
+END,
+
+CASE
+
+WHEN g.i % 4 = 0
+OR g.i % 4 = 3
+
+THEN TRUE
+
+ELSE FALSE
+
+END,
+
+CASE
+
+WHEN g.i % 4 = 0
+OR g.i % 4 = 3
+
+THEN NULL
+
+WHEN g.i % 4 = 1
+
+THEN 'POWER_RULE'
+
+WHEN g.i % 4 = 2
+
+THEN 'TRIGONOMETRIC_RULE'
+
+END,
+
+CURRENT_TIMESTAMP
+-
+((48 - g.i) * INTERVAL '1 day')
 
 FROM users u
 
-CROSS JOIN
-(
-    VALUES
-
-    (
-        'd/dx (2x² + 5x)',
-        '4x + 5',
-        '4x + 5',
-        'polynomial',
-        'easy',
-        TRUE,
-        NULL
-    ),
-
-    (
-        'd/dx (3x³)',
-        '9x²',
-        '6x²',
-        'power',
-        'easy',
-        FALSE,
-        'POWER_RULE'
-    ),
-
-    (
-        'd/dx (sin(x))',
-        'cos(x)',
-        '-sin(x)',
-        'trigonometric',
-        'medium',
-        FALSE,
-        'TRIGONOMETRIC_RULE'
-    ),
-
-    (
-        'd/dx (5x⁴)',
-        '20x³',
-        '20x³',
-        'power',
-        'medium',
-        TRUE,
-        NULL
-    ),
-
-    (
-        'd/dx (x²+3x)',
-        '2x+3',
-        '2x',
-        'polynomial',
-        'easy',
-        FALSE,
-        'CONSTANT_RULE'
-    ),
-
-    (
-        'd/dx (x⁵)',
-        '5x⁴',
-        '5x⁴',
-        'power',
-        'hard',
-        TRUE,
-        NULL
-    ),
-
-    (
-        'd/dx (cos(x))',
-        '-sin(x)',
-        'sin(x)',
-        'trigonometric',
-        'medium',
-        FALSE,
-        'TRIGONOMETRIC_SIGN'
-    ),
-
-    (
-        'd/dx (8x)',
-        '8',
-        '8',
-        'polynomial',
-        'easy',
-        TRUE,
-        NULL
-    )
-
-) AS data
-(
-    question,
-    correct_answer,
-    user_answer,
-    exercise_type,
-    difficulty,
-    is_correct,
-    error_type
-)
+CROSS JOIN generate_series(1,48) AS g(i)
 
 WHERE u.email='demo.student@derivalab.com';
