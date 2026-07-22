@@ -1,5 +1,5 @@
 /*
-Schema for Guest & Visitor Demo (Unregistered Access)
+Schema for guest and visitor Demo (Unregistered Access)
 */
 
 INSERT INTO users
@@ -19,8 +19,6 @@ VALUES
 
 ON CONFLICT (email)
 DO NOTHING;
-
-
 
 INSERT INTO users
 (
