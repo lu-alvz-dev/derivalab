@@ -1,5 +1,5 @@
 /*
-Schema for guest and visitor Demo (Unregistered Access)
+Demo users 
 */
 
 INSERT INTO users
@@ -11,14 +11,12 @@ INSERT INTO users
 VALUES
 (
     'demo.teacher@derivalab.com',
-
     '$2b$10$KSqDVjmj4aNtyp40aHXHd.0q1sJs1TqqeAbImRUoRZDeAR3fdsyv2',
-
     'teacher'
 )
-
 ON CONFLICT (email)
 DO NOTHING;
+
 
 INSERT INTO users
 (
@@ -27,19 +25,36 @@ INSERT INTO users
     role,
     teacher_id
 )
+
 SELECT
+    students.email,
+    '$2b$10$KSqDVjmj4aNtyp40aHXHd.0q1sJs1TqqeAbImRUoRZDeAR3fdsyv2',
+    'student',
+    teacher.id
 
-'demo.student@derivalab.com',
+FROM
+(
+    SELECT 'ana.johnson@derivalab.com' AS email
 
-'$2b$10$KSqDVjmj4aNtyp40aHXHd.0q1sJs1TqqeAbImRUoRZDeAR3fdsyv2',
+    UNION ALL
 
-'student',
+    SELECT 'carlos.rivera@derivalab.com'
 
-id
+    UNION ALL
 
-FROM users
+    SELECT 'emma.wilson@derivalab.com'
 
-WHERE email='demo.teacher@derivalab.com'
+    UNION ALL
+
+    SELECT 'luis.martinez@derivalab.com'
+) students
+
+CROSS JOIN
+(
+    SELECT id
+    FROM users
+    WHERE email='demo.teacher@derivalab.com'
+) teacher
 
 ON CONFLICT (email)
 DO NOTHING;
