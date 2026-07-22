@@ -54,138 +54,228 @@ function DemoSelectionPage() {
     <>
       <Navbar />
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 min-h-screen bg-slate-50">
-        <div className="text-center max-w-2xl mx-auto">
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900">
-            Try DerivaLab
-          </h1>
+      <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          {/* Header */}
 
-          <p className="mt-4 text-lg text-slate-600">
-            Experience the platform without creating an account.
-          </p>
-        </div>
-
-        <div className="mt-14 grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Teacher Demo */}
-
-          <section
-            className="
-              rounded-2xl
-              border
-              border-slate-200
-              bg-white
-              p-8
-              shadow-sm
-              transition-all
-              duration-200
-              hover:-translate-y-1
-              hover:shadow-lg
-            "
-          >
-            <div className="text-5xl mb-6 text-center">👨‍🏫</div>
-
-            <h2 className="text-2xl font-semibold text-slate-900 text-center">
-              Teacher Experience
-            </h2>
-
-            <p className="mt-4 text-center text-slate-600 leading-7">
-              Explore learning analytics, monitor student progress, review
-              dashboards, charts and classroom performance.
-            </p>
-
-            <button
-              onClick={loginTeacherDemo}
-              disabled={loadingTeacher}
+          <div className="max-w-3xl mx-auto text-center">
+            <span
               className="
-                mt-8
-                w-full
-                rounded-lg
-                bg-blue-600
-                px-5
-                py-3
+                inline-flex
+                rounded-full
+                bg-blue-100
+                px-4
+                py-1
+                text-sm
                 font-medium
-                text-white
-                transition-all
-                duration-200
-                hover:bg-blue-700
-                hover:shadow-lg
-                disabled:cursor-not-allowed
-                disabled:opacity-60
+                text-blue-700
               "
             >
-              {loadingTeacher
-                ? "Launching Teacher Demo..."
-                : "Launch Teacher Demo"}
-            </button>
-          </section>
+              Interactive Product Demo
+            </span>
 
-          {/* Student Demo */}
+            <h1 className="mt-6 text-5xl font-bold tracking-tight text-slate-900">
+              Explore DerivaLab
+            </h1>
 
-          <section
-            className="
-              rounded-2xl
-              border
-              border-slate-200
-              bg-white
-              p-8
-              shadow-sm
-              transition-all
-              duration-200
-              hover:-translate-y-1
-              hover:shadow-lg
-            "
-          >
-            <div className="text-5xl mb-6 text-center">👨‍🎓</div>
-
-            <h2 className="text-2xl font-semibold text-slate-900 text-center">
-              Student Experience
-            </h2>
-
-            <p className="mt-4 text-center text-slate-600 leading-7">
-              Solve derivative exercises, receive instant feedback, track your
-              learning progress and review your practice history.
+            <p className="mt-6 text-xl leading-8 text-slate-600">
+              Experience the platform exactly as teachers and students use it.
+              No registration required.
             </p>
+          </div>
 
-            <button
-              onClick={loginStudentDemo}
-              disabled={loadingStudent}
+          {/* Cards */}
+
+          <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            {/* Teacher */}
+
+            <section
               className="
-                mt-8
-                w-full
-                rounded-lg
-                bg-blue-600
-                px-5
-                py-3
-                font-medium
-                text-white
+                flex
+                flex-col
+                rounded-3xl
+                border
+                border-slate-200
+                bg-white
+                p-8
+                shadow-sm
                 transition-all
-                duration-200
-                hover:bg-blue-700
-                hover:shadow-lg
-                disabled:cursor-not-allowed
-                disabled:opacity-60
+                duration-300
+                hover:-translate-y-2
+                hover:shadow-xl
               "
             >
-              {loadingStudent
-                ? "Launching Student Demo..."
-                : "Launch Student Demo"}
-            </button>
-          </section>
-        </div>
+              <div className="text-6xl text-center">👨‍🏫</div>
 
-        <div className="mt-12 text-center">
-          <Link
-            to="/"
-            className="
-              inline-flex
-              items-center
-              text-blue-600
-              font-medium
-              hover:text-blue-700
-            "
-          >
-            ← Back to Home
-          </Link>
+              <div className="mt-6 text-center">
+                <span
+                  className="
+                    inline-flex
+                    rounded-full
+                    bg-slate-100
+                    px-3
+                    py-1
+                    text-xs
+                    font-semibold
+                    uppercase
+                    tracking-wide
+                    text-slate-600
+                  "
+                >
+                  Demo Account
+                </span>
+
+                <h2 className="mt-4 text-2xl font-bold text-slate-900">
+                  Teacher Experience
+                </h2>
+
+                <p className="mt-4 text-slate-600 leading-7">
+                  Explore classroom analytics and understand how DerivaLab helps
+                  teachers monitor learning progress.
+                </p>
+              </div>
+
+              <ul className="mt-8 space-y-3 text-slate-600 flex-1">
+                <li>✓ Teacher Dashboard</li>
+                <li>✓ Student Analytics</li>
+                <li>✓ Learning Progress</li>
+                <li>✓ Error Analysis</li>
+                <li>✓ Difficulty Distribution</li>
+                <li>✓ Practice History</li>
+              </ul>
+
+              <button
+                onClick={loginTeacherDemo}
+                disabled={loadingTeacher}
+                className="
+                  mt-10
+                  w-full
+                  rounded-xl
+                  bg-blue-600
+                  px-6
+                  py-3
+                  font-semibold
+                  text-white
+                  transition-all
+                  duration-200
+                  hover:bg-blue-700
+                  hover:shadow-lg
+                  disabled:opacity-60
+                  disabled:cursor-not-allowed
+                "
+              >
+                {loadingTeacher
+                  ? "Launching Teacher Demo..."
+                  : "Launch Teacher Demo"}
+              </button>
+            </section>
+
+            {/* Student */}
+
+            <section
+              className="
+                flex
+                flex-col
+                rounded-3xl
+                border
+                border-slate-200
+                bg-white
+                p-8
+                shadow-sm
+                transition-all
+                duration-300
+                hover:-translate-y-2
+                hover:shadow-xl
+              "
+            >
+              <div className="text-6xl text-center">👨‍🎓</div>
+
+              <div className="mt-6 text-center">
+                <span
+                  className="
+                    inline-flex
+                    rounded-full
+                    bg-slate-100
+                    px-3
+                    py-1
+                    text-xs
+                    font-semibold
+                    uppercase
+                    tracking-wide
+                    text-slate-600
+                  "
+                >
+                  Demo Account
+                </span>
+
+                <h2 className="mt-4 text-2xl font-bold text-slate-900">
+                  Student Experience
+                </h2>
+
+                <p className="mt-4 text-slate-600 leading-7">
+                  Practice derivatives, receive instant feedback and track your
+                  learning progress.
+                </p>
+              </div>
+
+              <ul className="mt-8 space-y-3 text-slate-600 flex-1">
+                <li>✓ Interactive Exercises</li>
+                <li>✓ Instant Feedback</li>
+                <li>✓ Practice History</li>
+                <li>✓ Learning Statistics</li>
+                <li>✓ Continue Practice</li>
+                <li>✓ Personal Dashboard</li>
+              </ul>
+
+              <button
+                onClick={loginStudentDemo}
+                disabled={loadingStudent}
+                className="
+                  mt-10
+                  w-full
+                  rounded-xl
+                  bg-blue-600
+                  px-6
+                  py-3
+                  font-semibold
+                  text-white
+                  transition-all
+                  duration-200
+                  hover:bg-blue-700
+                  hover:shadow-lg
+                  disabled:opacity-60
+                  disabled:cursor-not-allowed
+                "
+              >
+                {loadingStudent
+                  ? "Launching Student Demo..."
+                  : "Launch Student Demo"}
+              </button>
+            </section>
+          </div>
+
+          {/* Footer */}
+
+          <div className="mt-16 text-center">
+            <p className="text-sm text-slate-500">
+              Both demo accounts include preloaded data so you can immediately
+              explore the platform without creating an account.
+            </p>
+
+            <Link
+              to="/"
+              className="
+                mt-6
+                inline-flex
+                items-center
+                text-blue-600
+                font-medium
+                hover:text-blue-700
+              "
+            >
+              ← Back to Home
+            </Link>
+          </div>
         </div>
       </main>
     </>
