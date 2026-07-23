@@ -14,8 +14,10 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
+
 import EmptyState from "./EmptyState";
 import LoadingState from "./LoadingState";
+import ChartCard from "./ChartCard";
 
 function DifficultyChart({ studentId = null }) {
   const [data, setData] = useState([]);
@@ -41,6 +43,7 @@ function DifficultyChart({ studentId = null }) {
   if (loading) {
     return <LoadingState message="Loading difficulty statistics..." />;
   }
+
   if (data.length === 0) {
     return (
       <EmptyState
@@ -49,33 +52,23 @@ function DifficultyChart({ studentId = null }) {
       />
     );
   }
+
   const formattedData = data.map((item) => ({
     ...item,
     difficulty:
       item.difficulty.charAt(0).toUpperCase() +
       item.difficulty.slice(1).toLowerCase(),
   }));
-  return (
-    <div
-      className="h-full bg-white
-rounded-2xl
-border
-border-slate-200
-shadow-sm
-hover:shadow-md
-transition-shadow
-duration-200
-p-6"
-    >
-      <h2 className="text-xl font-semibold text-slate-800 mb-6">
-        {studentId
-          ? "Student Difficulty Performance"
-          : "Group Difficulty Distribution"}
-      </h2>
-      <p className="text-sm text-slate-500 mt-1 mb-6">
-        Practice attempts grouped by selected difficulty.
-      </p>
 
+  return (
+    <ChartCard
+      title={
+        studentId
+          ? "Student Difficulty Performance"
+          : "Group Difficulty Distribution"
+      }
+      description="Practice attempts grouped by selected difficulty."
+    >
       <ResponsiveContainer width="100%" height={320}>
         <BarChart data={formattedData}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -94,7 +87,7 @@ p-6"
           <Bar dataKey="count" fill="#10b981" radius={[8, 8, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
-    </div>
+    </ChartCard>
   );
 }
 

@@ -14,8 +14,10 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
+
 import EmptyState from "./EmptyState";
 import LoadingState from "./LoadingState";
+import ChartCard from "./ChartCard";
 
 function MostCommonErrorsChart({ studentId = null }) {
   const [data, setData] = useState([]);
@@ -41,6 +43,7 @@ function MostCommonErrorsChart({ studentId = null }) {
   if (loading) {
     return <LoadingState message="Loading error analysis..." />;
   }
+
   if (data.length === 0) {
     return (
       <EmptyState
@@ -49,6 +52,7 @@ function MostCommonErrorsChart({ studentId = null }) {
       />
     );
   }
+
   const formattedData = data.map((item) => {
     const label = item.error_type ?? "";
 
@@ -60,25 +64,12 @@ function MostCommonErrorsChart({ studentId = null }) {
         .replace(/\b\w/g, (letter) => letter.toUpperCase()),
     };
   });
-  return (
-    <div
-      className="h-full bg-white
-rounded-2xl
-border
-border-slate-200
-shadow-sm
-hover:shadow-md
-transition-shadow
-duration-200
-p-6"
-    >
-      <h2 className="text-xl font-semibold text-slate-800 mb-6">
-        {studentId ? "Student Error Analysis" : "Group Error Analysis"}
-      </h2>
-      <p className="text-sm text-slate-500 mt-1 mb-6">
-        Frequent mistakes detected during derivative practice.
-      </p>
 
+  return (
+    <ChartCard
+      title={studentId ? "Student Error Analysis" : "Group Error Analysis"}
+      description="Frequent mistakes detected during derivative practice."
+    >
       <ResponsiveContainer width="100%" height={320}>
         <BarChart
           data={formattedData}
@@ -115,7 +106,7 @@ p-6"
           <Bar dataKey="count" fill="#2563eb" radius={[8, 8, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
-    </div>
+    </ChartCard>
   );
 }
 

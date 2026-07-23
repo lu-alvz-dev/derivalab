@@ -21,15 +21,10 @@ function EmptyState({
         </svg>
       </div>
 
-      <h2 className="mt-5 text-xl font-semibold text-slate-800">
-        {title}
-      </h2>
+      <h2 className="mt-5 text-xl font-semibold text-slate-800">{title}</h2>
 
-      <p className="mt-2 text-sm text-slate-500 max-w-md mx-auto">
-        {message}
-      </p>
+      <p className="mt-2 text-sm text-slate-500 max-w-md mx-auto">{message}</p>
     </div>
   );
 }
-
 export default EmptyState;
