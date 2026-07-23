@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import { loginUserApi } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
+import { DEMO_ACCOUNTS } from "../constants/demoAccounts";
 
 function DemoSelectionPage() {
   const navigate = useNavigate();
@@ -16,10 +17,7 @@ function DemoSelectionPage() {
     try {
       setLoadingTeacher(true);
 
-      const response = await loginUserApi({
-        email: "demo.teacher@derivalab.com",
-        password: "Demo123!",
-      });
+      const response = await loginUserApi(DEMO_ACCOUNTS.teacher);
 
       login(response.data.user, response.data.token);
 
@@ -35,10 +33,7 @@ function DemoSelectionPage() {
     try {
       setLoadingStudent(true);
 
-      const response = await loginUserApi({
-        email: "demo.student@derivalab.com",
-        password: "Demo123!",
-      });
+      const response = await loginUserApi(DEMO_ACCOUNTS.student);
 
       login(response.data.user, response.data.token);
 
