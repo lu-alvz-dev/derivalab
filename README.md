@@ -1,4 +1,4 @@
-![App Preview](docs/images/frontend-v8.png)
+![App Preview](docs/images/frontend-v9.png)
 
 # DerivaLab
 
