@@ -1,7 +1,3 @@
-/*
-Demo users 
-*/
-
 INSERT INTO users
 (
     email,
@@ -25,13 +21,29 @@ INSERT INTO users
     role,
     teacher_id
 )
+SELECT
+    'demo.student@derivalab.com',
+    '$2b$10$KSqDVjmj4aNtyp40aHXHd.0q1sJs1TqqeAbImRUoRZDeAR3fdsyv2',
+    'student',
+    id
+FROM users
+WHERE email = 'demo.teacher@derivalab.com'
+ON CONFLICT (email)
+DO NOTHING;
 
+
+INSERT INTO users
+(
+    email,
+    password,
+    role,
+    teacher_id
+)
 SELECT
     students.email,
     '$2b$10$KSqDVjmj4aNtyp40aHXHd.0q1sJs1TqqeAbImRUoRZDeAR3fdsyv2',
     'student',
     teacher.id
-
 FROM
 (
     SELECT 'ana.johnson@derivalab.com' AS email
@@ -53,7 +65,7 @@ CROSS JOIN
 (
     SELECT id
     FROM users
-    WHERE email='demo.teacher@derivalab.com'
+    WHERE email = 'demo.teacher@derivalab.com'
 ) teacher
 
 ON CONFLICT (email)

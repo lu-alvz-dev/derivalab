@@ -73,6 +73,7 @@ JOIN
 
 ON users.email IN
 (
+    'demo.student@derivalab.com',
     'ana.johnson@derivalab.com',
     'carlos.rivera@derivalab.com',
     'emma.wilson@derivalab.com',
