@@ -1,17 +1,23 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 import Navbar from "../components/Navbar";
+
 import { loginUserApi } from "../services/api";
 import { useAuth } from "../context/AuthContext";
-import { useState } from "react";
 import { DEMO_ACCOUNTS } from "../constants/demoAccounts";
 
 function DemoSelectionPage() {
   const navigate = useNavigate();
 
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
 
   const [loadingTeacher, setLoadingTeacher] = useState(false);
   const [loadingStudent, setLoadingStudent] = useState(false);
+
+  useEffect(() => {
+    logout();
+  }, [logout]);
 
   const loginTeacherDemo = async () => {
     try {
