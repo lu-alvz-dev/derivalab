@@ -4,6 +4,7 @@ import { registerUserApi } from "../services/api";
 
 function RegisterPage() {
   const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("teacher");
@@ -18,7 +19,9 @@ function RegisterPage() {
         role,
         teacher_id: role === "student" ? Number(teacherId) : null,
       });
+
       setErrorMessage("");
+
       navigate("/login", {
         state: {
           successMessage:
@@ -35,7 +38,7 @@ function RegisterPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50">
+    <main className="min-h-screen flex items-center justify-center bg-gray-50 px-6">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
         <h1 className="text-3xl font-bold text-blue-600 text-center">
           Create Account
@@ -64,7 +67,6 @@ function RegisterPage() {
             className="w-full border rounded-lg p-3"
           >
             <option value="teacher">Teacher</option>
-
             <option value="student">Student</option>
           </select>
 
@@ -86,13 +88,50 @@ function RegisterPage() {
 
           <button
             onClick={handleRegister}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg"
+            className="
+              w-full
+              bg-blue-600
+              text-white
+              py-3
+              rounded-lg
+              transition-colors
+              hover:bg-blue-700
+            "
           >
             Register
           </button>
+
           {errorMessage && (
             <p className="text-red-500 text-sm text-center">{errorMessage}</p>
           )}
+        </div>
+
+        <div className="mt-8 border-t border-slate-200 pt-6 space-y-4 text-center">
+          <p className="text-sm text-slate-600">
+            Already have an account?{" "}
+            <button
+              onClick={() => navigate("/login")}
+              className="font-semibold text-blue-600 hover:underline"
+            >
+              Login
+            </button>
+          </p>
+
+          <button
+            onClick={() => navigate("/")}
+            className="
+              inline-flex
+              items-center
+              text-sm
+              font-medium
+              text-blue-600
+              transition-colors
+              hover:text-blue-700
+              hover:underline
+            "
+          >
+            ← Back to Home
+          </button>
         </div>
       </div>
     </main>
