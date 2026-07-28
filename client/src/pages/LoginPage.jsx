@@ -6,8 +6,11 @@ import { useAuth } from "../context/AuthContext";
 function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
+
   const successMessage = location.state?.successMessage;
+
   const { login } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -20,7 +23,9 @@ function LoginPage() {
       });
 
       login(response.data.user, response.data.token);
+
       setErrorMessage("");
+
       const user = response.data.user;
 
       if (user.role === "teacher") {
@@ -69,13 +74,50 @@ function LoginPage() {
 
           <button
             onClick={handleLogin}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg"
+            className="
+              w-full
+              bg-blue-600
+              text-white
+              py-3
+              rounded-lg
+              transition-colors
+              hover:bg-blue-700
+            "
           >
             Login
           </button>
+
           {errorMessage && (
             <p className="text-red-500 text-sm text-center">{errorMessage}</p>
           )}
+        </div>
+
+        <div className="mt-8 border-t border-slate-200 pt-6 space-y-4 text-center">
+          <p className="text-sm text-slate-600">
+            Don't have an account?{" "}
+            <button
+              onClick={() => navigate("/register")}
+              className="font-semibold text-blue-600 hover:underline"
+            >
+              Create one
+            </button>
+          </p>
+
+          <button
+            onClick={() => navigate("/")}
+            className="
+              inline-flex
+              items-center
+              text-sm
+              font-medium
+              text-blue-600
+              transition-colors
+              hover:text-blue-700
+              hover:underline
+            "
+          >
+            ← Back to Home
+          </button>
         </div>
       </div>
     </main>
