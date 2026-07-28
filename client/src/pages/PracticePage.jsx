@@ -23,23 +23,19 @@ function PracticePage() {
   const [result, setResult] = useState(null);
   const navigate = useNavigate();
 
-  // Filtros para la consulta a la API
   const [type, setType] = useState("polynomial");
   const [difficulty, setDifficulty] = useState("easy");
   const [feedback, setFeedback] = useState("");
   const [errorType, setErrorType] = useState("");
+
   const [stats, setStats] = useState({
     attempts: 0,
     correct: 0,
     accuracy: 0,
   });
+
   const [history, setHistory] = useState([]);
 
-  /* 
-   Fetches a new exercise from the backend, useCallback is used to stabilize 
-   the function reference, so useEffect won't enter an infinite loop when state changes, 
-   the function is only recreated if 'type' or 'difficulty' change.
-   */
   const fetchExercise = useCallback(() => {
     fetchExerciseApi(type, difficulty)
       .then((res) => {
@@ -54,7 +50,6 @@ function PracticePage() {
       });
   }, [type, difficulty]);
 
-  //Sends the user's answer to the server for validation.
   const validateAnswer = () => {
     validateAnswerApi({
       userId: currentUser.id,
@@ -69,6 +64,7 @@ function PracticePage() {
       setResult(isCorrect);
       setFeedback(res.data.feedback);
       setErrorType(res.data.errorType);
+
       loadStats();
       loadHistory();
     });
@@ -111,36 +107,39 @@ function PracticePage() {
   return (
     <>
       <Navbar />
+
       <div className="max-w-3xl mx-auto p-6">
         <div className="mb-8">
           <button
-            onClick={() => navigate("/student-dashboard")}
+            onClick={() => navigate("/student/dashboard")}
             className="
-      inline-flex
-      items-center
-      gap-2
-      rounded-xl
-      border
-      border-slate-300
-      bg-white
-      px-5
-      py-3
-      text-sm
-      font-medium
-      text-slate-700
-      shadow-sm
-      transition-all
-      duration-200
-      hover:border-blue-200
-      hover:bg-blue-50
-      hover:text-blue-700
-      hover:shadow-md
-    "
+              inline-flex
+              items-center
+              gap-2
+              rounded-xl
+              border
+              border-slate-300
+              bg-white
+              px-5
+              py-3
+              text-sm
+              font-medium
+              text-slate-700
+              shadow-sm
+              transition-all
+              duration-200
+              hover:border-blue-200
+              hover:bg-blue-50
+              hover:text-blue-700
+              hover:shadow-md
+            "
           >
             ← Back to Dashboard
           </button>
         </div>
+
         <Header />
+
         <ControlsPanel
           type={type}
           setType={setType}
@@ -157,13 +156,16 @@ function PracticePage() {
               onCheck={validateAnswer}
               onNext={fetchExercise}
             />
+
             <FeedbackPanel
               result={result}
               feedback={feedback}
               errorType={errorType}
               onNextExercise={fetchExercise}
             />
+
             <DashboardPanel stats={stats} />
+
             <ExerciseHistoryPanel history={history} />
           </>
         )}
