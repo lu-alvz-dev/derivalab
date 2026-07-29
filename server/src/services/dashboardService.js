@@ -66,29 +66,23 @@ async function getTeacherDashboard(teacherId) {
 async function getAccuracyOverTime(teacherId) {
   const query = `
     SELECT
-      created_at,
-      is_correct
+      eh.created_at,
+      eh.is_correct
 
     FROM exercise_history eh
 
-INNER JOIN users u
-ON eh.user_id = u.id
+    INNER JOIN users u
+      ON eh.user_id = u.id
 
-WHERE u.teacher_id = $1
+    WHERE
+      u.teacher_id = $1
 
-    ORDER BY created_at DESC
+    ORDER BY eh.created_at DESC
 
     LIMIT ${MAX_RECENT_ATTEMPTS}
   `;
 
   const result = await pool.query(query, [teacherId]);
-
-  /*
-    PostgreSQL devuelve primero el intento más reciente.
-
-    Recharts necesita que los datos estén del más antiguo
-    al más reciente para dibujar correctamente la línea.
-  */
 
   const attempts = result.rows.reverse();
 

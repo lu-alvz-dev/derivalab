@@ -32,6 +32,8 @@ async function getAccuracyChart(req, res) {
     const data = await getAccuracyOverTime(teacherId);
     res.json(data);
   } catch (error) {
+    console.error("Accuracy chart error:", error);
+
     res.status(500).json({
       message: "Accuracy chart error",
     });
