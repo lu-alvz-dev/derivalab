@@ -4,13 +4,13 @@ const { MAX_RECENT_ATTEMPTS } = require("../config/dashboardConfig");
 async function validateTeacherStudent(teacherId, studentId) {
   const query = `
     SELECT
-      id,
-      email
-    FROM users
+      u.id,
+      u.email
+    FROM users u
     WHERE
-      id = $1
-      AND role = 'student'
-      AND teacher_id = $2
+      u.id = $1
+      AND u.role = 'student'
+      AND u.teacher_id = $2
   `;
 
   const result = await pool.query(query, [studentId, teacherId]);
@@ -47,9 +47,7 @@ async function getTeacherDashboard(teacherId) {
   const row = result.rows[0];
 
   const students = Number(row.students);
-
   const attempts = Number(row.attempts);
-
   const correct = Number(row.correct);
 
   const averageAccuracy =
@@ -100,48 +98,55 @@ async function getAccuracyOverTime(teacherId) {
   });
 }
 
-async function getMostCommonErrors(userId) {
+async function getMostCommonErrors(teacherId) {
   const query = `
     SELECT
-      error_type,
+      eh.error_type,
       COUNT(*) AS count
 
     FROM exercise_history eh
 
-INNER JOIN users u
-ON eh.user_id=u.id
+    INNER JOIN users u
+      ON eh.user_id = u.id
 
-WHERE
-u.teacher_id=$1
-      AND error_type IS NOT NULL
+    WHERE
+      u.teacher_id = $1
+      AND eh.error_type IS NOT NULL
 
-    GROUP BY error_type
+    GROUP BY
+      eh.error_type
 
-    ORDER BY count DESC
+    ORDER BY
+      count DESC
   `;
 
-  const result = await pool.query(query, [userId]);
+  const result = await pool.query(query, [teacherId]);
 
   return result.rows;
 }
 
-async function getExercisesByDifficulty(userId) {
+async function getExercisesByDifficulty(teacherId) {
   const query = `
     SELECT
-      difficulty,
+      eh.difficulty,
       COUNT(*) AS count
 
     FROM exercise_history eh
 
-INNER JOIN users u
-ON eh.user_id=u.id
+    INNER JOIN users u
+      ON eh.user_id = u.id
 
-WHERE u.teacher_id=$1
+    WHERE
+      u.teacher_id = $1
 
-    GROUP BY difficulty
+    GROUP BY
+      eh.difficulty
+
+    ORDER BY
+      eh.difficulty
   `;
 
-  const result = await pool.query(query, [userId]);
+  const result = await pool.query(query, [teacherId]);
 
   return result.rows;
 }
@@ -178,7 +183,6 @@ async function getTeacherStudents(teacherId) {
 
   return result.rows.map((student) => {
     const attempts = Number(student.attempts);
-
     const correct = Number(student.correct);
 
     const accuracy =
@@ -206,18 +210,18 @@ async function getTeacherStudentDashboard(teacherId, studentId) {
       COUNT(*) AS attempts,
 
       COUNT(*) FILTER (
-        WHERE is_correct = true
+        WHERE eh.is_correct = true
       ) AS correct
 
-    FROM exercise_history
+    FROM exercise_history eh
 
-    WHERE user_id = $1
+    WHERE
+      eh.user_id = $1
   `;
 
   const statsResult = await pool.query(statsQuery, [studentId]);
 
   const attempts = Number(statsResult.rows[0].attempts);
-
   const correct = Number(statsResult.rows[0].correct);
 
   const accuracy = attempts === 0 ? 0 : Math.round((correct / attempts) * 100);
@@ -245,21 +249,23 @@ async function getTeacherStudentHistory(teacherId, studentId) {
 
   const historyQuery = `
     SELECT
-      id,
-      question,
-      correct_answer,
-      user_answer,
-      exercise_type,
-      difficulty,
-      is_correct,
-      error_type,
-      created_at
+      eh.id,
+      eh.question,
+      eh.correct_answer,
+      eh.user_answer,
+      eh.exercise_type,
+      eh.difficulty,
+      eh.is_correct,
+      eh.error_type,
+      eh.created_at
 
-    FROM exercise_history
+    FROM exercise_history eh
 
-    WHERE user_id = $1
+    WHERE
+      eh.user_id = $1
 
-    ORDER BY created_at DESC
+    ORDER BY
+      eh.created_at DESC
   `;
 
   const historyResult = await pool.query(historyQuery, [studentId]);
@@ -268,31 +274,24 @@ async function getTeacherStudentHistory(teacherId, studentId) {
 }
 
 async function getTeacherStudentAccuracy(teacherId, studentId) {
-  /*
-    Primero validamos que el alumno pertenezca al profesor.
-  */
-
   const student = await validateTeacherStudent(teacherId, studentId);
 
   if (!student) {
     return "FORBIDDEN";
   }
 
-  /*
-    Obtenemos únicamente los últimos intentos
-    del estudiante.
-  */
-
   const accuracyQuery = `
     SELECT
-      created_at,
-      is_correct
+      eh.created_at,
+      eh.is_correct
 
-    FROM exercise_history
+    FROM exercise_history eh
 
-    WHERE user_id = $1
+    WHERE
+      eh.user_id = $1
 
-    ORDER BY created_at DESC
+    ORDER BY
+      eh.created_at DESC
 
     LIMIT $2
   `;
@@ -301,14 +300,6 @@ async function getTeacherStudentAccuracy(teacherId, studentId) {
     studentId,
     MAX_RECENT_ATTEMPTS,
   ]);
-
-  /*
-    PostgreSQL devuelve del más reciente
-    al más antiguo.
-
-    Recharts necesita exactamente
-    el orden contrario.
-  */
 
   const attempts = result.rows.reverse();
 
@@ -327,36 +318,28 @@ async function getTeacherStudentAccuracy(teacherId, studentId) {
 }
 
 async function getTeacherStudentErrors(teacherId, studentId) {
-  /*
-    Primero validamos que el estudiante
-    pertenezca al profesor autenticado.
-  */
-
   const student = await validateTeacherStudent(teacherId, studentId);
 
   if (!student) {
     return "FORBIDDEN";
   }
 
-  /*
-    Ahora obtenemos únicamente
-    los errores de ese estudiante.
-  */
-
   const errorsQuery = `
     SELECT
-      error_type,
+      eh.error_type,
       COUNT(*) AS count
 
-    FROM exercise_history
+    FROM exercise_history eh
 
     WHERE
-      user_id = $1
-      AND error_type IS NOT NULL
+      eh.user_id = $1
+      AND eh.error_type IS NOT NULL
 
-    GROUP BY error_type
+    GROUP BY
+      eh.error_type
 
-    ORDER BY count DESC
+    ORDER BY
+      count DESC
   `;
 
   const result = await pool.query(errorsQuery, [studentId]);
@@ -365,34 +348,27 @@ async function getTeacherStudentErrors(teacherId, studentId) {
 }
 
 async function getTeacherStudentDifficulty(teacherId, studentId) {
-  /*
-    Verificamos que el estudiante
-    pertenezca al profesor autenticado.
-  */
-
   const student = await validateTeacherStudent(teacherId, studentId);
 
   if (!student) {
     return "FORBIDDEN";
   }
 
-  /*
-    Obtenemos únicamente los ejercicios
-    realizados por este estudiante.
-  */
-
   const difficultyQuery = `
     SELECT
-      difficulty,
+      eh.difficulty,
       COUNT(*) AS count
 
-    FROM exercise_history
+    FROM exercise_history eh
 
-    WHERE user_id = $1
+    WHERE
+      eh.user_id = $1
 
-    GROUP BY difficulty
+    GROUP BY
+      eh.difficulty
 
-    ORDER BY difficulty
+    ORDER BY
+      eh.difficulty
   `;
 
   const result = await pool.query(difficultyQuery, [studentId]);
