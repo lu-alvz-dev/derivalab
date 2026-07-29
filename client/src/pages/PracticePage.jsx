@@ -18,10 +18,11 @@ import { useNavigate } from "react-router-dom";
 function PracticePage() {
   const currentUser = getCurrentUser();
 
+  const navigate = useNavigate();
+
   const [exercise, setExercise] = useState(null);
   const [userAnswer, setUserAnswer] = useState("");
   const [result, setResult] = useState(null);
-  const navigate = useNavigate();
 
   const [type, setType] = useState("polynomial");
   const [difficulty, setDifficulty] = useState("easy");
@@ -104,6 +105,11 @@ function PracticePage() {
     );
   }
 
+  const dashboardRoute =
+    currentUser.role === "teacher"
+      ? "/teacher/dashboard"
+      : "/student/dashboard";
+
   return (
     <>
       <Navbar />
@@ -111,7 +117,7 @@ function PracticePage() {
       <div className="max-w-3xl mx-auto p-6">
         <div className="mb-8">
           <button
-            onClick={() => navigate("/student/dashboard")}
+            onClick={() => navigate(dashboardRoute)}
             className="
               inline-flex
               items-center
