@@ -11,7 +11,7 @@ import AccuracyChart from "../components/AccuracyChart";
 import MostCommonErrorsChart from "../components/MostCommonErrorsChart";
 import DifficultyChart from "../components/DifficultyChart";
 import StudentAnalyticsTable from "../components/StudentAnalyticsTable";
-import HistoryTable from "../components/HistoryTable";
+import TeacherInsightsPanel from "../components/TeacherInsightsPanel";
 import LoadingState from "../components/LoadingState";
 
 function TeacherDashboard() {
@@ -20,12 +20,12 @@ function TeacherDashboard() {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    fetchTeacherDashboardApi().then((res) => {
-      setDashboard(res.data);
+    fetchTeacherDashboardApi().then((response) => {
+      setDashboard(response.data);
     });
 
-    fetchTeacherStudentsApi().then((res) => {
-      setStudents(res.data);
+    fetchTeacherStudentsApi().then((response) => {
+      setStudents(response.data);
     });
   }, []);
 
@@ -38,21 +38,23 @@ function TeacherDashboard() {
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-slate-50 min-h-screen">
-        {/* Encabezado */}
+        {/* Header */}
+
         <header className="mb-10">
           <h1 className="text-4xl font-bold tracking-tight text-slate-900">
             Teacher Dashboard
           </h1>
 
           <p className="mt-3 max-w-3xl text-base leading-7 text-slate-600">
-            Monitor student performance and learning analytics.
+            Monitor student performance, identify learning patterns and quickly
+            detect students who may require additional support.
           </p>
         </header>
 
-        {/* Layout principal  */}
+        {/* Main Layout */}
 
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
-          {/* Sidebar */}
+          {/* Left Sidebar */}
 
           <aside className="order-2 xl:order-1 xl:col-span-3 space-y-6">
             <StudentAnalyticsTable students={students} />
@@ -60,11 +62,8 @@ function TeacherDashboard() {
 
           {/* Main Content */}
 
-          <section
-            className="order-1 xl:order-2 xl:col-span-9
-    space-y-8"
-          >
-            {/* Analytics Cards */}
+          <section className="order-1 xl:order-2 xl:col-span-9 space-y-8">
+            {/* KPI Cards */}
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
               <AnalyticsCard title="Students" value={dashboard.students} />
@@ -85,24 +84,24 @@ function TeacherDashboard() {
               />
             </div>
 
-            {/* Accuracy */}
+            {/* Accuracy Trend */}
 
             <section>
-              <AccuracyChart />
+              <AccuracyChart title="Group Learning Progress" />
             </section>
 
-            {/* Errors and Difficulty */}
+            {/* Charts */}
 
-            <section className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-stretch">
+            <section className="grid grid-cols-1 xl:grid-cols-2 gap-6">
               <MostCommonErrorsChart />
 
               <DifficultyChart />
             </section>
 
-            {/* History */}
+            {/* Teacher Insights */}
 
-            <section className="w-full">
-              <HistoryTable />
+            <section>
+              <TeacherInsightsPanel students={students} />
             </section>
           </section>
         </div>
