@@ -2,7 +2,8 @@ function AnalyticsCard({ title, value }) {
   return (
     <div
       className="
-        h-full
+        relative
+        overflow-hidden
         rounded-2xl
         border
         border-slate-200
@@ -12,14 +13,46 @@ function AnalyticsCard({ title, value }) {
         transition-all
         duration-200
         hover:-translate-y-1
+        hover:border-blue-200
         hover:shadow-lg
       "
     >
-      <h3 className="text-sm font-medium text-slate-500">{title}</h3>
+      <div
+        className="
+          absolute
+          top-0
+          left-0
+          h-1
+          w-full
+          bg-blue-600
+        "
+      />
 
-      <p className="mt-3 text-4xl font-bold tracking-tight text-blue-600">
-        {value}
-      </p>
+      <div className="flex flex-col gap-3">
+        <p
+          className="
+            text-sm
+            font-medium
+            uppercase
+            tracking-wide
+            text-slate-500
+          "
+        >
+          {title}
+        </p>
+
+        <p
+          className="
+            break-words
+            text-4xl
+            font-bold
+            tracking-tight
+            text-slate-900
+          "
+        >
+          {value}
+        </p>
+      </div>
     </div>
   );
 }
