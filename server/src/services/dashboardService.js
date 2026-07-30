@@ -161,7 +161,9 @@ async function getTeacherStudents(teacherId) {
 
       COUNT(*) FILTER (
         WHERE eh.is_correct = true
-      ) AS correct
+      ) AS correct,
+
+      MAX(eh.created_at) AS last_activity
 
     FROM users u
 
@@ -183,6 +185,7 @@ async function getTeacherStudents(teacherId) {
 
   return result.rows.map((student) => {
     const attempts = Number(student.attempts);
+
     const correct = Number(student.correct);
 
     const accuracy =
@@ -190,10 +193,16 @@ async function getTeacherStudents(teacherId) {
 
     return {
       id: student.id,
+
       email: student.email,
+
       attempts,
+
       correct,
+
       accuracy,
+
+      lastActivity: student.last_activity,
     };
   });
 }
