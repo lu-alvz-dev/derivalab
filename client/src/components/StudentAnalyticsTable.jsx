@@ -1,8 +1,17 @@
 import { Link, useLocation } from "react-router-dom";
+
 import EmptyState from "./EmptyState";
 
 function StudentAnalyticsTable({ students }) {
   const location = useLocation();
+
+  const formatLastActivity = (date) => {
+    if (!date) {
+      return "No activity";
+    }
+
+    return new Date(date).toLocaleDateString();
+  };
 
   if (!students.length) {
     return (
@@ -16,15 +25,16 @@ function StudentAnalyticsTable({ students }) {
   return (
     <aside
       className="
-bg-white
-rounded-2xl
-border
-border-slate-200
-shadow-sm
-hover:shadow-md
-transition-shadow
-duration-200
-p-6"
+        bg-white
+        rounded-2xl
+        border
+        border-slate-200
+        shadow-sm
+        hover:shadow-md
+        transition-shadow
+        duration-200
+        p-6
+      "
     >
       <h2 className="text-xl font-semibold text-slate-900">My Students</h2>
 
@@ -32,7 +42,7 @@ p-6"
         Select a student to view individual analytics.
       </p>
 
-      <div className="mt-6 space-y-2">
+      <div className="mt-6 space-y-3">
         {students.map((student) => {
           const isActive =
             location.pathname === `/teacher/student/${student.id}`;
@@ -42,38 +52,49 @@ p-6"
               key={student.id}
               to={`/teacher/student/${student.id}`}
               className={`
-  flex
-  items-center
-  justify-between
-  rounded-xl
-  px-4
-  py-3
-  border
-  transition-all
-  duration-200
-  ${
-    isActive
-      ? "border-blue-200 bg-blue-50 shadow-sm"
-      : "border-transparent hover:border-slate-200 hover:bg-slate-50 hover:shadow-sm hover:-translate-y-0.5"
-  }
-`}
+                block
+                rounded-xl
+                border
+                p-4
+                transition-all
+                duration-200
+                ${
+                  isActive
+                    ? "border-blue-200 bg-blue-50 shadow-sm"
+                    : "border-slate-200 hover:border-blue-200 hover:bg-slate-50 hover:shadow-sm"
+                }
+              `}
             >
-              <div className="min-w-0">
-                <p className="font-medium text-slate-800 truncate">
-                  {student.email}
-                </p>
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-semibold text-slate-800">
+                    {student.email}
+                  </p>
 
-                <p className="text-xs text-slate-500 mt-1">
-                  {student.attempts} attempts
-                </p>
-              </div>
+                  <div className="mt-3 space-y-1 text-xs text-slate-500">
+                    <p>
+                      <span className="font-medium text-slate-700">
+                        Attempts:
+                      </span>{" "}
+                      {student.attempts}
+                    </p>
 
-              <div className="text-right">
-                <p className="text-sm font-semibold text-blue-600">
-                  {student.accuracy}%
-                </p>
+                    <p>
+                      <span className="font-medium text-slate-700">
+                        Last Activity:
+                      </span>{" "}
+                      {formatLastActivity(student.lastActivity)}
+                    </p>
+                  </div>
+                </div>
 
-                <p className="text-xs text-slate-400">accuracy</p>
+                <div className="text-right">
+                  <p className="text-2xl font-bold text-blue-600">
+                    {student.accuracy}%
+                  </p>
+
+                  <p className="mt-1 text-xs text-slate-400">accuracy</p>
+                </div>
               </div>
             </Link>
           );
