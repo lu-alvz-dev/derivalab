@@ -22,6 +22,7 @@ function TeacherInsightsPanel({ students }) {
         icon: "🟢",
         label: "Excellent",
         color: "text-green-600",
+        background: "bg-green-50",
       };
     }
 
@@ -29,7 +30,8 @@ function TeacherInsightsPanel({ students }) {
       return {
         icon: "🟡",
         label: "Needs Practice",
-        color: "text-yellow-600",
+        color: "text-yellow-700",
+        background: "bg-yellow-50",
       };
     }
 
@@ -37,7 +39,16 @@ function TeacherInsightsPanel({ students }) {
       icon: "🔴",
       label: "Needs Attention",
       color: "text-red-600",
+      background: "bg-red-50",
     };
+  };
+
+  const formatLastActivity = (date) => {
+    if (!date) {
+      return "No activity";
+    }
+
+    return new Date(date).toLocaleDateString();
   };
 
   return (
@@ -60,8 +71,8 @@ function TeacherInsightsPanel({ students }) {
         </h2>
 
         <p className="mt-2 text-sm text-slate-500">
-          Students are ordered by lowest accuracy to help identify who may need
-          additional support.
+          Students are ordered by lowest accuracy to help identify learners who
+          may benefit from additional support.
         </p>
       </div>
 
@@ -73,54 +84,92 @@ function TeacherInsightsPanel({ students }) {
             <div
               key={student.id}
               className="
-                flex
-                items-center
-                justify-between
                 rounded-xl
                 border
                 border-slate-200
-                p-4
+                bg-white
+                p-5
                 transition-all
                 duration-200
                 hover:border-blue-200
-                hover:bg-slate-50
+                hover:shadow-sm
               "
             >
-              <div className="min-w-0">
-                <p className="truncate font-semibold text-slate-800">
-                  {student.email}
-                </p>
+              <div className="flex items-start justify-between gap-6">
+                <div className="flex-1 min-w-0">
+                  <p className="truncate text-base font-semibold text-slate-800">
+                    {student.email}
+                  </p>
 
-                <p className="mt-1 text-sm text-slate-500">
-                  {student.attempts} attempts
-                </p>
+                  <div className="mt-4 space-y-2 text-sm text-slate-600">
+                    <p>
+                      <span className="font-medium text-slate-700">
+                        Attempts:
+                      </span>{" "}
+                      {student.attempts}
+                    </p>
 
-                <p className={`mt-1 text-sm font-medium ${badge.color}`}>
-                  {badge.icon} {badge.label}
-                </p>
-              </div>
+                    <p>
+                      <span className="font-medium text-slate-700">
+                        Last Activity:
+                      </span>{" "}
+                      {formatLastActivity(student.lastActivity)}
+                    </p>
+                  </div>
 
-              <div className="flex flex-col items-end gap-3">
-                <span className="text-2xl font-bold text-blue-600">
-                  {student.accuracy}%
-                </span>
+                  <div
+                    className={`
+                      mt-4
+                      inline-flex
+                      items-center
+                      gap-2
+                      rounded-full
+                      px-3
+                      py-1
+                      text-sm
+                      font-medium
+                      ${badge.background}
+                      ${badge.color}
+                    `}
+                  >
+                    <span>{badge.icon}</span>
 
-                <Link
-                  to={`/teacher/student/${student.id}`}
-                  className="
-                    rounded-lg
-                    bg-blue-600
-                    px-4
-                    py-2
-                    text-sm
-                    font-medium
-                    text-white
-                    transition-colors
-                    hover:bg-blue-700
-                  "
-                >
-                  View Analytics
-                </Link>
+                    <span>{badge.label}</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-end gap-4">
+                  <div className="text-right">
+                    <p className="text-xs uppercase tracking-wide text-slate-500">
+                      Accuracy
+                    </p>
+
+                    <p className="text-3xl font-bold text-blue-600">
+                      {student.accuracy}%
+                    </p>
+                  </div>
+
+                  <Link
+                    to={`/teacher/student/${student.id}`}
+                    className="
+                      inline-flex
+                      items-center
+                      justify-center
+                      rounded-lg
+                      bg-blue-600
+                      px-4
+                      py-2
+                      text-sm
+                      font-medium
+                      text-white
+                      transition-colors
+                      duration-200
+                      hover:bg-blue-700
+                    "
+                  >
+                    View Analytics
+                  </Link>
+                </div>
               </div>
             </div>
           );
