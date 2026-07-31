@@ -64,6 +64,7 @@ async function getTeacherDashboard(teacherId) {
 async function getAccuracyOverTime(teacherId) {
   const query = `
     SELECT
+      eh.id,
       eh.created_at,
       eh.is_correct
 
@@ -75,7 +76,9 @@ async function getAccuracyOverTime(teacherId) {
     WHERE
       u.teacher_id = $1
 
-    ORDER BY eh.created_at DESC
+    ORDER BY
+      eh.created_at DESC,
+      eh.id DESC
 
     LIMIT ${MAX_RECENT_ATTEMPTS}
   `;
@@ -291,6 +294,7 @@ async function getTeacherStudentAccuracy(teacherId, studentId) {
 
   const accuracyQuery = `
     SELECT
+      eh.id,
       eh.created_at,
       eh.is_correct
 
@@ -300,7 +304,8 @@ async function getTeacherStudentAccuracy(teacherId, studentId) {
       eh.user_id = $1
 
     ORDER BY
-      eh.created_at DESC
+      eh.created_at DESC,
+      eh.id DESC
 
     LIMIT $2
   `;
