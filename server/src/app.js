@@ -1,14 +1,19 @@
 require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
 
 const app = express();
 
 // Middlewares
+app.use(helmet());
+
 app.use(cors());
+
 app.use(express.json());
 
-//Routes
+// Routes
 const exerciseRoutes = require("./routes/exerciseRoutes");
 
 app.use("/api/exercises", exerciseRoutes);
@@ -41,9 +46,12 @@ const studentDashboardRoutes = require("./routes/studentDashboardRoutes");
 
 app.use("/api/student-dashboard", studentDashboardRoutes);
 
-// Health check route
+// Health check
 app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", message: "Server is running" });
+  res.json({
+    status: "ok",
+    message: "Server is running",
+  });
 });
 
 module.exports = app;
