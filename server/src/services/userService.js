@@ -7,6 +7,10 @@ function isValidEmail(email) {
   return emailRegex.test(email);
 }
 
+function isValidPassword(password) {
+  return typeof password === "string" && password.length >= 8;
+}
+
 async function teacherExists(teacherId) {
   const result = await pool.query(
     `
@@ -24,6 +28,10 @@ async function teacherExists(teacherId) {
 async function registerUser(email, password, role = "teacher", teacherId) {
   if (!isValidEmail(email)) {
     throw new Error("Invalid email format");
+  }
+
+  if (!isValidPassword(password)) {
+    throw new Error("Password must contain at least 8 characters.");
   }
 
   const existingUser = await pool.query(
