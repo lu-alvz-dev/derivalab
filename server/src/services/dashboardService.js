@@ -77,19 +77,15 @@ async function getAccuracyOverTime(teacherId) {
       u.teacher_id = $1
 
     ORDER BY
-      eh.created_at DESC,
-      eh.id DESC
-
-    LIMIT ${MAX_RECENT_ATTEMPTS}
+      eh.created_at ASC,
+      eh.id ASC
   `;
 
   const result = await pool.query(query, [teacherId]);
 
-  const attempts = result.rows.reverse();
-
   let correct = 0;
 
-  return attempts.map((attempt, index) => {
+  const history = result.rows.map((attempt, index) => {
     if (attempt.is_correct) {
       correct++;
     }
@@ -99,6 +95,8 @@ async function getAccuracyOverTime(teacherId) {
       accuracy: Math.round((correct / (index + 1)) * 100),
     };
   });
+
+  return history.slice(-MAX_RECENT_ATTEMPTS);
 }
 
 async function getMostCommonErrors(teacherId) {
@@ -304,22 +302,15 @@ async function getTeacherStudentAccuracy(teacherId, studentId) {
       eh.user_id = $1
 
     ORDER BY
-      eh.created_at DESC,
-      eh.id DESC
-
-    LIMIT $2
+      eh.created_at ASC,
+      eh.id ASC
   `;
 
-  const result = await pool.query(accuracyQuery, [
-    studentId,
-    MAX_RECENT_ATTEMPTS,
-  ]);
-
-  const attempts = result.rows.reverse();
+  const result = await pool.query(accuracyQuery, [studentId]);
 
   let correct = 0;
 
-  return attempts.map((attempt, index) => {
+  const history = result.rows.map((attempt, index) => {
     if (attempt.is_correct) {
       correct++;
     }
@@ -329,6 +320,8 @@ async function getTeacherStudentAccuracy(teacherId, studentId) {
       accuracy: Math.round((correct / (index + 1)) * 100),
     };
   });
+
+  return history.slice(-MAX_RECENT_ATTEMPTS);
 }
 
 async function getTeacherStudentErrors(teacherId, studentId) {
