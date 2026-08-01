@@ -1,6 +1,12 @@
 const pool = require("../config/db");
 const bcrypt = require("bcryptjs");
 
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  return emailRegex.test(email);
+}
+
 async function teacherExists(teacherId) {
   const result = await pool.query(
     `
@@ -16,6 +22,10 @@ async function teacherExists(teacherId) {
 }
 
 async function registerUser(email, password, role = "teacher", teacherId) {
+  if (!isValidEmail(email)) {
+    throw new Error("Invalid email format");
+  }
+
   const existingUser = await pool.query(
     "SELECT * FROM users WHERE email = $1",
     [email],
@@ -40,7 +50,21 @@ async function registerUser(email, password, role = "teacher", teacherId) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const result = await pool.query(
-    "INSERT INTO users (email, password, role, teacher_id)VALUES ($1, $2, $3, $4) RETURNING id, email, role, teacher_id",
+    `
+    INSERT INTO users
+    (
+      email,
+      password,
+      role,
+      teacher_id
+    )
+    VALUES ($1,$2,$3,$4)
+    RETURNING
+      id,
+      email,
+      role,
+      teacher_id
+    `,
     [email, hashedPassword, role, teacherId],
   );
 
