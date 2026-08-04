@@ -405,5 +405,3 @@ The current MVP includes:
 - Security hardening
 - Production-ready environment configuration
 - Prepared deployment for Neon, Koyeb and Vercel
-
-The architecture is intentionally simple, modular, and appropriate for a junior full-stack portfolio project while following industry-standard development practices.
