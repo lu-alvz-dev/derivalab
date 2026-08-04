@@ -1,241 +1,409 @@
-# Architecture Decision
+# Architecture
 
 ## Overview
 
-DerivaLab follows a client-server architecture:
+DerivaLab follows a layered client-server architecture designed to separate responsibilities, improve maintainability, and prepare the application for production deployment.
 
-- Client: React SPA
-- Server: REST API (Node.js + Express)
-- Communication: HTTP (JSON)
+The project is organized into three independent layers:
 
-## Rationale
+- React Frontend
+- REST API Backend
+- PostgreSQL Database
 
-This architecture was chosen because:
-
-- Simple and scalable for MVP
-- Widely used in industry
-- Easy to deploy independently
-
-## Future Improvements
-
-- Microservices architecture
-- GraphQL API
-
-## Exercise Generation System
-
-The system will generate calculus exercises dynamically.
-
-### Initial Scope
-
-- Generate basic derivative exercises
-- Functions will include:
-  - Polynomial (e.g., x^2 + 3x)
-  - Power functions (x^n)
-
-### Approach
-
-- Backend generates the function
-- Backend calculates the derivative
-- Frontend displays exercise
-- User will solve (later phase)
-
-### Example
-
-Input:
-f(x) = x^2 + 3x
-
-Output:
-f'(x) = 2x + 3
-
-## Answer Validation System
-
-### Flow
-
-1. Backend generates exercise (question + correct answer)
-2. Frontend displays exercise
-3. User inputs answer
-4. Frontend sends answer to backend
-5. Backend compares with correct answer
-6. Backend returns result (correct / incorrect)
-7. Frontend displays feedback
-
-### Endpoint
-
-POST /api/validate
-
-### Example Request
-
-{
-"userAnswer": "4x + 5",
-"correctAnswer": "4x + 5"
-}
-
-### Example Response
-
-{
-"isCorrect": true
-}
+Each layer has a single responsibility and communicates through well-defined interfaces.
 
 ---
 
-## Advanced Exercise System
+# High-Level Architecture
 
-### Supported Types
-
-- Polynomial
-- Power functions
-- Trigonometric (basic)
-
-### Difficulty Levels
-
-- Easy
-- Medium
-- Hard
-
-### Strategy
-
-The backend will:
-
-1. Receive query params:
-   - type
-   - difficulty
-
-2. Route to specific generator
-
-3. Return:
-   - question
-   - answer
-   - metadata (type, difficulty)
-
-### Example
-
-GET /api/exercises?type=polynomial&difficulty=easy
-
-Response:
-
-{
-"question": "f(x) = 2x^2 + 3x",
-"answer": "4x + 3",
-"type": "polynomial",
-"difficulty": "easy"
-}
+```text
+┌───────────────────────┐
+│       React           │
+│   (Frontend - Vite)   │
+└───────────┬───────────┘
+            │
+      HTTP / JSON
+            │
+            ▼
+┌───────────────────────┐
+│   Express REST API    │
+│  (Node.js Backend)    │
+└───────────┬───────────┘
+            │
+      SQL Queries
+            │
+            ▼
+┌───────────────────────┐
+│     PostgreSQL        │
+│       Database        │
+└───────────────────────┘
+```
 
 ---
 
-## Mathematical Validation System
+# Architecture Layers
 
-### Problem
+## Frontend
 
-Current validation compares strings:
-"4x + 5" === "4x+5"
+The frontend is a React Single Page Application (SPA) built with Vite.
 
-This is unreliable and fails for equivalent expressions:
+Its responsibilities include:
 
-- 4x + 5 !== 5 + 4x
-- x^2 !== x²
+- Rendering the user interface
+- Managing navigation
+- Communicating with the backend API
+- Displaying dashboards and charts
+- Showing mathematical exercises
+- Collecting user answers
 
-### Solution
-
-Use a math parsing library to:
-
-- Normalize expressions
-- Simplify both expressions
-- Compare mathematically
-
-### Approach
-
-1. Receive userAnswer
-2. Normalize input (replace symbols like ² → ^2)
-3. Parse expressions using math library
-4. Simplify both expressions
-5. Compare results
-
-### Library
-
-mathjs will be used for:
-
-- parsing
-- simplifying
-- evaluating expressions
+The frontend never communicates directly with the database.
 
 ---
 
-## Feedback System (Extended Validation)
+## Backend
 
-### Objective
+The backend is built using Node.js and Express.
 
-Enhance existing mathematical validation by providing intelligent feedback based on user mistakes.
+It exposes a REST API responsible for:
 
-### Current System
+- Authentication
+- Authorization
+- Exercise generation
+- Mathematical validation
+- Intelligent feedback
+- Statistics generation
+- Teacher dashboards
+- Student dashboards
+- History management
 
-- Uses mathjs to compare expressions mathematically
-- Returns: isCorrect (true/false)
-
-### New System
-
-- Uses existing validation result
-- If incorrect:
-  - Analyze structural differences
-  - Detect common calculus mistakes
-  - Generate contextual feedback
-
-### Flow
-
-1. User submits answer
-2. compareExpressions() validates mathematically
-3. IF correct → success message
-4. IF incorrect:
-   - analyzeError()
-   - detect mistake type
-   - return feedback
-
-### Error Types
-
-- Power rule error
-- Sign error
-- Missing coefficient
-- Missing chain rule
-- Incorrect simplification
-
-### Endpoint
-
-POST /api/feedback
+Business logic is separated from HTTP request handling by using a layered architecture.
 
 ---
 
-## Authentication Flow Architecture
+## Database
 
-First authentication layer in DerivaLab.
+PostgreSQL stores all persistent application data.
 
-A new backend authentication module was added following the existing architecture pattern:
+Current entities include:
 
-Routes -> Controllers -> Services
+- Users
+- Exercise History
 
-New authentication modules:
+The database stores:
 
-- authRoutes.js
-- authController.js
-- userService.js
-
-The login flow now works as follows:
-
-1. LoginPage sends email and password to `/api/auth/login`
-2. authRoutes forwards the request to authController
-3. authController calls userService to validate credentials
-4. bcrypt compares the password hash
-5. JWT token is generated
-6. The frontend stores the token for session state
-
-This structure keeps authentication logic separated from routes and prepares the backend for future protected routes and role-based access.
+- Practice attempts
+- Correct answers
+- User answers
+- Error types
+- Statistics
+- Teacher/student relationships
 
 ---
 
-## Pending Improvements
+# Layered Backend Architecture
 
-- ~~Add try/catch to all API requests (frontend)~~
-- Replace alert() with proper UI feedback
-- Handle server errors and network failures
+The backend follows a layered architecture.
 
-## Done
+```text
+Routes
+   │
+   ▼
+Controllers
+   │
+   ▼
+Services
+   │
+   ▼
+Database
+```
 
-- Add try/catch to all API requests (frontend)
+Each layer has a specific responsibility.
+
+## Routes
+
+Routes define the available API endpoints.
+
+Example:
+
+- /api/auth
+- /api/dashboard
+- /api/history
+- /api/feedback
+
+Routes do not contain business logic.
+
+---
+
+## Controllers
+
+Controllers receive HTTP requests.
+
+Responsibilities:
+
+- Validate incoming data
+- Call services
+- Return HTTP responses
+
+Controllers remain intentionally small.
+
+---
+
+## Services
+
+Services contain the application's business logic.
+
+Examples:
+
+- Authentication
+- Dashboard calculations
+- Mathematical validation
+- Feedback generation
+- Statistics processing
+
+This separation makes the project easier to maintain and extend.
+
+---
+
+# Authentication Architecture
+
+Authentication uses JSON Web Tokens (JWT).
+
+Login flow:
+
+```text
+User
+   │
+   ▼
+Login Page
+   │
+   ▼
+POST /api/auth/login
+   │
+   ▼
+Authentication Service
+   │
+   ▼
+bcrypt Password Verification
+   │
+   ▼
+JWT Generation
+   │
+   ▼
+Token returned to Frontend
+```
+
+Protected routes require a valid JWT before accessing application resources.
+
+Role-based authorization restricts access to Teacher and Student functionality.
+
+---
+
+# Database Architecture
+
+The current schema includes:
+
+Users
+
+- Teachers
+- Students
+
+Exercise History
+
+- Question
+- Correct Answer
+- User Answer
+- Exercise Type
+- Difficulty
+- Correct/Incorrect
+- Error Type
+- Timestamp
+
+Relationships
+
+```text
+Teacher
+   │
+   │ 1
+   │
+   ├───────────────┐
+                   │
+              Student
+                   │
+                   │ 1
+                   │
+                   ▼
+          Exercise History
+```
+
+---
+
+# Exercise Flow
+
+The exercise workflow is fully handled by the backend.
+
+```text
+Teacher / Student
+        │
+        ▼
+Request Exercise
+        │
+        ▼
+Exercise Generator
+        │
+        ▼
+Derivative Calculation
+        │
+        ▼
+JSON Response
+        │
+        ▼
+Frontend
+```
+
+---
+
+# Answer Validation Flow
+
+User answers are validated mathematically instead of using string comparison.
+
+```text
+Student Answer
+       │
+       ▼
+Normalization
+       │
+       ▼
+Mathematical Comparison
+       │
+       ▼
+Correct?
+   │         │
+ Yes         No
+ │            │
+ ▼            ▼
+Success   Error Analysis
+                │
+                ▼
+      Intelligent Feedback
+```
+
+The validation engine supports equivalent mathematical expressions.
+
+---
+
+# Dashboard Architecture
+
+Teacher dashboards aggregate information from multiple students.
+
+Displayed metrics include:
+
+- Total students
+- Total attempts
+- Correct answers
+- Learning accuracy
+- Error distribution
+- Difficulty distribution
+
+Student dashboards display:
+
+- Practice history
+- Accuracy
+- Statistics
+- Learning progress
+
+---
+
+# Security
+
+Current security measures include:
+
+- JWT authentication
+- bcrypt password hashing
+- Helmet security headers
+- Email validation
+- Minimum password length validation
+- Request body size limit
+- Parameterized SQL queries
+- Environment variables for sensitive configuration
+
+These measures provide a secure foundation suitable for an MVP and prepare the application for production deployment.
+
+---
+
+# Environment Configuration
+
+Configuration values are stored outside the source code using environment variables.
+
+Examples include:
+
+- Database connection
+- JWT secret
+- Server port
+- API URLs
+
+This allows different configurations for:
+
+- Local development
+- Testing
+- Production
+
+---
+
+# Deployment Architecture
+
+The application is prepared for cloud deployment.
+
+Target production architecture:
+
+```text
+React (Vercel)
+        │
+        ▼
+Node.js API (Koyeb)
+        │
+        ▼
+Neon PostgreSQL
+```
+
+Each service can be deployed independently.
+
+---
+
+# Architectural Decisions
+
+The following design decisions were made during development:
+
+- Layered backend architecture
+- REST API communication
+- Stateless authentication with JWT
+- PostgreSQL relational database
+- Separate frontend and backend deployments
+- Environment-based configuration
+- Reusable React components
+- Service-oriented backend organization
+
+These decisions keep the codebase simple while allowing future growth.
+
+---
+
+# Current Status
+
+The current MVP includes:
+
+- Authentication
+- Teacher workflow
+- Student workflow
+- Exercise generation
+- Mathematical validation
+- Intelligent feedback
+- Learning analytics
+- Teacher dashboard
+- Student dashboard
+- Practice history
+- Interactive charts
+- Demo experience
+- Security hardening
+- Production-ready environment configuration
+- Prepared deployment for Neon, Koyeb and Vercel
+
+The architecture is intentionally simple, modular, and appropriate for a junior full-stack portfolio project while following industry-standard development practices.
