@@ -1,51 +1,51 @@
-![App Preview](docs/images/frontend-v9.png)
+![DerivaLab Preview](docs/images/frontend-v9.png)
 
 # DerivaLab
 
-DerivaLab is a **Full-Stack Micro-SaaS** created to help high school calculus teachers generate derivative exercises, evaluate student answers, and provide automated feedback, and monitor learning progress through interactive analytics dashboards.
+DerivaLab is a full-stack web application that helps high school calculus teachers generate derivative exercises, validate student answers, provide automated feedback, and monitor learning progress through interactive dashboards.
+
+The project was built as my main portfolio application to practice modern frontend and backend development while following clean architecture, reusable components, REST API design, authentication, and secure coding practices.
 
 ---
 
-## Problem
+## Project Overview
 
-Teachers often spend too much time on repetitive tasks such as:
+Teaching calculus usually requires repetitive work such as creating exercises, reviewing answers, calculating student accuracy, and identifying common mistakes.
 
-- Creating calculus exercises manually
-- Reviewing student answers one by one
-- Writing personalized feedback for every student
+DerivaLab automates these repetitive tasks so teachers can spend more time helping students understand mathematical concepts.
 
----
-
-## Solution
-
-DerivaLab helps automate these processes by providing:
-
-- Automatic exercise generation
-- Answer validation
-- Automated feedback generation
-- Learning analytics
-- Personalized feedback
-- Teacher and student dashboards
+The application includes complete teacher and student workflows connected through a REST API and a PostgreSQL database.
 
 ---
 
 ## Features
 
-Current MVP features include:
+Current MVP functionality includes:
 
-- Teacher Dashboard
-- Student Dashboard
-- JWT Authentication
-- Derivative Exercise Generator
-- Automatic Answer Validation
-- Intelligent Feedback
-- Learning Analytics
-- Student Practice History
-- Accuracy Charts
-- Error Analysis
-- Difficulty Distribution
-- Demo Experience
-- Responsive Interface
+### Teacher
+
+- Secure authentication with JWT
+- Dashboard with learning statistics
+- Student management
+- Individual student analytics
+- Learning accuracy chart
+- Common error analysis
+- Exercise difficulty distribution
+- Student practice history
+
+### Student
+
+- Secure authentication
+- Practice derivative exercises
+- Automatic answer validation
+- Intelligent feedback
+- Personal learning dashboard
+- Practice history
+- Accuracy statistics
+
+### Demo Experience
+
+The application includes demo accounts that allow recruiters to explore the complete application without creating an account.
 
 ---
 
@@ -64,20 +64,50 @@ Current MVP features include:
 
 - Node.js
 - Express
-- JWT
+- PostgreSQL
+- JWT Authentication
 - bcryptjs
+- Helmet
 
 ### Database
 
 - PostgreSQL
 
+Prepared for production deployment using Neon PostgreSQL.
+
 ---
 
-## Project Status
+## Architecture
 
-This project is currently in **MVP development phase**.
+DerivaLab follows a classic client-server architecture.
 
-The application already includes complete teacher and student workflows and is currently being prepared for production deployment.
+```text
+React Frontend
+       │
+       │ REST API
+       ▼
+Node.js + Express
+       │
+       ▼
+PostgreSQL
+```
+
+This separation keeps the frontend, backend, and database independent, making the project easier to maintain, test, and deploy.
+
+---
+
+## Project Goals
+
+This project was created to demonstrate practical knowledge of:
+
+- React component architecture
+- REST API integration
+- Authentication with JWT
+- PostgreSQL database design
+- Secure backend development
+- Dashboard development with charts
+- Clean and maintainable code
+- Real-world project organization
 
 ---
 
@@ -93,7 +123,9 @@ cd derivalab
 
 ---
 
-## 2. Install backend dependencies
+## 2. Install dependencies
+
+### Backend
 
 ```bash
 cd server
@@ -101,9 +133,7 @@ cd server
 npm install
 ```
 
----
-
-## 3. Install frontend dependencies
+### Frontend
 
 ```bash
 cd ../client
@@ -113,41 +143,44 @@ npm install
 
 ---
 
-## 4. Configure environment variables
+## 3. Configure environment variables
 
-Create:
+Create the following files:
 
 ```text
 server/.env
+client/.env
 ```
 
-using the values from:
+Use the provided example files as a reference:
 
 ```text
 server/.env.example
+client/.env.example
 ```
 
 ---
 
-## 5. Create the PostgreSQL database
+## 4. Create the database
 
-Run:
+Run the PostgreSQL schema located in:
 
 ```text
 server/database/schema.sql
 ```
 
-Then load the demo data if desired:
+Optional demo data:
 
 ```text
 server/database/demo_users.sql
-
 server/database/demo_history.sql
 ```
 
 ---
 
-## 6. Start the backend
+## 5. Start the application
+
+### Backend
 
 ```bash
 cd server
@@ -155,15 +188,13 @@ cd server
 npm run dev
 ```
 
-Backend:
+Runs on:
 
 ```text
 http://localhost:3000
 ```
 
----
-
-## 7. Start the frontend
+### Frontend
 
 ```bash
 cd client
@@ -171,7 +202,7 @@ cd client
 npm run dev
 ```
 
-Frontend:
+Runs on:
 
 ```text
 http://localhost:5173
@@ -179,7 +210,7 @@ http://localhost:5173
 
 ---
 
-# Project Structure
+## Project Structure
 
 ```text
 DerivaLab
@@ -204,100 +235,93 @@ DerivaLab
 
 ## Demo Experience
 
-DerivaLab includes demo accounts that allow recruiters and reviewers to explore the application without creating an account.
+DerivaLab includes demo accounts so recruiters can explore the application without creating new users.
 
 ### Teacher Demo
 
-```
+**Email**
+
+```text
 demo.teacher@derivalab.com
 ```
 
-Provides access to:
+Features available:
 
 - Teacher Dashboard
 - Student Analytics
-- Accuracy Charts
+- Accuracy Chart
 - Error Analysis
 - Difficulty Distribution
 - Student History
 
----
-
 ### Student Demo
 
-```
-demo.student@derivalab.com
-```
+The student demo login is performed automatically from the application.
 
-Provides access to:
+Features available:
 
-- Student Dashboard
 - Practice Exercises
-- Instant Feedback
+- Automatic Feedback
 - Learning Statistics
 - Practice History
 
-The demo login is performed automatically from the application.
-
 ---
 
-## Database Setup
+## Documentation
 
-The PostgreSQL schema file is located at:
+Additional technical documentation is available in the `docs/` directory.
 
-```text
-server/database/schema.sql
-```
-
-Run this SQL script before starting the backend.
+- `architecture.md`
+- `backend.md`
+- `frontend.md`
+- `testing.md`
 
 ---
 
 ## Environment Variables
 
-Create:
+Configuration examples are included in:
 
 ```text
-server/.env
+server/.env.example
+client/.env.example
 ```
 
-using:
-
-```env
-DB_USER=postgres
-DB_HOST=localhost
-DB_NAME=derivalab
-DB_PASSWORD=your_password
-DB_PORT=5432
-
-JWT_SECRET=your_secret_key
-
-PORT=3000
-```
+No secrets are stored in this repository.
 
 ---
 
-## Testing
+## Database
 
-Manual and integration testing are documented in:
+Database schema:
 
 ```text
-docs/testing.md
+server/database/schema.sql
 ```
 
-This includes:
+Optional demo data:
 
-- Backend validation
-- Frontend integration
-- User workflow verification
+```text
+server/database/demo_users.sql
+server/database/demo_history.sql
+```
+
+## Documentation
+
+Additional technical documentation is available in the `docs/` folder.
+
+| Document          | Description                                           |
+| ----------------- | ----------------------------------------------------- |
+| `architecture.md` | Overall application architecture and design decisions |
+| `backend.md`      | Backend structure, API layers and services            |
+| `frontend.md`     | Frontend architecture and component organization      |
+| `testing.md`      | Manual testing process and validation results         |
 
 ---
 
-## Deployment (In Progress)
+## Deployment
 
-The application is currently being prepared for cloud deployment.
-
-Planned deployment architecture:
+The project is prepared for cloud deployment using a separated architecture.
 
 | Service  | Platform        |
 | -------- | --------------- |
@@ -305,7 +329,20 @@ Planned deployment architecture:
 | Backend  | Koyeb           |
 | Database | Neon PostgreSQL |
 
-Deployment configuration will be added in future iterations.
+Production deployment is currently in progress.
+
+---
+
+## Roadmap
+
+Future improvements planned for DerivaLab include:
+
+- More derivative exercise generators
+- Additional calculus topics
+- Teacher classroom management
+- Student progress reports
+- Exportable analytics
+- Automated grading reports
 
 ---
 
