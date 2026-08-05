@@ -1,428 +1,313 @@
 # Testing – DerivaLab
 
-This document describes the manual testing performed during my journey creating Derivalab.
-
 ## Overview
 
-The goal is to validate the basic functionality of the system, including:
+This document summarizes the manual testing performed during the development of DerivaLab.
 
-- Backend server availability
-- API endpoint response
-- Frontend-backend integration
-
-## Backend Testing
-
-### Endpoint: GET /api/health
-
-**Method:**
-
-- Browser
-
-```
-http://localhost:3000/api/health
-```
-
-**Expected Response:**
-
-```
-{
-  "status": "ok",
-  "message": "Server is running"
-}
-```
-
-**Result:**
-Success — endpoint responds correctly
-
-## Frontend Testing
-
-### Application Load
-
-**URL:**
-
-```
-http://localhost:5173
-```
-
-**Expected Behavior:**
-
-- Page renders without errors
-- Displays application title
-- Displays message from backend
-
-**Expected Output:**
-
-```
-DerivaLab
-Server message: Server is running
-```
-
-**Result:**
-Success — frontend renders and fetches data correctly
-
-## Testing-Integration
-
-### Flow
-
-Frontend → Axios → Backend → JSON Response → UI Render
-
-**Validated:**
-
-- API communication works
-- Data is correctly received and displayed
-
-**Result:**
-Success — full integration working
-
-![Frontend Running](./images/frontend-v1.png)
-
-## Conclusion
-
-The system is functional at a basic level, the backend API is operational, the frontend is correctly connected anddata flow between client and server is validated establishing a solid foundation for further feature development.
+The goal is to verify that the main user workflows, API endpoints, authentication, dashboards, and security features behave as expected.
 
 ---
 
-## Exercise Generation Testing
+## Testing Strategy
 
-### 1. Backend Endpoint Test
+The project was tested from three different perspectives:
 
-**Endpoint:**
-GET /api/exercises
+- Backend endpoint validation
+- Frontend integration
+- Complete user workflows
 
-**Method:**
-Browser and curl
+Whenever possible, features were verified through the complete application flow instead of testing isolated functions only.
 
-**Steps:**
+---
 
-1. Start server:
+# Health Check
 
-   ```
-   cd server
-   npm run dev
-   ```
+## Endpoint
 
-2. Open:
+```
+GET /api/health
+```
 
-   ```
-   http://localhost:3000/api/exercises
-   ```
+### Verified
 
-3. Alternative (terminal):
-   ```
-   curl http://localhost:3000/api/exercises
-   ```
+- Server starts correctly
+- API responds successfully
+- JSON response format
 
-**Expected Response:**
+### Result
 
-- JSON object
-- Contains:
-  - question
-  - answer
+Passed
+
+![Health Check](./images/frontend-v1.png)
+
+---
+
+# Authentication
+
+## Registration
+
+Verified:
+
+- Teacher registration
+- Student registration
+- Email validation
+- Minimum password length
+- Password hashing
+
+### Result
+
+Passed
+
+---
+
+## Login
+
+Verified:
+
+- Valid credentials
+- Invalid credentials
+- JWT generation
+- Protected route access
+
+### Result
+
+Passed
+
+---
+
+# Exercise Generation
+
+Verified:
+
+- Polynomial exercises
+- Power rule exercises
+- Trigonometric exercises
+- Difficulty selection
+- Random exercise generation
+
+### Result
+
+Passed
+
+![Exercise Generator](./images/frontend-v2.png)
+
+---
+
+# Mathematical Validation
+
+Verified:
+
+- Equivalent expressions
 
 Example:
 
 ```
-{
-  "question": "f(x) = 3x^2 + 4x",
-  "answer": "f'(x) = 6x + 4"
-}
+4x + 5
+
+5 + 4x
 ```
 
-**Evidence:**
+- Different exponent notation
 
-![Backend Test](./images/backend-v2.png)
+```
+x²
 
-**Result:**
-Endpoint returns valid and random derivative exercises
-
-### 2. Frontend Integration Test
-
-**URL:**
-http://localhost:5173
-
-**Steps:**
-
-1. Start frontend:
-
-   ```
-   cd client
-   npm run dev
-   ```
-
-2. Open application in browser
-
-3. Verify:
-   - Exercise is displayed
-   - Answer is displayed
-   - Button generates new exercise
-
-**Expected Behavior:**
-
-- UI renders without errors
-- Clicking "Generate New" updates exercise
-
-**Evidence:**
-
-![Frontend Test](./images/frontend-v2.png)
-
-**Result:**
-Frontend successfully fetches and displays exercises from backend
-
-### 3. Integration Flow Test
-
-**Flow:**
-
-Frontend → Axios → Backend → Service → Response → UI
-
-**Validated:**
-
-- API communication works
-- Data is correctly transferred
-- UI updates dynamically
-
-**Result:**
-Full-stack integration working correctly
-
----
-
-## Answer Validation Testing
-
-### 1. Backend Validation Test
-
-**Endpoint:**
-POST /api/validate
-
-**Tool:**
-Postman
-
-**Test Correct Answer**
-
-Request:
-
-```json
-{
-  "userAnswer": "4x+5",
-  "correctAnswer": "4x + 5"
-}
+x^2
 ```
 
-Expected:
+- Incorrect answers
 
-```json
-{
-  "isCorrect": true
-}
+### Result
+
+Passed
+
+---
+
+# Feedback Engine
+
+Verified:
+
+- Correct answers
+- Incorrect answers
+- Error classification
+- Contextual feedback generation
+
+### Result
+
+Passed
+
+---
+
+# Student Dashboard
+
+Verified:
+
+- Statistics update correctly
+- Practice history
+- Learning progress
+- Accuracy values
+- Dashboard refresh after new attempts
+
+### Result
+
+Passed
+
+---
+
+# Teacher Dashboard
+
+Verified:
+
+- Student list
+- Overall statistics
+- Accuracy chart
+- Error distribution
+- Difficulty distribution
+- Individual student analytics
+
+Special attention was given to validating accuracy calculations after multiple rapid practice attempts.
+
+### Result
+
+Passed
+
+---
+
+# Demo Experience
+
+Verified:
+
+- Demo Teacher login
+- Demo Student login
+- Automatic demo access
+- Demo dashboards
+- Demo analytics
+
+The demo environment remains isolated from registered users.
+
+### Result
+
+Passed
+
+---
+
+# API Integration
+
+Communication flow verified:
+
+```
+React
+
+↓
+
+Axios
+
+↓
+
+Express API
+
+↓
+
+PostgreSQL
+
+↓
+
+JSON Response
+
+↓
+
+React UI
 ```
 
-Result:
+Verified:
+
+- Successful requests
+- Error responses
+- Dashboard data loading
+- Practice workflow
+
+### Result
+
 Passed
-
-![Postman Validation](./images/backend-postman-v1.png)
-
-### 2. Frontend Interaction Test
-
-**Steps:**
-
-1. Open app at http://localhost:5173
-2. Enter correct answer
-3. Click "Check Answer"
-
-**Expected:**
-
-- Displays "Correct answer"
-
-**Result:**
-Passed
-
-![Frontend Validation](./images/frontend-v3a.png)
-
-**Steps:**
-
-1. Enter incorrect answer
-2. Click "Check Answer"
-
-**Expected:**
-
-- Displays "Try again"
-
-**Result:**
-Passed
-
-**Evidence:**
-![Frontend Validation](./images/frontend-v3b.png)
-
-### 3. Full Integration Test
-
-**Flow:**
-Frontend → POST /api/validate → Backend → Response → UI
-
-**Validated:**
-
-- Data sent correctly
-- Backend processes correctly
-- UI updates dynamically
-
-**Result:**
-Passed
-
-- Verified using Postman and browser
 
 ---
 
-## Advanced Exercise System Testing
+# Environment Configuration
 
-### Backend
+Verified:
 
-Tested:
+- Local environment variables
+- Backend configuration through `.env`
+- Frontend configuration through `VITE_API_URL`
+- Production-ready configuration without hardcoded API URLs
 
-- polynomial / easy
-- power / medium
-- trig / easy
+### Result
 
-### API
-
-GET /api/exercises?type=polynomial&difficulty=easy
-
-Returns structured response with metadata
-
-![API Response](./images/backend-postman-v3.png)
-
-GET /api/exercises?type=power&difficulty=medium
-
-Returns structured response with metadata
-
-![API Response](./images/backend-postman-v2.png)
-
-GET /api/exercises?type=trig&difficulty=easy
-
-Returns structured response with metadata
-
-![API Response](./images/backend-postman-v4.png)
-
-### Frontend
-
-- User selects type
-- User selects difficulty
-- Exercise updates automatically
-
-Result:
-UI reacts correctly to user input
-
-### Selects Trigonometric
-
-![Frontend selects Trigonometric](./images/frontend-v4.png)
-
-### Selects hard
-
-![Frontend selects hard](./images/frontend-v5.png)
-
-### Updates automatically
-
-![Frontend updates automatically](./images/frontend-v6.png)
-
-### Integration
-
-- Frontend sends query params
-- Backend processes correctly
-
-Result:
-Full dynamic system working
-
-![Frontend dynamic system working](./images/frontend-v7.png)
+Passed
 
 ---
 
-## Mathematical Validation Testing
+# Security Validation
 
-### Backend Validation
+The following security features were manually verified.
 
-Tested with:
+## JWT Authentication
 
-- equivalent expressions (4x + 5 vs 5 + 4x)
+- Protected routes require authentication.
+- Unauthorized requests are rejected.
 
-![Equivalent](./images/backend-postman-v5.png)
+## Password Protection
 
-- power notation (x² vs x^2)
+- Passwords are stored using bcrypt hashes.
 
-![Power notation](./images/backend-postman-v6.png)
+## SQL Injection Protection
 
-- incorrect answers
+- Database queries use parameterized PostgreSQL statements.
 
-![Wrong answer](./images/backend-postman-v7.png)
+## Input Validation
 
-Result:
-Mathematical comparison and normalization handles variations correctly
+Verified:
 
-### Integration
+- Email format
+- Minimum password length
 
-- Frontend sends answer
-- Backend validates using mathjs
+## HTTP Security
 
-Result:
-Reliable validation achieved
+Verified:
 
----
+- Helmet security headers
+- JSON body size limit
 
-## Feedback System (Integrated with mathjs)
+### Result
 
-### Validation Layer
-
-- Mathematical equivalence using mathjs
-- Handles expression variations
-
-Result:
-Accurate validation independent of formatting
-
-### Feedback Layer
-
-Tested:
-
-- Missing coefficient
-- Sign errors
-- Chain rule mistakes
-- Trigonometric confusion
-
-Result:
-Contextual feedback generated
-
-### Integration
-
-Flow:
-Frontend → /api/feedback → validation → feedback → UI
-
-Result:
-Full intelligent feedback loop working
+Passed
 
 ---
 
-## Authentication Tests
+# Future Improvements
 
-### Login with correct credentials
+Possible future enhancements include:
 
-I tested the login route using a valid email and password.
+- Automated API testing
+- Unit testing
+- Component testing
+- End-to-end testing
+- CI pipeline integration
 
-Expected:
-The server should validate the credentials and return a JWT token.
+---
 
-Actual result:
-The login was successful and the token was returned correctly.
+# Conclusion
 
-### Password hashing
+Manual testing confirmed that the main application workflows operate correctly.
 
-I verified that the password is hashed before being stored.
+The project currently validates:
 
-Expected:
-The stored password should not match the plain text password.
-
-Actual result:
-The password was stored as a bcrypt hash, not as plain text.
-
-### JWT token generation
-
-I verified that a token is created after successful login.
-
-Expected:
-The server should generate and return a valid JWT token.
-
-Actual result:
-The JWT token was generated and returned correctly after login.
+- Authentication
+- Exercise generation
+- Mathematical validation
+- Feedback generation
+- Teacher dashboard
+- Student dashboard
+- Demo experience
+- REST API integration
+- Basic security measures
