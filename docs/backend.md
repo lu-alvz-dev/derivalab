@@ -2,14 +2,24 @@
 
 ## Overview
 
-The backend of DerivaLab is built using Node.js and Express.  
-It provides a simple REST API to support the frontend application.
+The backend of DerivaLab is built with **Node.js**, **Express**, and **PostgreSQL**.
+
+Uses a REST API that manages authentication, derivative practice, learning analytics, and dashboard data for both teachers and students.
+
+The project shows a simple layered architecture focused on readability, maintainability, and separation of responsibilities.
 
 ---
 
 ## Purpose
 
-The backend is responsible for handling HTTP requests, processing business logic, validating user input and sending structured responses to the client
+The backend is responsible for:
+
+- Handling HTTP requests
+- Managing business logic
+- Authenticating users
+- Accessing the PostgreSQL database
+- Validating incoming data
+- Returning structured JSON responses
 
 ---
 
@@ -17,59 +27,157 @@ The backend is responsible for handling HTTP requests, processing business logic
 
 - Node.js
 - Express
-- (Database to be added later)
+- PostgreSQL
+- pg (Connection Pool)
+- JWT Authentication
+- bcryptjs
+- Helmet
+- CORS
+- dotenv
 
 ---
 
 ## Project Structure
 
-```
+```text
 server/
 ├── src/
-│   ├── app.js         # Express app configuration
-│   ├── server.js      # Entry point
-│   ├── routes/        # API routes
-│   ├── controllers/   # Request handling logic
-│   └── services/      # Business logic
+│   ├── config/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── routes/
+│   ├── services/
+│   ├── app.js
+│   └── server.js
+│
+├── database/
+│   ├── schema.sql
+│   ├── demo_users.sql
+│   └── demo_history.sql
+│
+├── .env.example
+└── package.json
 ```
 
 ---
 
-## Architecture choices
+## Architecture Decisions
 
-### 1. Layered Structure
+### Layered Architecture
 
-The backend follows a layered approach:
+The backend separates responsibilities into independent layers.
 
-- Routes → define endpoints
-- Controllers → handle requests/responses
-- Services → contain business logic (Rules that define how data is processed to meet requirements)
+- **Routes** define API endpoints.
+- **Controllers** receive requests and return responses.
+- **Services** contain business logic and database queries.
 
-This improves: Code organization, maintainability and scalability
-
----
-
-### 2. REST API Design
-
-A RESTful approach was chosen because: It is simple and widely used, easy to integrate with frontend applications and perfect for initial releases
+This organization makes the project easier to understand and maintain.
 
 ---
 
-## Current Features
+### REST API
 
-- Health check endpoint (`/api/health`)
+DerivaLab uses a REST architecture.
+
+Endpoints are grouped by feature:
+
+- Authentication
+- Practice
+- Feedback
+- Student Dashboard
+- Teacher Dashboard
+
+This structure keeps related functionality together and simplifies future development.
 
 ---
 
-## Future Improvements
+## Database
 
-- Add database integration
-- Implement authentication
-- Add validation and error handling
-- Improve scalability
+DerivaLab uses **PostgreSQL** as its relational database.
+
+Database access is managed through a shared **connection pool** using the `pg` library.
+
+The application supports:
+
+- Local PostgreSQL
+- Neon PostgreSQL using `DATABASE_URL`
+
+The database schema is managed with SQL scripts.
 
 ---
 
-## Goal
+## Authentication
 
-This backend is designed to support the frontend while demonstrating understanding of API design, clean code structure, basic backend architecture knowledge. Showing the level expected from a frontend developer who can collaborate effectively with backend teams.
+Authentication is implemented using **JSON Web Tokens (JWT)**.
+
+Passwords are never stored as plain text.
+
+Instead:
+
+- Passwords are hashed with **bcryptjs**
+- JWT tokens are generated after successful login
+- Protected routes validate the token before processing requests
+
+---
+
+## Security
+
+Several basic security practices are implemented.
+
+### Helmet
+
+Security headers are added using Helmet.
+
+### CORS
+
+CORS is configured to allow communication between the frontend and backend.
+
+### Request Body Limit
+
+Incoming JSON requests are limited to **10 KB** to reduce the impact of oversized requests.
+
+### Input Validation
+
+The backend validates:
+
+- Email format
+- Minimum password length
+
+SQL injection risks are reduced by using **parameterized PostgreSQL queries** throughout the application.
+
+---
+
+## Environment Variables
+
+Sensitive configuration is stored outside the source code.
+
+Examples include:
+
+- DATABASE_URL
+- JWT_SECRET
+- PORT
+- Frontend URL (for CORS)
+
+This allows different configurations for local development on our machines versus online
+
+---
+
+## Error Handling
+
+Controllers validate incoming requests and return consistent HTTP responses.
+
+Unexpected server errors are handled without exposing sensitive implementation details to the client.
+
+---
+
+## Design Goals
+
+The backend demonstrates:
+
+- Clean project organization
+- Basic REST API design
+- Authentication with JWT
+- Secure password storage
+- Database integration
+- Separation of concerns
+- Production-ready configuration using environment variables
