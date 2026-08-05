@@ -2,95 +2,153 @@
 
 ## Overview
 
-The frontend of DerivaLab is built using React with Vite as the build tool.  
-It follows a modular and scalable structure designed for maintainability and clarity.
+The frontend of DerivaLab is built with **React** and **Vite**.
+
+I break the app down into separate parts. The user interface uses React components, while the routing and API connections live in their own modules. My main goal is to keep the code organized, easy to read, and simple to maintain as the project grows.
 
 ---
 
-## Why Vite?
+## Purpose
 
-I decided to use Vite because requires zero configuration and fast updates, so I can focus on writing code, also aligns with modern frontend development standards.
+The frontend is responsible for:
+
+- Rendering the user interface
+- Managing application navigation
+- Communicating with the backend API
+- Displaying learning analytics
+- Providing responsive feedback during user interactions
 
 ---
 
 ## Tech Stack
 
-- React (Frontend library)
-- Vite (build tool)
-- Axios (HTTP client)
-- Tailwind (utility-first framework)
+- React
+- React Router
+- Vite
+- Axios
+- Recharts
+- Tailwind CSS
 
 ---
 
 ## Project Structure
 
-```
+```text
 client/
-├── public/        # Static assets (favicon, future branding)
 ├── src/
-│   ├── assets/    # Images and static resources (bundled)
-│   ├── components/# Reusable UI components
-│   ├── pages/     # Page-level components (views)
-│   ├── services/  # API communication layer
-│   ├── hooks/     # Custom React hooks
-│   ├── App.jsx    # Root component
-│   └── main.jsx   # Entry point
+│   ├── assets/
+│   ├── components/
+│   ├── pages/
+│   ├── services/
+│   ├── hooks/
+│   ├── App.jsx
+│   └── main.jsx
+│
+├── .env.example
+├── package.json
+└── vite.config.js
 ```
 
 ---
 
-## Architectural Decisions
+## Architecture Decisions
 
-### 1. Separation of Concerns
+### Component-Based Design
 
-- Components handle UI
-- Services handle API calls
+The interface is divided into reusable components.
 
----
+Each component has a single responsibility, making the application easier to understand and maintain.
 
-### 2. Component-Based Design
+Examples include:
 
-The UI is broken down into reusable components to:
-
-- Avoid duplication
-- Improve maintainability
-- Faster development
-
----
-
-### 3. API Layer Abstraction
-
-All HTTP requests are handled through a dedicated `services/` layer.
-
-Benefits:
-
-- Centralized API logic
-- Easier error handling
-- Easier backend replacement or scaling
+- Charts
+- Dashboard cards
+- Tables
+- Forms
+- Navigation
 
 ---
 
-## Future Improvements
+### Routing
 
-- Add global state management (Context API)
-- Implement form handling (React Hook Form)
-- Add UI system (Tailwind)
-- Add testing (React Testing)
+Navigation is managed using **React Router**.
+
+Different routes are used for:
+
+- Authentication
+- Student Dashboard
+- Teacher Dashboard
+- Demo experience
+
+This separates navigation from our core app features or what we call business logic.
+
+---
+
+### API Layer
+
+All HTTP requests are centralized inside the `services/` directory.
+
+Axios is used to communicate with the backend.
+
+This approach provides:
+
+- Centralized API configuration
+- Easier maintenance
+- Reusable request functions
+- Simpler migration between environments
+
+---
+
+### Environment Variables
+
+The frontend does not contain hardcoded backend URLs.
+
+Instead, it uses:
+
+```text
+VITE_API_URL
+```
+
+This allows the same codebase to work in both local development and internet-production environments.
+
+---
+
+### Dashboard Architecture
+
+Learning analytics are displayed using reusable chart components.
+
+The frontend receives processed data from the backend and focuses only on presentation.
+
+Charts currently include:
+
+- Learning Accuracy
+- Error Distribution
+- Exercise Difficulty
+
+Recharts is used to visualize the information with responsive components.
 
 ---
 
 ## Development Principles
 
-- Clean and readable code
-- Consistent naming conventions
-- Small, focused components
+The frontend follows a few simple principles:
+
+- Reusable components
+- Clear folder organization
+- Separation of responsabilities
+- Writing small files that focus on one task
+- Try to be consistent with naming conventions
 
 ---
 
-## Goal
+## Design Goals
 
-The frontend is designed to be functional and to demonstrate:
+The frontend shows:
 
-- Real-world project structure
-- Professional decision-making
-- Readability and maintainability
+- Modern React application structure
+- Component reuse
+- REST API integration
+- Client-side routing
+- Environment variable configuration
+- Dashboard implementation
+- Maintainable project organization
