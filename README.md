@@ -2,19 +2,36 @@
 
 # DerivaLab
 
-DerivaLab is a full-stack web application that helps high school calculus teachers generate derivative exercises, validate student answers, provide automated feedback, and monitor learning progress through interactive dashboards.
-
-The project was built as my main portfolio application to practice modern frontend and backend development while following clean architecture, reusable components, REST API design, authentication, and secure coding practices.
+DerivaLab is a **Full-Stack Micro-SaaS** created to help high school calculus teachers generate derivative exercises, evaluate student answers, and provide automated feedback, and allow teachers to monitor learning progress through interactive analytics dashboards.
 
 ---
 
-## Project Overview
+## Overview
 
-Teaching calculus usually requires repetitive work such as creating exercises, reviewing answers, calculating student accuracy, and identifying common mistakes.
+DerivaLab automates repetitive tasks so teachers can spend more time helping students understand mathematical concepts.
+The application follows clean architecture, reusable components, authentication, secure coding practices and includes complete teacher and student workflows connected through a REST API and a PostgreSQL database.
 
-DerivaLab automates these repetitive tasks so teachers can spend more time helping students understand mathematical concepts.
+---
 
-The application includes complete teacher and student workflows connected through a REST API and a PostgreSQL database.
+## Problem
+
+Teachers often spend too much time on repetitive tasks such as:
+
+- Creating calculus exercises manually
+- Reviewing student answers one by one
+- Writing personalized feedback for every student
+
+---
+
+## Solution
+
+DerivaLab helps automate these processes by providing:
+
+- Automatic exercise generation
+- Answer validation
+- Automated personalized feedback generation
+- Learning analytics
+- Teacher and student dashboards
 
 ---
 
@@ -45,7 +62,7 @@ Current MVP functionality includes:
 
 ### Demo Experience
 
-The application includes demo accounts that allow recruiters to explore the complete application without creating an account.
+The application includes demo accounts that allow visitors to explore the complete application without creating an account.
 
 ---
 
@@ -92,13 +109,13 @@ Node.js + Express
 PostgreSQL
 ```
 
-This separation keeps the frontend, backend, and database independent, making the project easier to maintain, test, and deploy.
+This separation keeps the frontend, backend, and database independent, making it easier to maintain, test, and deploy.
 
 ---
 
-## Project Goals
+## Goals
 
-This project was created to demonstrate practical knowledge of:
+To demonstrate practical knowledge of:
 
 - React component architecture
 - REST API integration
@@ -107,7 +124,7 @@ This project was created to demonstrate practical knowledge of:
 - Secure backend development
 - Dashboard development with charts
 - Clean and maintainable code
-- Real-world project organization
+- Real-world organization
 
 ---
 
@@ -210,7 +227,7 @@ http://localhost:5173
 
 ---
 
-## Project Structure
+## Structure
 
 ```text
 DerivaLab
@@ -321,7 +338,7 @@ Additional technical documentation is available in the `docs/` folder.
 
 ## Deployment
 
-The project is prepared for cloud deployment using a separated architecture.
+Prepared for cloud deployment using a separated architecture.
 
 | Service  | Platform        |
 | -------- | --------------- |
@@ -348,7 +365,7 @@ Future improvements planned for DerivaLab include:
 
 ## License
 
-This project is licensed under the **MIT License**.
+Derivalab is licensed under the **MIT License**.
 
 ---
 
