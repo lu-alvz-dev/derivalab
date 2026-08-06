@@ -252,7 +252,7 @@ DerivaLab
 
 ## Demo Experience
 
-DerivaLab includes demo accounts so recruiters can explore the application without creating new users.
+DerivaLab includes demo accounts so visitors can explore the application without creating new users.
 
 ### Teacher Demo
 
@@ -281,17 +281,6 @@ Features available:
 - Automatic Feedback
 - Learning Statistics
 - Practice History
-
----
-
-## Documentation
-
-Additional technical documentation is available in the `docs/` directory.
-
-- `architecture.md`
-- `backend.md`
-- `frontend.md`
-- `testing.md`
 
 ---
 
