@@ -9,9 +9,11 @@ const app = express();
 // Middlewares
 app.use(helmet());
 
-const allowedOrigins = process.env.CLIENT_URL
-  ? [process.env.CLIENT_URL]
-  : ["http://localhost:5173"];
+const allowedOrigins = ["http://localhost:5173"];
+
+if (process.env.CLIENT_URL) {
+  allowedOrigins.push(process.env.CLIENT_URL);
+}
 
 app.use(
   cors({
@@ -58,8 +60,8 @@ app.use("/api/student-dashboard", studentDashboardRoutes);
 // Health check
 app.get("/api/health", (req, res) => {
   res.json({
-    status: "ok",
-    message: "Server is running",
+    message: "DerivaLab API",
+    status: "running",
   });
 });
 
