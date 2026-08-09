@@ -1,5 +1,7 @@
+# Environment files
 .env
-build
+.env.*
+!.env.example
 
 # Logs
 logs
