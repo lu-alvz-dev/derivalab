@@ -2,69 +2,53 @@
 
 # DerivaLab
 
-DerivaLab is a **Full-Stack Micro-SaaS** created to help high school calculus teachers generate derivative exercises, evaluate student answers, and provide automated feedback, and allow teachers to monitor learning progress through interactive analytics dashboards.
+DerivaLab is a **Full-Stack Micro-SaaS** for high school calculus practice. It helps teachers generate derivative exercises, validate student answers, provide automated feedback, and monitor learning progress through dashboards.
 
----
-
-## Overview
-
-DerivaLab automates repetitive tasks so teachers can spend more time helping students understand mathematical concepts.
-The application follows clean architecture, reusable components, authentication, secure coding practices and includes complete teacher and student workflows connected through a REST API and a PostgreSQL database.
-
----
+The application is built with React, Node.js, Express, PostgreSQL, JWT authentication, and a separated cloud deployment architecture.
 
 ## Problem
 
-Teachers often spend too much time on repetitive tasks such as:
-
-- Creating calculus exercises manually
-- Reviewing student answers one by one
-- Writing personalized feedback for every student
-
----
+Calculus teachers spend time creating exercises, reviewing answers, identifying common errors, and monitoring student progress.
 
 ## Solution
 
-DerivaLab helps automate these processes by providing:
+DerivaLab automates these repetitive tasks through:
 
-- Automatic exercise generation
-- Answer validation
-- Automated personalized feedback generation
-- Learning analytics
+- Derivative exercise generation
+- Mathematical answer validation
+- Automated feedback
+- Error classification
+- Student practice history
 - Teacher and student dashboards
-
----
+- Learning analytics and charts
+- Demo experiences for evaluation
 
 ## Features
 
-Current MVP functionality includes:
-
 ### Teacher
 
-- Secure authentication with JWT
-- Dashboard with learning statistics
+- JWT authentication
+- Teacher dashboard
 - Student management
 - Individual student analytics
-- Learning accuracy chart
-- Common error analysis
-- Exercise difficulty distribution
+- Accuracy chart
+- Error analysis
+- Difficulty distribution
 - Student practice history
 
 ### Student
 
 - Secure authentication
-- Practice derivative exercises
-- Automatic answer validation
+- Derivative practice
+- Mathematical answer validation
 - Intelligent feedback
-- Personal learning dashboard
+- Personal dashboard
 - Practice history
 - Accuracy statistics
 
-### Demo Experience
+### Demo
 
-The application includes demo accounts that allow visitors to explore the complete application without creating an account.
-
----
+The application includes teacher and student demo experiences so visitors can explore the main workflows without creating an account.
 
 ## Tech Stack
 
@@ -82,224 +66,94 @@ The application includes demo accounts that allow visitors to explore the comple
 - Node.js
 - Express
 - PostgreSQL
-- JWT Authentication
+- JWT
 - bcryptjs
 - Helmet
+- mathjs
 
-### Database
+### Deployment
 
-- PostgreSQL
-
-Prepared for production deployment using Neon PostgreSQL.
-
----
+- Frontend: Vercel
+- Backend: Render
+- Database: Neon PostgreSQL
 
 ## Architecture
 
-DerivaLab follows a classic client-server architecture.
-
 ```text
-React Frontend
-       │
-       │ REST API
-       ▼
-Node.js + Express
-       │
-       ▼
-PostgreSQL
+React / Vercel
+      │
+      │ HTTPS / REST API
+      ▼
+Node.js + Express / Render
+      │
+      │ PostgreSQL
+      ▼
+Neon PostgreSQL
 ```
 
-This separation keeps the frontend, backend, and database independent, making it easier to maintain, test, and deploy.
+The frontend communicates with the backend through the REST API. The backend is responsible for authentication, business logic, validation, analytics, and database access.
 
----
-
-## Goals
-
-To demonstrate practical knowledge of:
-
-- React component architecture
-- REST API integration
-- Authentication with JWT
-- PostgreSQL database design
-- Secure backend development
-- Dashboard development with charts
-- Clean and maintainable code
-- Real-world organization
-
----
-
-# Quick Start
-
-## 1. Clone the repository
-
-```bash
-git clone https://github.com/your-username/derivalab.git
-
-cd derivalab
-```
-
----
-
-## 2. Install dependencies
-
-### Backend
-
-```bash
-cd server
-
-npm install
-```
-
-### Frontend
-
-```bash
-cd ../client
-
-npm install
-```
-
----
-
-## 3. Configure environment variables
-
-Create the following files:
-
-```text
-server/.env
-client/.env
-```
-
-Use the provided example files as a reference:
-
-```text
-server/.env.example
-client/.env.example
-```
-
----
-
-## 4. Create the database
-
-Run the PostgreSQL schema located in:
-
-```text
-server/database/schema.sql
-```
-
-Optional demo data:
-
-```text
-server/database/demo_users.sql
-server/database/demo_history.sql
-```
-
----
-
-## 5. Start the application
-
-### Backend
-
-```bash
-cd server
-
-npm run dev
-```
-
-Runs on:
-
-```text
-http://localhost:3000
-```
-
-### Frontend
-
-```bash
-cd client
-
-npm run dev
-```
-
-Runs on:
-
-```text
-http://localhost:5173
-```
-
----
-
-## Structure
+## Project Structure
 
 ```text
 DerivaLab
-│
 ├── client/
 │   ├── src/
 │   ├── public/
 │   └── package.json
-│
 ├── server/
 │   ├── src/
 │   ├── database/
 │   ├── .env.example
 │   └── package.json
-│
 ├── docs/
-│
 └── README.md
 ```
 
----
+## Quick Start
 
-## Demo Experience
+### 1. Clone
 
-DerivaLab includes demo accounts so visitors can explore the application without creating new users.
-
-### Teacher Demo
-
-**Email**
-
-```text
-demo.teacher@derivalab.com
+```bash
+git clone https://github.com/lu-alvz-dev/derivalab.git
+cd derivalab
 ```
 
-Features available:
+### 2. Install dependencies
 
-- Teacher Dashboard
-- Student Analytics
-- Accuracy Chart
-- Error Analysis
-- Difficulty Distribution
-- Student History
+Backend:
 
-### Student Demo
-
-The student demo login is performed automatically from the application.
-
-Features available:
-
-- Practice Exercises
-- Automatic Feedback
-- Learning Statistics
-- Practice History
-
----
-
-## Environment Variables
-
-Configuration examples are included in:
-
-```text
-server/.env.example
-client/.env.example
+```bash
+cd server
+npm install
 ```
 
-No secrets are stored in this repository.
+Frontend:
 
----
+```bash
+cd ../client
+npm install
+```
 
-## Database
+### 3. Configure environment variables
 
-Database schema:
+Backend:
+
+```text
+server/.env
+```
+
+Frontend:
+
+```text
+client/.env.development
+```
+
+Use the corresponding `.env.example` files as templates.
+
+### 4. Configure PostgreSQL
+
+For local development, run:
 
 ```text
 server/database/schema.sql
@@ -312,51 +166,127 @@ server/database/demo_users.sql
 server/database/demo_history.sql
 ```
 
+### 5. Run locally
+
+Backend:
+
+```bash
+cd server
+npm start
+```
+
+Frontend:
+
+```bash
+cd client
+npm run dev
+```
+
+Local URLs:
+
+```text
+Backend:  http://localhost:3000
+Frontend: http://localhost:5173
+```
+
+## Production
+
+The application is currently deployed using:
+
+```text
+Vercel
+   ↓
+Render
+   ↓
+Neon PostgreSQL
+```
+
+The production frontend uses `VITE_API_URL` to communicate with the Render backend.
+
+Backend health check:
+
+```text
+https://derivalab-api.onrender.com/api/health
+```
+
+Production frontend:
+
+```text
+https://derivalab.vercel.app/
+```
+
+## Demo Experience
+
+### Teacher Demo
+
+```text
+demo.teacher@derivalab.com
+```
+
+The teacher demo provides access to dashboard analytics, students, charts, error analysis, difficulty distribution, and history.
+
+### Student Demo
+
+The student demo can be launched from the application demo experience and provides access to practice, feedback, statistics, and history.
+
+## Environment Variables
+
+The application keeps environment-specific configuration outside the source code.
+
+Frontend:
+
+```text
+VITE_API_URL
+```
+
+Backend configuration includes:
+
+```text
+DATABASE_URL
+JWT_SECRET
+PORT
+CLIENT_URL
+```
+
+Secrets are not stored in the repository.
+
 ## Documentation
 
-Additional technical documentation is available in the `docs/` folder.
+More detailed technical decisions are documented in `docs/`:
 
-| Document          | Description                                           |
+| Document          | Purpose                                               |
 | ----------------- | ----------------------------------------------------- |
-| `architecture.md` | Overall application architecture and design decisions |
-| `backend.md`      | Backend structure, API layers and services            |
-| `frontend.md`     | Frontend architecture and component organization      |
-| `testing.md`      | Manual testing process and validation results         |
+| `architecture.md` | Overall architecture and deployment design            |
+| `backend.md`      | Backend layers, database, authentication and security |
+| `frontend.md`     | React structure, routing, API layer and dashboards    |
+| `testing.md`      | Manual testing and production validation              |
 
----
+## Deployment Notes
 
-## Deployment
+The frontend and backend are deployed independently.
 
-Prepared for cloud deployment using a separated architecture.
+This makes troubleshooting easier because each layer can be checked separately:
 
-| Service  | Platform        |
-| -------- | --------------- |
-| Frontend | Vercel          |
-| Backend  | Koyeb           |
-| Database | Neon PostgreSQL |
+```text
+Frontend → Backend → Database
+```
 
-Production deployment is currently in progress.
-
----
+For example, the backend health endpoint can be checked independently before investigating frontend API communication.
 
 ## Roadmap
 
-Future improvements planned for DerivaLab include:
+Possible future improvements include:
 
-- More derivative exercise generators
 - Additional calculus topics
-- Teacher classroom management
-- Student progress reports
-- Exportable analytics
-- Automated grading reports
-
----
+- More exercise generators
+- Automated API tests
+- Unit and component tests
+- End-to-end testing
+- Exportable learning reports
 
 ## License
 
-Derivalab is licensed under the **MIT License**.
-
----
+This project is licensed under the **MIT License**.
 
 ## Author
 

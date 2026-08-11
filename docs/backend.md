@@ -1,41 +1,25 @@
-# Backend Architecture – DerivaLab
+# Backend
 
 ## Overview
 
 The backend of DerivaLab is built with **Node.js**, **Express**, and **PostgreSQL**.
 
-Uses a REST API that manages authentication, derivative practice, learning analytics, and dashboard data for both teachers and students.
+It provides a REST API for authentication, derivative practice, mathematical validation, feedback, learning analytics, and dashboard data.
 
-The project shows a simple layered architecture focused on readability, maintainability, and separation of responsibilities.
-
----
-
-## Purpose
-
-The backend is responsible for:
-
-- Handling HTTP requests
-- Managing business logic
-- Authenticating users
-- Accessing the PostgreSQL database
-- Validating incoming data
-- Returning structured JSON responses
-
----
+The structure intentionally stays simple while separating responsibilities between routes, controllers, services, and database access.
 
 ## Tech Stack
 
 - Node.js
 - Express
 - PostgreSQL
-- pg (Connection Pool)
-- JWT Authentication
+- pg connection pool
+- JWT
 - bcryptjs
 - Helmet
 - CORS
 - dotenv
-
----
+- mathjs
 
 ## Project Structure
 
@@ -49,135 +33,210 @@ server/
 │   ├── services/
 │   ├── app.js
 │   └── server.js
-│
 ├── database/
 │   ├── schema.sql
 │   ├── demo_users.sql
 │   └── demo_history.sql
-│
 ├── .env.example
 └── package.json
 ```
 
----
+## Layered Architecture
 
-## Architecture Decisions
+```text
+Routes
+   ↓
+Controllers
+   ↓
+Services
+   ↓
+PostgreSQL
+```
 
-### Layered Architecture
+### Routes
 
-The backend separates responsibilities into independent layers.
+Routes define API endpoints and group functionality by feature.
 
-- **Routes** define API endpoints.
-- **Controllers** receive requests and return responses.
-- **Services** contain business logic and database queries.
+### Controllers
 
-This organization makes the project easier to understand and maintain.
+Controllers handle HTTP requests, validate required input, call services, and return responses.
 
----
+### Services
 
-### REST API
+Services contain business logic and database operations.
 
-DerivaLab uses a REST architecture.
+This separation keeps controllers smaller and makes the code easier to follow.
 
-Endpoints are grouped by feature:
+## REST API
 
-- Authentication
-- Practice
-- Feedback
-- Student Dashboard
-- Teacher Dashboard
+Main API areas include:
 
-This structure keeps related functionality together and simplifies future development.
-
----
+```text
+/api/auth
+/api/exercises
+/api/validate
+/api/feedback
+/api/stats
+/api/history
+/api/dashboard
+/api/student-dashboard
+```
 
 ## Database
 
-DerivaLab uses **PostgreSQL** as its relational database.
+DerivaLab uses PostgreSQL as its relational database.
 
-Database access is managed through a shared **connection pool** using the `pg` library.
+Database access uses a shared connection pool from the `pg` package.
 
-The application supports:
+The connection supports both local PostgreSQL and Neon PostgreSQL.
 
-- Local PostgreSQL
-- Neon PostgreSQL using `DATABASE_URL`
+Production uses:
 
-The database schema is managed with SQL scripts.
+```text
+DATABASE_URL
+```
 
----
+Local development can use individual database variables.
+
+## Connection Pool
+
+The backend creates a PostgreSQL connection pool instead of opening a new database connection for every request.
+
+This provides a simple and efficient way to reuse database connections across API requests.
 
 ## Authentication
 
-Authentication is implemented using **JSON Web Tokens (JWT)**.
+Authentication uses JSON Web Tokens.
 
-Passwords are never stored as plain text.
+Login flow:
 
-Instead:
+```text
+Client
+  ↓
+POST /api/auth/login
+  ↓
+Credential validation
+  ↓
+bcrypt password comparison
+  ↓
+JWT generation
+  ↓
+Token returned to client
+```
 
-- Passwords are hashed with **bcryptjs**
-- JWT tokens are generated after successful login
-- Protected routes validate the token before processing requests
+Protected routes require a valid token.
 
----
+Role-based checks are used to separate teacher and student resources.
 
-## Security
+## Password Security
 
-Several basic security practices are implemented.
+Passwords are hashed with **bcryptjs** before storage.
+
+Plain-text passwords are not stored in PostgreSQL.
+
+## Security Middleware
 
 ### Helmet
 
-Security headers are added using Helmet.
+Helmet adds common HTTP security headers.
 
 ### CORS
 
-CORS is configured to allow communication between the frontend and backend.
+CORS restricts browser requests to configured frontend origins.
+
+The production frontend URL is provided through:
+
+```text
+CLIENT_URL
+```
 
 ### Request Body Limit
 
-Incoming JSON requests are limited to **10 KB** to reduce the impact of oversized requests.
+JSON request bodies are limited to:
 
-### Input Validation
+```text
+10 KB
+```
 
-The backend validates:
+This is a simple protection against unnecessarily large requests.
+
+## Validation
+
+The backend validates user input such as:
 
 - Email format
-- Minimum password length
+- Password requirements
+- Required request fields
+- Route parameters
 
-SQL injection risks are reduced by using **parameterized PostgreSQL queries** throughout the application.
+Mathematical answers are processed through the validation/feedback flow using mathjs.
 
----
+## SQL Queries
+
+Database queries use parameterized values rather than string concatenation.
+
+This reduces SQL injection risk and keeps database operations explicit.
 
 ## Environment Variables
 
-Sensitive configuration is stored outside the source code.
+Configuration is kept outside the source code.
 
-Examples include:
+Important backend variables include:
 
-- DATABASE_URL
-- JWT_SECRET
-- PORT
-- Frontend URL (for CORS)
+```text
+DATABASE_URL
+JWT_SECRET
+PORT
+CLIENT_URL
+```
 
-This allows different configurations for local development on our machines versus online
-
----
+The same application code can therefore run with different local and production configurations.
 
 ## Error Handling
 
-Controllers validate incoming requests and return consistent HTTP responses.
+Controllers return appropriate HTTP responses for expected validation and authentication failures.
 
-Unexpected server errors are handled without exposing sensitive implementation details to the client.
+Unexpected errors are handled without intentionally exposing sensitive implementation details to clients.
 
----
+## Production Deployment
+
+The backend is deployed on **Render**.
+
+Current architecture:
+
+```text
+Vercel Frontend
+      ↓
+Render REST API
+      ↓
+Neon PostgreSQL
+```
+
+The backend listens on the port provided by Render through:
+
+```text
+process.env.PORT
+```
+
+The API health endpoint is:
+
+```text
+https://derivalab-api.onrender.com/api/health
+```
 
 ## Design Goals
 
 The backend demonstrates:
 
-- Clean project organization
-- Basic REST API design
-- Authentication with JWT
+- REST API design
+- Layered architecture
+- PostgreSQL integration
+- Connection pooling
+- JWT authentication
 - Secure password storage
-- Database integration
-- Separation of concerns
-- Production-ready configuration using environment variables
+- Input validation
+- Basic security hardening
+- Environment-based configuration
+- Independent cloud deployment
+
+The architecture is intentionally straightforward and focused on readability.

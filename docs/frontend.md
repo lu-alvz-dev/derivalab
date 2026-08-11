@@ -1,24 +1,12 @@
-# Frontend Architecture – DerivaLab
+# Frontend
 
 ## Overview
 
-The frontend of DerivaLab is built with **React** and **Vite**.
+The frontend of DerivaLab is a React Single Page Application built with Vite.
 
-I break the app down into separate parts. The user interface uses React components, while the routing and API connections live in their own modules. My main goal is to keep the code organized, easy to read, and simple to maintain as the project grows.
+The application is organized into reusable components, page-level views, API services, and routing.
 
----
-
-## Purpose
-
-The frontend is responsible for:
-
-- Rendering the user interface
-- Managing application navigation
-- Communicating with the backend API
-- Displaying learning analytics
-- Providing responsive feedback during user interactions
-
----
+The goal is to keep the code understandable and maintainable while the application grows.
 
 ## Tech Stack
 
@@ -29,8 +17,6 @@ The frontend is responsible for:
 - Recharts
 - Tailwind CSS
 
----
-
 ## Project Structure
 
 ```text
@@ -40,115 +26,190 @@ client/
 │   ├── components/
 │   ├── pages/
 │   ├── services/
-│   ├── hooks/
 │   ├── App.jsx
 │   └── main.jsx
-│
 ├── .env.example
 ├── package.json
 └── vite.config.js
 ```
 
----
-
-## Architecture Decisions
-
-### Component-Based Design
+## Component-Based Design
 
 The interface is divided into reusable components.
 
-Each component has a single responsibility, making the application easier to understand and maintain.
-
 Examples include:
 
-- Charts
 - Dashboard cards
+- Charts
 - Tables
 - Forms
 - Navigation
+- Feedback panels
 
----
+The goal is to keep components focused on presentation and interaction instead of putting unrelated logic into a single large component.
 
-### Routing
+## Routing
 
-Navigation is managed using **React Router**.
+Navigation is handled with **React Router**.
 
-Different routes are used for:
+Routes cover:
 
 - Authentication
-- Student Dashboard
-- Teacher Dashboard
-- Demo experience
+- Student workflow
+- Teacher dashboard
+- Demo experiences
 
-This separates navigation from our core app features or what we call business logic.
+Because DerivaLab is a SPA, production hosting must also support client-side route fallback.
 
----
+The Vercel deployment was configured to handle refreshes on application routes correctly.
 
-### API Layer
+## API Layer
 
-All HTTP requests are centralized inside the `services/` directory.
+HTTP requests are centralized in:
 
-Axios is used to communicate with the backend.
+```text
+client/src/services/api.js
+```
 
-This approach provides:
+Axios is used as the HTTP client.
 
-- Centralized API configuration
-- Easier maintenance
-- Reusable request functions
-- Simpler migration between environments
+The API module also adds the JWT token to authenticated requests through an Axios request interceptor.
 
----
+This keeps authentication-related request behavior in one place.
 
-### Environment Variables
+## Environment Variables
 
-The frontend does not contain hardcoded backend URLs.
+The frontend does not hardcode the backend production URL inside the application logic.
 
-Instead, it uses:
+It uses:
 
 ```text
 VITE_API_URL
 ```
 
-This allows the same codebase to work in both local development and internet-production environments.
+Development example:
 
----
+```text
+VITE_API_URL=http://localhost:3000/api
+```
 
-### Dashboard Architecture
+Production example:
 
-Learning analytics are displayed using reusable chart components.
+```text
+VITE_API_URL=https://derivalab-api.onrender.com/api
+```
 
-The frontend receives processed data from the backend and focuses only on presentation.
+This allows the same frontend codebase to communicate with different backend environments.
 
-Charts currently include:
+## Dashboard
 
-- Learning Accuracy
-- Error Distribution
-- Exercise Difficulty
+Dashboards are built from reusable UI sections and chart components.
 
-Recharts is used to visualize the information with responsive components.
+Teacher analytics currently include:
 
----
+- Learning accuracy
+- Error distribution
+- Exercise difficulty
+- Student statistics
+- Practice history
+
+Student analytics include:
+
+- Accuracy
+- Practice history
+- Learning statistics
+- Progress information
+
+The frontend receives processed analytics data from the backend and focuses primarily on presentation.
+
+## Recharts
+
+Recharts is used for the dashboard visualizations.
+
+Charts use responsive containers so they can adapt to different screen sizes.
+
+The dashboard was also adjusted for:
+
+- Desktop
+- Tablet
+- Mobile
+
+Responsive layout decisions were made with Tailwind CSS grid and ordering utilities.
+
+## Responsive Design
+
+The Teacher Dashboard uses responsive grids and content ordering.
+
+On large screens:
+
+```text
+Sidebar | Main Content
+```
+
+On smaller screens:
+
+```text
+Main Content
+     ↓
+Sidebar
+```
+
+This prioritizes the most important analytics before secondary navigation on mobile devices.
+
+## Tailwind CSS
+
+Tailwind CSS is used for layout, spacing, typography, responsive behavior, borders, shadows, and interactive states.
+
+The project uses utility classes instead of introducing a large custom CSS layer for every component.
+
+## Demo Experience
+
+The frontend includes demo flows for teacher and student users.
+
+The demo experience allows visitors to explore the application without going through the complete registration workflow.
+
+## Deployment
+
+The production frontend is deployed on **Vercel**.
+
+Current architecture:
+
+```text
+React / Vercel
+      ↓
+Render API
+      ↓
+Neon PostgreSQL
+```
+
+Production API configuration uses:
+
+```text
+VITE_API_URL=https://derivalab-api.onrender.com/api
+```
 
 ## Development Principles
 
-The frontend follows a few simple principles:
+The frontend follows a few practical principles:
 
 - Reusable components
 - Clear folder organization
-- Separation of responsabilities
-- Writing small files that focus on one task
-- Try to be consistent with naming conventions
-
----
+- Separation of responsibilities
+- Centralized API communication
+- Environment-based configuration
+- Responsive layouts
+- Small, focused modules
+- Consistent naming
 
 ## Design Goals
 
-The frontend shows:
+The frontend demonstrates:
 
-- Modern React application structure
+- Modern React structure
 - Component reuse
-- REST API integration
 - Client-side routing
-- Environment variable configuration
-- Dashboard implementation
+- REST API integration
+- Environment configuration
+- Dashboard development
+- Responsive UI
 - Maintainable project organization

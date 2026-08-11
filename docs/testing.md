@@ -2,65 +2,71 @@
 
 ## Overview
 
-This document summarizes the manual testing performed during the development of DerivaLab.
+This document summarizes the manual testing performed during the development and deployment of DerivaLab.
 
-The goal is to verify that the main user workflows, API endpoints, authentication, dashboards, and security features behave as expected.
-
----
+The goal is to verify the main application workflows from the backend, frontend, integration, authentication, dashboard, security, and production perspectives.
 
 ## Testing Strategy
 
-The project was tested from three different perspectives:
+Testing was performed from three main perspectives:
 
 - Backend endpoint validation
 - Frontend integration
 - Complete user workflows
 
-Whenever possible, features were verified through the complete application flow instead of testing isolated functions only.
+When possible, features were verified through the complete application flow instead of only checking isolated components.
 
----
+## Health Check
 
-# Health Check
+### Local
 
-## Endpoint
-
-```
+```text
 GET /api/health
 ```
 
-### Verified
+Verified:
 
 - Server starts correctly
 - API responds successfully
-- JSON response format
+- JSON response is returned
 
-### Result
+Result:
 
-Passed
+**Passed**
 
-![Health Check](./images/frontend-v1.png)
+### Production
 
----
+```text
+https://derivalab-api.onrender.com/api/health
+```
 
-# Authentication
+Verified:
 
-## Registration
+- Render service is running
+- Production API responds
+- JSON response is returned
+
+Result:
+
+**Passed**
+
+## Authentication
+
+### Registration
 
 Verified:
 
 - Teacher registration
 - Student registration
 - Email validation
-- Minimum password length
+- Minimum password requirements
 - Password hashing
 
-### Result
+Result:
 
-Passed
+**Passed**
 
----
-
-## Login
+### Login
 
 Verified:
 
@@ -69,13 +75,11 @@ Verified:
 - JWT generation
 - Protected route access
 
-### Result
+Result:
 
-Passed
+**Passed**
 
----
-
-# Exercise Generation
+## Exercise Generation
 
 Verified:
 
@@ -84,46 +88,35 @@ Verified:
 - Trigonometric exercises
 - Difficulty selection
 - Random exercise generation
+- Production API response
 
-### Result
+Result:
 
-Passed
+**Passed**
 
-![Exercise Generator](./images/frontend-v2.png)
-
----
-
-# Mathematical Validation
+## Mathematical Validation
 
 Verified:
 
 - Equivalent expressions
+- Different exponent notation
+- Incorrect answers
+- Mathematical normalization
 
 Example:
 
-```
+```text
 4x + 5
-
 5 + 4x
 ```
 
-- Different exponent notation
+Both expressions can represent the same mathematical result.
 
-```
-x²
+Result:
 
-x^2
-```
+**Passed**
 
-- Incorrect answers
-
-### Result
-
-Passed
-
----
-
-# Feedback Engine
+## Feedback Engine
 
 Verified:
 
@@ -132,29 +125,27 @@ Verified:
 - Error classification
 - Contextual feedback generation
 
-### Result
+The validation and feedback flow was tested through the application rather than relying only on isolated API responses.
 
-Passed
+Result:
 
----
+**Passed**
 
-# Student Dashboard
+## Student Dashboard
 
 Verified:
 
-- Statistics update correctly
+- Statistics
 - Practice history
+- Accuracy
 - Learning progress
-- Accuracy values
 - Dashboard refresh after new attempts
 
-### Result
+Result:
 
-Passed
+**Passed**
 
----
-
-# Teacher Dashboard
+## Teacher Dashboard
 
 Verified:
 
@@ -164,143 +155,176 @@ Verified:
 - Error distribution
 - Difficulty distribution
 - Individual student analytics
+- Practice history
 
-Special attention was given to validating accuracy calculations after multiple rapid practice attempts.
+Special attention was given to accuracy calculations after multiple practice attempts.
 
-### Result
+Result:
 
-Passed
+**Passed**
 
----
+## Analytics Bug Validation
 
-# Demo Experience
+During development, a discrepancy was found between dashboard accuracy and the last point of the accuracy chart.
+
+The investigation showed that the chart was calculating cumulative accuracy after the backend had already limited the history to the last 40 attempts.
+
+The fix changed the processing order:
+
+```text
+Calculate complete history
+          ↓
+Trim returned chart points
+```
+
+instead of:
+
+```text
+Trim history
+     ↓
+Calculate accuracy
+```
+
+After the change, dashboard and chart accuracy matched.
+
+Result:
+
+**Passed**
+
+## Demo Experience
 
 Verified:
 
-- Demo Teacher login
-- Demo Student login
-- Automatic demo access
+- Teacher demo access
+- Student demo access
 - Demo dashboards
 - Demo analytics
+- Practice workflow
+- History display
 
-The demo environment remains isolated from registered users.
+Result:
 
-### Result
+**Passed**
 
-Passed
+## API Integration
 
----
+The complete communication flow was verified:
 
-# API Integration
-
-Communication flow verified:
-
-```
+```text
 React
-
-↓
-
+  ↓
 Axios
-
-↓
-
-Express API
-
-↓
-
+  ↓
+Render API
+  ↓
 PostgreSQL
-
-↓
-
+  ↓
 JSON Response
-
-↓
-
+  ↓
 React UI
 ```
 
 Verified:
 
 - Successful requests
-- Error responses
+- Authentication headers
+- API responses
 - Dashboard data loading
 - Practice workflow
+- Production communication
 
-### Result
+Result:
 
-Passed
+**Passed**
 
----
-
-# Environment Configuration
+## Environment Configuration
 
 Verified:
 
-- Local environment variables
-- Backend configuration through `.env`
-- Frontend configuration through `VITE_API_URL`
-- Production-ready configuration without hardcoded API URLs
+- Local backend environment variables
+- Local frontend `VITE_API_URL`
+- Production frontend API configuration
+- Render environment configuration
+- Neon `DATABASE_URL`
+- No production secrets committed to the repository
 
-### Result
+Result:
 
-Passed
+**Passed**
 
----
+## Security Validation
 
-# Security Validation
-
-The following security features were manually verified.
-
-## JWT Authentication
+### JWT
 
 - Protected routes require authentication.
 - Unauthorized requests are rejected.
 
-## Password Protection
+### Password Protection
 
 - Passwords are stored using bcrypt hashes.
 
-## SQL Injection Protection
+### SQL Injection Protection
 
 - Database queries use parameterized PostgreSQL statements.
 
-## Input Validation
-
-Verified:
+### Input Validation
 
 - Email format
-- Minimum password length
+- Password requirements
+- Required request data
 
-## HTTP Security
-
-Verified:
+### HTTP Security
 
 - Helmet security headers
 - JSON body size limit
+- CORS configuration
 
-### Result
+Result:
 
-Passed
+**Passed**
 
----
+## Production Validation
 
-# Future Improvements
+The deployed architecture was tested layer by layer:
 
-Possible future enhancements include:
+```text
+Vercel
+  ↓
+Render
+  ↓
+Neon
+```
 
-- Automated API testing
-- Unit testing
-- Component testing
-- End-to-end testing
+Verified:
+
+- Frontend loads successfully
+- Frontend can communicate with Render
+- Render API responds
+- Database-backed functionality works
+- Demo workflows operate in production
+- Client-side route refresh works after Vercel routing configuration
+
+Result:
+
+**Passed**
+
+## Current Testing Approach
+
+Testing is currently manual and integration-focused.
+
+This is appropriate for the current project stage, but the next logical improvements are:
+
+- Automated API tests
+- Unit tests
+- React component tests
+- End-to-end tests
 - CI pipeline integration
 
----
+## Conclusion
 
-# Conclusion
+Manual testing has validated the main DerivaLab workflows across local development and the current production deployment.
 
-Manual testing confirmed that the main application workflows operate correctly.
-
-The project currently validates:
+The current validation covers:
 
 - Authentication
 - Exercise generation
@@ -310,4 +334,6 @@ The project currently validates:
 - Student dashboard
 - Demo experience
 - REST API integration
-- Basic security measures
+- Environment configuration
+- Basic security
+- Production deployment

@@ -2,393 +2,243 @@
 
 ## Overview
 
-DerivaLab follows a layered client-server architecture designed to separate responsibilities, improve maintainability, and prepare the application for production deployment.
+DerivaLab follows a layered client-server architecture designed to separate responsibilities, improve maintainability, and support independent deployment.
 
-The project is organized into three independent layers:
+The system is organized into three main layers:
 
 - React Frontend
-- REST API Backend
+- Node.js + Express REST API
 - PostgreSQL Database
 
-Each layer has a single responsibility and communicates through well-defined interfaces.
+Each layer has a specific responsibility and communicates through defined interfaces.
 
----
-
-# High-Level Architecture
+## High-Level Architecture
 
 ```text
-┌───────────────────────┐
-│       React           │
-│   (Frontend - Vite)   │
-└───────────┬───────────┘
-            │
-      HTTP / JSON
-            │
-            ▼
-┌───────────────────────┐
-│   Express REST API    │
-│  (Node.js Backend)    │
-└───────────┬───────────┘
-            │
-      SQL Queries
-            │
-            ▼
-┌───────────────────────┐
-│     PostgreSQL        │
-│       Database        │
-└───────────────────────┘
+┌──────────────────────────┐
+│     React Frontend       │
+│          Vercel          │
+└────────────┬─────────────┘
+             │
+             │ HTTPS / JSON
+             ▼
+┌──────────────────────────┐
+│    Node.js + Express     │
+│          Render          │
+└────────────┬─────────────┘
+             │
+             │ PostgreSQL
+             ▼
+┌──────────────────────────┐
+│    Neon PostgreSQL       │
+└──────────────────────────┘
 ```
 
----
-
-# Architecture Layers
+The frontend never communicates directly with PostgreSQL.
 
 ## Frontend
 
-The frontend is a React Single Page Application (SPA) built with Vite.
+The frontend is a React Single Page Application built with Vite.
 
-Its responsibilities include:
+Responsibilities include:
 
-- Rendering the user interface
+- Rendering the interface
 - Managing navigation
-- Communicating with the backend API
+- Communicating with the REST API
+- Displaying exercises
+- Collecting answers
 - Displaying dashboards and charts
-- Showing mathematical exercises
-- Collecting user answers
-
-The frontend never communicates directly with the database.
-
----
+- Providing demo experiences
 
 ## Backend
 
-The backend is built using Node.js and Express.
+The backend uses Node.js and Express.
 
-It exposes a REST API responsible for:
+It is responsible for:
 
 - Authentication
 - Authorization
 - Exercise generation
 - Mathematical validation
-- Intelligent feedback
-- Statistics generation
+- Feedback generation
+- Statistics
 - Teacher dashboards
 - Student dashboards
-- History management
+- Practice history
 
-Business logic is separated from HTTP request handling by using a layered architecture.
-
----
+Business logic is separated from HTTP request handling through routes, controllers, and services.
 
 ## Database
 
-PostgreSQL stores all persistent application data.
+PostgreSQL stores persistent application data.
 
-Current entities include:
+Current data includes:
 
 - Users
-- Exercise History
-
-The database stores:
-
+- Teacher/student relationships
 - Practice attempts
 - Correct answers
 - User answers
-- Error types
+- Exercise type
+- Difficulty
+- Error classification
 - Statistics
-- Teacher/student relationships
+- Timestamps
 
----
-
-# Layered Backend Architecture
-
-The backend follows a layered architecture.
+## Backend Layers
 
 ```text
 Routes
-   │
-   ▼
+   ↓
 Controllers
-   │
-   ▼
+   ↓
 Services
-   │
-   ▼
-Database
+   ↓
+PostgreSQL
 ```
 
-Each layer has a specific responsibility.
+### Routes
 
-## Routes
-
-Routes define the available API endpoints.
-
-Example:
-
-- /api/auth
-- /api/dashboard
-- /api/history
-- /api/feedback
-
-Routes do not contain business logic.
-
----
-
-## Controllers
-
-Controllers receive HTTP requests.
-
-Responsibilities:
-
-- Validate incoming data
-- Call services
-- Return HTTP responses
-
-Controllers remain intentionally small.
-
----
-
-## Services
-
-Services contain the application's business logic.
+Routes define API endpoints and group functionality by feature.
 
 Examples:
 
-- Authentication
-- Dashboard calculations
-- Mathematical validation
-- Feedback generation
-- Statistics processing
+```text
+/api/auth
+/api/exercises
+/api/feedback
+/api/history
+/api/dashboard
+/api/student-dashboard
+```
 
-This separation makes the project easier to maintain and extend.
+### Controllers
 
----
+Controllers receive requests, validate required input, call services, and return HTTP responses.
 
-# Authentication Architecture
+### Services
 
-Authentication uses JSON Web Tokens (JWT).
+Services contain business logic such as authentication, mathematical validation, feedback, statistics, and dashboard calculations.
 
-Login flow:
+## Authentication
+
+Authentication uses JWT.
 
 ```text
-User
-   │
-   ▼
-Login Page
-   │
-   ▼
+Login
+  ↓
 POST /api/auth/login
-   │
-   ▼
-Authentication Service
-   │
-   ▼
-bcrypt Password Verification
-   │
-   ▼
-JWT Generation
-   │
-   ▼
-Token returned to Frontend
+  ↓
+Credential validation
+  ↓
+bcrypt password verification
+  ↓
+JWT generation
+  ↓
+Token returned to frontend
+  ↓
+Protected API requests
 ```
 
-Protected routes require a valid JWT before accessing application resources.
+Role-based authorization separates teacher and student functionality.
 
-Role-based authorization restricts access to Teacher and Student functionality.
+## Answer Validation
 
----
-
-# Database Architecture
-
-The current schema includes:
-
-Users
-
-- Teachers
-- Students
-
-Exercise History
-
-- Question
-- Correct Answer
-- User Answer
-- Exercise Type
-- Difficulty
-- Correct/Incorrect
-- Error Type
-- Timestamp
-
-Relationships
-
-```text
-Teacher
-   │
-   │ 1
-   │
-   ├───────────────┐
-                   │
-              Student
-                   │
-                   │ 1
-                   │
-                   ▼
-          Exercise History
-```
-
----
-
-# Exercise Flow
-
-The exercise workflow is fully handled by the backend.
-
-```text
-Teacher / Student
-        │
-        ▼
-Request Exercise
-        │
-        ▼
-Exercise Generator
-        │
-        ▼
-Derivative Calculation
-        │
-        ▼
-JSON Response
-        │
-        ▼
-Frontend
-```
-
----
-
-# Answer Validation Flow
-
-User answers are validated mathematically instead of using string comparison.
+Answers are validated mathematically rather than through simple string comparison.
 
 ```text
 Student Answer
-       │
-       ▼
+      ↓
 Normalization
-       │
-       ▼
-Mathematical Comparison
-       │
-       ▼
+      ↓
+mathjs comparison
+      ↓
 Correct?
-   │         │
- Yes         No
- │            │
- ▼            ▼
-Success   Error Analysis
-                │
-                ▼
-      Intelligent Feedback
+   ↙       ↘
+ Yes       No
+ ↓          ↓
+Success   Error classification
+              ↓
+        Feedback generation
 ```
 
-The validation engine supports equivalent mathematical expressions.
+## Dashboard Architecture
 
----
+Teacher dashboards aggregate student learning data.
 
-# Dashboard Architecture
-
-Teacher dashboards aggregate information from multiple students.
-
-Displayed metrics include:
+Current metrics include:
 
 - Total students
-- Total attempts
+- Attempts
 - Correct answers
-- Learning accuracy
+- Accuracy
 - Error distribution
 - Difficulty distribution
-
-Student dashboards display:
-
 - Practice history
+
+Student dashboards focus on:
+
 - Accuracy
+- Practice history
 - Statistics
 - Learning progress
 
----
-
-# Security
+## Security
 
 Current security measures include:
 
 - JWT authentication
 - bcrypt password hashing
 - Helmet security headers
+- CORS configuration
 - Email validation
-- Minimum password length validation
-- Request body size limit
+- Password validation
+- JSON body limit
 - Parameterized SQL queries
 - Environment variables for sensitive configuration
 
-These measures provide a secure foundation suitable for an MVP and prepare the application for production deployment.
+## Environment Configuration
 
----
-
-# Environment Configuration
-
-Configuration values are stored outside the source code using environment variables.
-
-Examples include:
-
-- Database connection
-- JWT secret
-- Server port
-- API URLs
-
-This allows different configurations for:
-
-- Local development
-- Testing
-- Production
-
----
-
-# Deployment Architecture
-
-The application is prepared for cloud deployment.
-
-Target production architecture:
+Configuration changes by environment.
 
 ```text
-React (Vercel)
-        │
-        ▼
-Node.js API (Koyeb)
-        │
-        ▼
+Development
+     ↓
+VITE_API_URL → Local backend
+
+Production
+     ↓
+VITE_API_URL → Render backend
+```
+
+Backend production configuration uses environment variables such as:
+
+```text
+DATABASE_URL
+JWT_SECRET
+PORT
+CLIENT_URL
+```
+
+## Deployment Architecture
+
+The current production deployment is:
+
+```text
+Vercel
+  ↓
+Render
+  ↓
 Neon PostgreSQL
 ```
 
-Each service can be deployed independently.
+The frontend and backend are deployed independently.
 
----
+This makes it possible to verify each layer separately when troubleshooting production issues.
 
-# Architectural Decisions
+## Current Status
 
-The following design decisions were made during development:
-
-- Layered backend architecture
-- REST API communication
-- Stateless authentication with JWT
-- PostgreSQL relational database
-- Separate frontend and backend deployments
-- Environment-based configuration
-- Reusable React components
-- Service-oriented backend organization
-
-These decisions keep the codebase simple while allowing future growth.
-
----
-
-# Current Status
-
-The current MVP includes:
+DerivaLab currently includes:
 
 - Authentication
 - Teacher workflow
@@ -403,5 +253,7 @@ The current MVP includes:
 - Interactive charts
 - Demo experience
 - Security hardening
-- Production-ready environment configuration
-- Prepared deployment for Neon, Koyeb and Vercel
+- Production environment configuration
+- Vercel frontend deployment
+- Render backend deployment
+- Neon PostgreSQL database
