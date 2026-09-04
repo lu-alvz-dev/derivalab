@@ -6,6 +6,8 @@ DerivaLab is a **Full-Stack Micro-SaaS** for high school calculus practice. It h
 
 The application is built with React, Node.js, Express, PostgreSQL, JWT authentication, and a separated cloud deployment architecture.
 
+**[Live Demo](https://derivalab.vercel.app/) · [Portfolio](https://lu-alvz-dev.vercel.app/)**
+
 ## Problem
 
 Calculus teachers spend time creating exercises, reviewing answers, identifying common errors, and monitoring student progress.
